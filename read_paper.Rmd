@@ -1,0 +1,130 @@
+---
+title: NLP相关paper阅读
+author: 高文欣
+date: "`r Sys.Date()`"
+output: 
+  bookdown::gitbook:
+  split_by: none
+split_bib: TRUE
+df_print: paged
+bibliography: refs/add.bib
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+# NLP paper preview
+
+emmmmm...站在巨人的肩膀看世界\~ 是件幸福的事情
+
+## fasttext
+
+结构中比较重要的几个点
+
+### Hierarchical softmax
+
+这个没什么好说的，和word2vec里面的是一样的。具体解释忘记之前从哪里找来得了但私以为解释的8错
+
+> When the number of classes is large, computing the linear classifier
+> is computationally expensive. More precisely, the computational
+> complexity is $O(k h)$ where $k$ is the number of classes and $h$ the
+> dimension of the text representation. In order to improve our running
+> time, we use a hierarchical softmax (Goodman, 2001) based on the
+> Huffman coding tree (Mikolov et al., 2013 ). During training, the
+> computational complexity drops to $O\left(h \log _{2}(k)\right)$. The
+> hierarchical softmax is also advantageous at test time when searching
+> for the most likely class. Each node is associated with a probability
+> that is the probability of the path from the root to that node. If the
+> node is at depth $l+1$ with parents $n_{1}, \ldots, n_{l},$ its
+> probability is $$
+> P\left(n_{l+1}\right)=\prod_{i=1}^{l} P\left(n_{i}\right)
+> $$
+
+> This means that the probability of a node is always lower than the one
+> of its parent. Exploring the tree with a depth first search and
+> tracking the maximum probability among the leaves allows us to discard
+> any branch associated with a small probability. In practice, we
+> observe a reduction of the complexity to
+> $O\left(h \log _{2}(k)\right)$ at test time. This approach is further
+> extended to compute the $T$ -top targets at the cost of $O(\log (T)),$
+> using a binary heap.
+
+主要就是利用霍夫曼树加快计算的速度
+
+> Hierachical
+> Softmax的基本思想就是首先将词典中的每个词按照词频大小构建出一棵Huffman树,
+> 保证词频较大的词处于相对比较浅的层,
+> 词频较低的词相应的处于Huffman树较深层的叶子节点,
+> 每一个词都处于这棵Huffman树上的某个叶子节点;
+> 第二，将原本的一个\|V\|分类问题变成了$\log|V|$ 次的二分类问题,
+> 做法简单说来就是, 原先要计算 $P\left(w_{t} \mid c_{t}\right)$的时候,
+> 因为使用的 是普通的softmax,
+> 势必要求词典中的每一个词的概率大小，为了减少这一步的计算量, 在
+> Hierachical Softmax中，同样是计算当前词 $w_{t}$
+> 在其上下文中的概率大小，只需要把它变成在
+> Huffman树中的路径预测问题就可以了，因为当前词 $w_{t}$
+> 在Huffman树中对应到一条路径, 这条 路径由这棵二叉树中从根节点开始,
+> 经过一系列中间的父节点, 最终到达当前这个词的叶子节点而 组成,
+> 那么在每一个父节点上，都对应的是一个二分类问题（本质上就是一个LR分类器），而
+> Huffman树的构造过程保证了树的深度为 $\log |V|,$
+> 所以也就只需要做$\log |V|$次二分类便可以 求得
+> $P\left(w_{t} \mid c_{t}\right)$ 的大小, 这相比原来\|V\|次的计算量,
+> 已经大大减小了。
+
+### N\_gram features
+
+**这个是主要区别于word2vec的输入的部分了，为了更好的学习到上下文的语序特征**
+
+从bag of word 变成了bag of features
+
+> Bag of words is invariant to word order but taking explicitly this
+> order into account is often computationally very expensive. Instead,
+> we use a bag of n-grams as additional features to capture some partial
+> information about the local word order. This is very efficient in
+> practice while achieving comparable results to methods that explicitly
+> use the order (Wang and Manning, 2012 ). We maintain a fast and memory
+> efficient mapping of the n-grams by using the hashing trick
+> (Weinberger et al., 2009 ) with the same hashing function as in
+> Mikolov et al. (2011) and $10 \mathrm{M}$ bins if we only used
+> bigrams, and $100 \mathrm{M}$ otherwise.
+
+### fasttext与word2vec对比
+
+感觉读paper的时候并没有很仔细的找出fasttext和word2vec的区别
+
+> word2vec和GloVe都不需要人工标记的监督数据，只需要语言内部存在的监督信号即可以完成训练。而与此相对应的，fastText则是利用带有监督标记的文本分类数据完成训练，本质上没有什么特殊的，模型框架就是CBOW。
+
+因为是训练词向量的嘛，因此只需要文本就可以了，不需要标签。
+
+fasttext和word2vec本质无区别都是单层的神经网络，CBOW的结构，通过上下文预测当前词。
+word2vec是为了得到embedding的矩阵，word2vec本质是一个词袋模型:bag of
+word。
+
+### fasttext与CBOW有两点不同
+
+> 分别是输入数据和预测目标的不同 -
+> 在输入数据上，CBOW输入的是一段区间中除去目标词之外的所有其他词的向量加和或平均，而fastText为了利用更多的语序信息，将bag-of-words变成了bag-of-features，也就是下图中的输入x不再仅仅是一个词，还可以加上bigram或者是trigram的信息等等；
+> -
+> 第二个不同在于，CBOW预测目标是语境中的一个词，而fastText预测目标是当前这段输入文本的类别，正因为需要这个文本类别，因此才说fastText是一个监督模型。而相同点在于，fastText的网络结构和CBOW基本一致，同时在输出层的分类上也使用了Hierachical
+> Softmax技巧来加速训练。
+
+### 实验和结果分析
+
+*情感分析实验*
+
+在8个数据集上面acc对比，对比了6个模型，可以看出在绝大部分的数据集上面fasttext的acc是最好的。
+加入bgram的效果要优于不加的
+
+![](C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-87AA0A90.png)
+
+运行时间对比fasttext的速度绝了\~
+
+![](C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-099A1FC8.png)
+
+对比不同模型的acc，fasttext略高\~
+
+![](C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-283D5547.png)
+
+在标签预测上的测试时间，fasttext非常快\~
+
+![](C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-77B0769C.png)
