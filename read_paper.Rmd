@@ -104,9 +104,27 @@ word。
 
 > 分别是输入数据和预测目标的不同 -
 > 在输入数据上，CBOW输入的是一段区间中除去目标词之外的所有其他词的向量加和或平均，而fastText为了利用更多的语序信息，将bag-of-words变成了bag-of-features，也就是下图中的输入x不再仅仅是一个词，还可以加上bigram或者是trigram的信息等等；
-> -
+
+``` {.r}
+from gensim.models import FastText
+sentences = [["你", "是", "谁"], ["我", "是", "中国人"]]
+
+model = FastText(sentences,  size=4, window=3, min_count=1, iter=10,min_n = 3 , max_n = 6,word_ngrams = 0)
+model['你']  # 词向量获得的方式
+model.wv['你'] # 词向量获得的方式
+```
+
+所以在训练fasttext的词向量时候，参数word\_ngrams =
+0时候，是等价于word2vec的。
+
 > 第二个不同在于，CBOW预测目标是语境中的一个词，而fastText预测目标是当前这段输入文本的类别，正因为需要这个文本类别，因此才说fastText是一个监督模型。而相同点在于，fastText的网络结构和CBOW基本一致，同时在输出层的分类上也使用了Hierachical
 > Softmax技巧来加速训练。
+
+两者本质的不同，体现在 h-softmax的使用：
+
+Wordvec的目的是得到词向量，该词向量 最终是在输入层得到，输出层对应的
+h-softmax 也会生成一系列的向量，但最终都被抛弃，不会使用。
+fasttext则充分利用了h-softmax的分类功能，遍历分类树的所有叶节点，找到概率最大的label（一个或者N个）
 
 ### 实验和结果分析
 
@@ -128,3 +146,7 @@ word。
 在标签预测上的测试时间，fasttext非常快\~
 
 ![](C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-77B0769C.png)
+
+## Doc2vec
+
+## 

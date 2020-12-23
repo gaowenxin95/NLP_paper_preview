@@ -1,0 +1,16 @@
+---
+title: 多标签学习笔记
+author: 高文欣
+date: "`r Sys.Date()`"
+output: 
+    bookdown::gitbook:
+        split_by: none
+        split_bib: TRUE
+        df_print: paged
+bibliography: refs/add.bib
+---
+
+# multi_label 
+
+多标签学习笔记
+
