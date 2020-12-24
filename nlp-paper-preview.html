@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2020-12-23" />
+<meta name="date" content="2020-12-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -139,8 +139,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.1.4" data-path=""><a href="#fasttext与cbow有两点不同"><i class="fa fa-check"></i><b>1.1.4</b> fasttext与CBOW有两点不同</a></li>
 <li class="chapter" data-level="1.1.5" data-path=""><a href="#实验和结果分析"><i class="fa fa-check"></i><b>1.1.5</b> 实验和结果分析</a></li>
 </ul></li>
-<li class="chapter" data-level="1.2" data-path=""><a href="#doc2vec"><i class="fa fa-check"></i><b>1.2</b> Doc2vec</a></li>
-<li class="chapter" data-level="1.3" data-path=""><a href="#section"><i class="fa fa-check"></i><b>1.3</b> </a></li>
+<li class="chapter" data-level="1.2" data-path=""><a href="#doc2vec"><i class="fa fa-check"></i><b>1.2</b> Doc2vec</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path=""><a href="#introduction"><i class="fa fa-check"></i><b>1.2.1</b> introduction</a></li>
+</ul></li>
 </ul></li>
 </ul>
 
@@ -162,7 +164,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">NLP相关paper阅读</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2020-12-23</em></p>
+<p class="date"><em>2020-12-24</em></p>
 </div>
 <div id="nlp-paper-preview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> NLP paper preview</h1>
@@ -289,9 +291,71 @@ fasttext则充分利用了h-softmax的分类功能，遍历分类树的所有叶
 </div>
 <div id="doc2vec" class="section level2" number="1.2">
 <h2><span class="header-section-number">1.2</span> Doc2vec</h2>
+<div id="introduction" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> introduction</h3>
+<blockquote>
+<p>However, the bag-of-words (BOW) has many disadvantages. The word order
+is lost, and thus different sentences can have exactly the same
+representation, as long as the same words are used. Even though
+bag-of-n-grams considers the word order in short context, it suffers
+from data sparsity and high dimensionality. Bag-of-words and
+bagof-n-grams have very little sense about the semantics of the words
+or more formally the distances between the words. This means that
+words “powerful,” “strong” and “Paris” are equally distant despite the
+fact that semantically, “powerful” should be closer to “strong” than
+“Paris.”</p>
+</blockquote>
+<ul>
+<li>词袋模型的缺点是没有考虑词序，学习不到语义；</li>
+<li>bag-of-n-grams模型即使在短文本中也是存在高维稀疏问题的；</li>
+<li>二者都无法学习到语义</li>
+</ul>
+<blockquote>
+<p>In this paper, we propose Paragraph Vector, an unsupervised framework
+that learns continuous distributed vector representations for pieces
+of texts. The texts can be of variable-length, ranging from sentences
+to documents. The name Paragraph Vector is to emphasize the fact that
+the method can be applied to variable-length pieces of texts, anything
+from a phrase or sentence to a large document.</p>
+</blockquote>
+<p>DOC2vec中提出了一种句向量的思想。文本是由不同长度的句子组成的，句向量可以学习到不同长度的短语和句子的embedding</p>
+<blockquote>
+<p>In our model, the vector representation is trained to be useful for
+predicting words in a paragraph. More precisely, we concatenate the
+paragraph vector with several word vectors from a paragraph and
+predict the following word in the given context. Both word vectors and
+paragraph vectors are trained by the stochastic gradient descent and
+backpropagation (Rumelhart et al., 1986 ). While paragraph vectors are
+unique among paragraphs, the word vectors are shared. At prediction
+time, the paragraph vectors are inferred by fixing the word vectors
+and training the new paragraph vector until convergence.</p>
+</blockquote>
+<p>说简单点就是在原有词向量的基础上concat上了句向量，同时学习词向量和句向量的语义。</p>
+<p>个人感觉句向量的作用其实是增加了一个上下文的position，句向量的大小可以自定义。</p>
+<p>Doc2vec同样具有2种结构</p>
+<blockquote>
+<p>The above method considers the concatenation of the paragraph vector
+with the word vectors to predict the next word in a text window.
+Another way is to ignore the context words in the input, but force the
+model to predict words randomly sampled from the paragraph in the
+output. In reality, what this means is that at each iteration of
+stochastic gradient descent, we sample a text window, then sample a
+random word from the text window and form a classification task given
+the Paragraph Vector. This technique is shown in Figure <span class="math inline">\(3 .\)</span> We name
+this version the Distributed Bag of Words version of Paragraph Vector
+(PV-DBOW), as opposed to Distributed Memory version of Paragraph
+Vector (PV-DM) in previous section.</p>
+</blockquote>
+<p>PV-DBOW是Distributed Bag of Words version of Paragraph
+Vector，和Skip-gram类似，通过文档来预测文档内的词，训练的时候，随机采样一些文本片段，然后再从这个片段中采样一个词，让PV-DBOW模型来预测这个词，以此分类任务作为训练方法，说白了本质上和Skip-gram是一样的。这个方法有个致命的弱点，就是为了获取新文档的向量，还得继续走一遍训练流程，并且由于模型主要是针对文档向量预测词向量的过程进行建模，其实很难去表征词语之间的更丰富的语义结构。</p>
+<p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-CEE075C9.png" /></p>
+<p>PV-DM的全称是Distributed Memory Model of Paragraph
+Vectors，和CBOW类似，也是通过上下文预测下一个词，不过在输入层的时候，同时也维护了一个文档ID映射到一个向量的look-up
+table，模型的目的便是将当前文档的向量以及上下文向量联合输入模型，并让模型预测下一个词，训练结束后，对于现有的文档，便可以直接通过查表的方式快速得到该文档的向量，而对于新的一篇文档，那么则需要将已有的look-up
+table添加相应的列，然后重新走一遍训练流程，只不过此时固定好其他的参数，只调整look-up
+table，收敛后便可以得到新文档对应的向量了。</p>
+<p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-64854E74.png" /></p>
 </div>
-<div id="section" class="section level2" number="1.3">
-<h2><span class="header-section-number">1.3</span> </h2>
 </div>
 </div>
             </section>
