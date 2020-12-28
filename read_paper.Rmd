@@ -88,6 +88,8 @@ emmmmm...站在巨人的肩膀看世界\~ 是件幸福的事情
 > Mikolov et al. (2011) and $10 \mathrm{M}$ bins if we only used
 > bigrams, and $100 \mathrm{M}$ otherwise.
 
+-   [ ] fasttext 文本分类的结构？
+
 ### fasttext与word2vec对比
 
 感觉读paper的时候并没有很仔细的找出fasttext和word2vec的区别
@@ -135,15 +137,15 @@ fasttext则充分利用了h-softmax的分类功能，遍历分类树的所有叶
 
 ![](C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-87AA0A90.png)
 
-运行时间对比fasttext的速度绝了\~
+运行时间对比fasttext的速度绝了
 
 ![](C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-099A1FC8.png)
 
-对比不同模型的acc，fasttext略高\~
+对比不同模型的acc，fasttext略高
 
 ![](C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-283D5547.png)
 
-在标签预测上的测试时间，fasttext非常快\~
+在标签预测上的测试时间，fasttext非常快
 
 ![](C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-77B0769C.png)
 
@@ -215,3 +217,207 @@ table添加相应的列，然后重新走一遍训练流程，只不过此时固
 table，收敛后便可以得到新文档对应的向量了。
 
 ![](C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-64854E74.png)
+
+### 实验对比
+
+Treebank Dataset 情感分析结果对比 基本都是不同长度的句子
+
+![](C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-CE415F36.png)
+
+情感分析结果对比，段落和文章上
+
+![](C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-EC1185C3.png)
+
+计算句间的距离对比
+
+![](C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-C86443E1.png)
+
+实际跑下来，Doc的效果并不如word2vec的效果好，是不是和样本数据量有关，亦或者和fasttext一样适用于英文。
+
+-   [ ] Doc2VEC是否可以直接使用word2vec的结果？
+
+个人人为应该可以使用，但是这里的句向量的计算的方式应该挺多的，计算出来句向量直接concat到词向量上面，理论上来说就是该篇文章的思想。
+
+## skip-thoughts
+
+> Using the continuity of text from books, we train an encoderdecoder
+> model that tries to reconstruct the surrounding sentences of an
+> encoded passage. Sentences that share semantic and syntactic
+> properties are thus mapped to similar vector representations. We next
+> introduce a simple vocabulary expansion method to encode words that
+> were not seen as part of training, allowing us to expand our
+> vocabulary to a million words.
+
+skip-thoughts也是一种encoder-decoder结构，直接根据当前句预测上下文。
+
+skip-gram是根据当前词预测上下文的词。目标不同。
+
+### introduction
+
+> In this paper we abstract away from the composition methods themselves
+> and consider an alternative loss function that can be applied with any
+> composition operator. We consider the following question: is there a
+> task and a corresponding loss that will allow us to learn highly
+> generic sentence representations? We give evidence for this by
+> proposing a model for learning high-quality sentence vectors without a
+> particular supervised task in mind. Using word vector learning as
+> inspiration, we propose an objective function that abstracts the
+> skip-gram model of [8] to the sentence level. That is, instead of
+> using a word to predict its surrounding context, we instead encode a
+> sentence to predict the sentences around it. Thus, any composition
+> operator can be substituted as a sentence encoder and only the
+> objective function becomes modified. Figure 1 illustrates the model.
+> We call our model skip-thoughts and vectors induced by our model are
+> called skip-thought vectors.
+
+也是在强调直接学习句向量，根据当前的句子预测上下文的句子向量。
+<eos>是每个句子的结尾
+
+![](figs/skip-thoughts.png)
+
+当前句$s_{i}$预测上下句$s_{i-1}$和$s_{i+1}$
+
+### 结构
+
+> We treat skip-thoughts in the framework of encoder-decoder models
+> $1 .$ That is, an encoder maps words to a sentence vector and a
+> decoder is used to generate the surrounding sentences. Encoderdecoder
+> models have gained a lot of traction for neural machine translation.
+> In this setting, an encoder is used to map e.g. an English sentence
+> into a vector. The decoder then conditions on this vector to generate
+> a translation for the source English sentence. Several choices of
+> encoder-decoder pairs have been explored, including ConvNet-RNN [10],
+> RNN-RNN [11] and LSTM-LSTM [12]. The source sentence representation
+> can also dynamically change through the use of an attention mechanism
+> [13] to take into account only the relevant words for translation at
+> any given time. In our model, we use an RNN encoder with GRU [14]
+> activations and an RNN decoder with a conditional GRU. This model
+> combination is nearly identical to the RNN encoder-decoder of [11]
+> used in neural machine translation. GRU has been shown to perform as
+> well as LSTM [2] on sequence modelling tasks [14] while being
+> conceptually simpler. GRU units have only 2 gates and do not require
+> the use of a cell. While we use RNNs for our model, any encoder and
+> decoder can be used so long as we can backpropagate through it.
+
+常见的编码器和解码器的结构有ConvNet-RNN , RNN-RNN and LSTM-LSTM
+
+skip-thoughts是一个encoder-decoder的结构，编码器和解码器都是使用的GRU的结构。
+GRU对比LSTM从速度上面来说是应该是更快的，效果上来看，实际数据中差不多~
+
+### encoder
+
+encoder-decoder上使用的GRU的结构
+
+> Encoder. Let $w_{i}^{1}, \ldots, w_{i}^{N}$ be the words in sentence
+> $s_{i}$ where $N$ is the number of words in the sentence. At each time
+> step, the encoder produces a hidden state $\mathbf{h}_{i}^{t}$ which
+> can be interpreted as the representation of the sequence
+> $w_{i}^{1}, \ldots, w_{i}^{t} .$ The hidden state $\mathbf{h}_{i}^{N}$
+> thus represents the full sentence. To encode a sentence, we iterate
+> the following sequence of equations (dropping the subscript $i$ ):
+
+$$
+\begin{aligned}
+\mathbf{r}^{t} &=\sigma\left(\mathbf{W}_{r} \mathbf{x}^{t}+\mathbf{U}_{r} \mathbf{h}^{t-1}\right) \\
+\mathbf{z}^{t} &=\sigma\left(\mathbf{W}_{z} \mathbf{x}^{t}+\mathbf{U}_{z} \mathbf{h}^{t-1}\right) \\
+\overline{\mathbf{h}}^{t} &=\tanh \left(\mathbf{W} \mathbf{x}^{t}+\mathbf{U}\left(\mathbf{r}^{t} \odot \mathbf{h}^{t-1}\right)\right) \\
+\mathbf{h}^{t} &=\left(1-\mathbf{z}^{t}\right) \odot \mathbf{h}^{t-1}+\mathbf{z}^{t} \odot \overline{\mathbf{h}}^{t}
+\end{aligned}
+$$ where $\overline{\mathbf{h}}^{t}$ is the proposed state update at
+time $t, \mathbf{z}^{t}$ is the update gate, $\mathbf{r}_{t}$ is the
+reset gate $(\odot)$ denotes a component-wise product. Both update gates
+takes values between zero and one.
+
+encoder部分就是一个GRU的结构进行特征选择
+
+编码器的作用：编码器的作⽤是把⼀个不定⻓的输⼊序列变换成⼀个定⻓的背景变量
+c，并在该背景变量中编码输⼊序列信息。
+
+### decoder
+
+> Decoder. The decoder is a neural language model which conditions on
+> the encoder output $\mathbf{h}_{i} .$ The computation is similar to
+> that of the encoder except we introduce matrices
+> $\mathbf{C}_{z}, \mathbf{C}_{r}$ and $\mathbf{C}$ that are used to
+> bias the update gate, reset gate and hidden state computation by the
+> sentence vector. One decoder is used for the next sentence $s_{i+1}$
+> while a second decoder is used for the previous sentence $s_{i-1}$.
+> Separate parameters are used for each decoder with the exception of
+> the vocabulary matrix $\mathbf{V}$ which is the weight matrix
+> connecting the decoder's hidden state for computing a distribution
+> over words. In what follows we describe the decoder for the next
+> sentence $s_{i+1}$ although an analogous computation is used for the
+> previous sentence $s_{i-1}$. Let $\mathbf{h}_{i+1}^{t}$ denote the
+> hidden state of the decoder at time $t .$ Decoding involves iterating
+> through the following sequence of equations (dropping the subscript
+> $i+1$ ):
+
+decoder的输入是encoder的输出，两个解码器分别对当前句的上下句进行解码。
+
+
+$$
+\begin{aligned}
+\mathbf{r}^{t} &=\sigma\left(\mathbf{W}_{r}^{d} \mathbf{x}^{t-1}+\mathbf{U}_{r}^{d} \mathbf{h}^{t-1}+\mathbf{C}_{r} \mathbf{h}_{i}\right) \\
+\mathbf{z}^{t} &=\sigma\left(\mathbf{W}_{z}^{d} \mathbf{x}^{t-1}+\mathbf{U}_{z}^{d} \mathbf{h}^{t-1}+\mathbf{C}_{z} \mathbf{h}_{i}\right) \\
+\overline{\mathbf{h}}^{t} &=\tanh \left(\mathbf{W}^{d} \mathbf{x}^{t-1}+\mathbf{U}^{d}\left(\mathbf{r}^{t} \odot \mathbf{h}^{t-1}\right)+\mathbf{C h}_{i}\right) \\
+\mathbf{h}_{i+1}^{t} &=\left(1-\mathbf{z}^{t}\right) \odot \mathbf{h}^{t-1}+\mathbf{z}^{t} \odot \overline{\mathbf{h}}^{t}
+\end{aligned}
+$$
+
+Given $\mathbf{h}_{i+1}^{t},$ the probability of word $w_{i+1}^{t}$
+given the previous $t-1$ words and the encoder vector is $$
+P\left(w_{i+1}^{t} \mid w_{i+1}^{<t}, \mathbf{h}_{i}\right) \propto \exp \left(\mathbf{v}_{w_{i+1}^{t}} \mathbf{h}_{i+1}^{t}\right)
+$$ where $\mathbf{v}_{w_{i+1}^{t}}$ denotes the row of $\mathbf{V}$
+corresponding to the word of $w_{i+1}^{t} .$ An analogous computation is
+performed for the previous sentence $s_{i-1}$.
+
+解码器部分使用的网络结构也是GRU
+
+
+### 目标函数
+
+> Objective. Given a tuple $\left(s_{i-1}, s_{i}, s_{i+1}\right),$ the
+> objective optimized is the sum of the log-probabilities for the
+> forward and backward sentences conditioned on the encoder
+> representation: $$
+> \sum_{t} \log P\left(w_{i+1}^{t} \mid w_{i+1}^{<t}, \mathbf{h}_{i}\right)+\sum_{t} \log P\left(w_{i-1}^{t} \mid w_{i-1}^{<t}, \mathbf{h}_{i}\right)
+> $$
+
+由前向传播和反向传播的交叉熵损失函数两部分构成的。
+
+### 词典的拓展
+
+>We now describe how to expand our encoder's vocabulary to words it has not seen during training. Suppose we have a model that was trained to induce word representations, such as word2vec. Let $V_{w 2 v}$ denote the word embedding space of these word representations and let $V_{r n n}$ denote the $\mathrm{RNN}$ word embedding space. We assume the vocabulary of $\mathcal{V}_{w 2 v}$ is much larger than that of $\mathcal{V}_{r n n}$. Our goal is to construct a mapping $f: \mathcal{V}_{w 2 v} \rightarrow \mathcal{V}_{r n n}$ parameterized by a matrix $\mathbf{W}$ such that $\mathbf{v}^{\prime}=\mathbf{W} \mathbf{v}$ for $\mathbf{v} \in \mathcal{V}_{w 2 v}$ and $\mathbf{v}^{\prime} \in \mathcal{V}_{r n n} .$ Inspired by [15] , which learned linear mappings between translation word spaces, we solve an un-regularized L2 linear regression loss for the matrix $\mathbf{W}$. Thus, any word from $\mathcal{V}_{w 2 v}$ can now be mapped into $\mathcal{V}_{r n n}$ for encoding sentences. Table 3 shows examples of nearest neighbour words for queries that did not appear in our training vocabulary.
+
+对于encoder部分，如何对词库中未出现的词进行编码。
+- [ ] 从w2vec词向量的词表中做一个映射到rnn的词表上，得到一个映射的矩阵
+
+这个是说加载预训练模型作为第一层的embedding吗？
+
+
+>We note that there are alternate strategies for solving the vocabulary problem. One alternative is to initialize the RNN embedding space to that of pre-trained word vectors. This would require a more sophisticated softmax for decoding, or clipping the vocabulary of the decoder as it would be too computationally expensive to naively decode with vocabularies of hundreds of thousands of words. An alternative strategy is to avoid words altogether and train at the character level.
+
+以词作为预训练的词向量，需要非常复杂的softmax做解码，这样计算的代码比较大，确实。。每次算词频都需要遍历整个词库，计算量很大。。很慢。
+因此有了以字符为基本单位的可代替方案
+
+
+这一段的意义何在？skip-thoughts中还是以词为基本做的预训练，没有用到字符啊
+
+### 实验部分
+
+>In our experiments, we evaluate the capability of our encoder as a generic feature extractor after training on the BookCorpus dataset. Our experimentation setup on each task is as follows:
+
+在BookCorpus数据集上进行训练，每个任务如下
+
+>Using the learned encoder as a feature extractor, extract skip-thought vectors for all sentences.
+
+encoder部分：使用skip-th-vec提取所有句子特征
+
+
+>If the task involves computing scores between pairs of sentences, compute component-wise features between pairs. This is described in more detail specifically for each experiment.
+
+>Train a linear classifier on top of the extracted features, with no additional fine-tuning or backpropagation through the skip-thoughts model.
+
+>We restrict ourselves to linear classifiers for two reasons. The first is to directly evaluate the representation quality of the computed vectors. It is possible that additional performance gains can be made throughout our experiments with non-linear models but this falls out of scope of our goal. Furthermore, it allows us to better analyze the strengths and weaknesses of the learned representations. The second reason is that reproducibility now becomes very straightforward.
+
+

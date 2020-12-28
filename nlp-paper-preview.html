@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2020-12-24" />
+<meta name="date" content="2020-12-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -142,6 +142,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.2" data-path=""><a href="#doc2vec"><i class="fa fa-check"></i><b>1.2</b> Doc2vec</a>
 <ul>
 <li class="chapter" data-level="1.2.1" data-path=""><a href="#introduction"><i class="fa fa-check"></i><b>1.2.1</b> introduction</a></li>
+<li class="chapter" data-level="1.2.2" data-path=""><a href="#实验对比"><i class="fa fa-check"></i><b>1.2.2</b> 实验对比</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path=""><a href="#skip-thoughts"><i class="fa fa-check"></i><b>1.3</b> skip-thoughts</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path=""><a href="#introduction-1"><i class="fa fa-check"></i><b>1.3.1</b> introduction</a></li>
+<li class="chapter" data-level="1.3.2" data-path=""><a href="#结构"><i class="fa fa-check"></i><b>1.3.2</b> 结构</a></li>
+<li class="chapter" data-level="1.3.3" data-path=""><a href="#encoder"><i class="fa fa-check"></i><b>1.3.3</b> encoder</a></li>
+<li class="chapter" data-level="1.3.4" data-path=""><a href="#decoder"><i class="fa fa-check"></i><b>1.3.4</b> decoder</a></li>
+<li class="chapter" data-level="1.3.5" data-path=""><a href="#目标函数"><i class="fa fa-check"></i><b>1.3.5</b> 目标函数</a></li>
+<li class="chapter" data-level="1.3.6" data-path=""><a href="#词典的拓展"><i class="fa fa-check"></i><b>1.3.6</b> 词典的拓展</a></li>
+<li class="chapter" data-level="1.3.7" data-path=""><a href="#实验部分"><i class="fa fa-check"></i><b>1.3.7</b> 实验部分</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -164,7 +175,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">NLP相关paper阅读</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2020-12-24</em></p>
+<p class="date"><em>2020-12-29</em></p>
 </div>
 <div id="nlp-paper-preview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> NLP paper preview</h1>
@@ -240,6 +251,10 @@ efficient mapping of the n-grams by using the hashing trick
 Mikolov et al. (2011) and <span class="math inline">\(10 \mathrm{M}\)</span> bins if we only used
 bigrams, and <span class="math inline">\(100 \mathrm{M}\)</span> otherwise.</p>
 </blockquote>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" />
+fasttext 文本分类的结构？</li>
+</ul>
 </div>
 <div id="fasttext与word2vec对比" class="section level3" number="1.1.3">
 <h3><span class="header-section-number">1.1.3</span> fasttext与word2vec对比</h3>
@@ -281,11 +296,11 @@ fasttext则充分利用了h-softmax的分类功能，遍历分类树的所有叶
 <p>在8个数据集上面acc对比，对比了6个模型，可以看出在绝大部分的数据集上面fasttext的acc是最好的。
 加入bgram的效果要优于不加的</p>
 <p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-87AA0A90.png" /></p>
-<p>运行时间对比fasttext的速度绝了~</p>
+<p>运行时间对比fasttext的速度绝了</p>
 <p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-099A1FC8.png" /></p>
-<p>对比不同模型的acc，fasttext略高~</p>
+<p>对比不同模型的acc，fasttext略高</p>
 <p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-283D5547.png" /></p>
-<p>在标签预测上的测试时间，fasttext非常快~</p>
+<p>在标签预测上的测试时间，fasttext非常快</p>
 <p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-77B0769C.png" /></p>
 </div>
 </div>
@@ -355,6 +370,197 @@ table，模型的目的便是将当前文档的向量以及上下文向量联合
 table添加相应的列，然后重新走一遍训练流程，只不过此时固定好其他的参数，只调整look-up
 table，收敛后便可以得到新文档对应的向量了。</p>
 <p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-64854E74.png" /></p>
+</div>
+<div id="实验对比" class="section level3" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> 实验对比</h3>
+<p>Treebank Dataset 情感分析结果对比 基本都是不同长度的句子</p>
+<p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-CE415F36.png" /></p>
+<p>情感分析结果对比，段落和文章上</p>
+<p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-EC1185C3.png" /></p>
+<p>计算句间的距离对比</p>
+<p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-C86443E1.png" /></p>
+<p>实际跑下来，Doc的效果并不如word2vec的效果好，是不是和样本数据量有关，亦或者和fasttext一样适用于英文。</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" />
+Doc2VEC是否可以直接使用word2vec的结果？</li>
+</ul>
+<p>个人人为应该可以使用，但是这里的句向量的计算的方式应该挺多的，计算出来句向量直接concat到词向量上面，理论上来说就是该篇文章的思想。</p>
+</div>
+</div>
+<div id="skip-thoughts" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> skip-thoughts</h2>
+<blockquote>
+<p>Using the continuity of text from books, we train an encoderdecoder
+model that tries to reconstruct the surrounding sentences of an
+encoded passage. Sentences that share semantic and syntactic
+properties are thus mapped to similar vector representations. We next
+introduce a simple vocabulary expansion method to encode words that
+were not seen as part of training, allowing us to expand our
+vocabulary to a million words.</p>
+</blockquote>
+<p>skip-thoughts也是一种encoder-decoder结构，直接根据当前句预测上下文。</p>
+<p>skip-gram是根据当前词预测上下文的词。目标不同。</p>
+<div id="introduction-1" class="section level3" number="1.3.1">
+<h3><span class="header-section-number">1.3.1</span> introduction</h3>
+<blockquote>
+<p>In this paper we abstract away from the composition methods themselves
+and consider an alternative loss function that can be applied with any
+composition operator. We consider the following question: is there a
+task and a corresponding loss that will allow us to learn highly
+generic sentence representations? We give evidence for this by
+proposing a model for learning high-quality sentence vectors without a
+particular supervised task in mind. Using word vector learning as
+inspiration, we propose an objective function that abstracts the
+skip-gram model of [8] to the sentence level. That is, instead of
+using a word to predict its surrounding context, we instead encode a
+sentence to predict the sentences around it. Thus, any composition
+operator can be substituted as a sentence encoder and only the
+objective function becomes modified. Figure 1 illustrates the model.
+We call our model skip-thoughts and vectors induced by our model are
+called skip-thought vectors.</p>
+</blockquote>
+<p>也是在强调直接学习句向量，根据当前的句子预测上下文的句子向量。
+<eos>是每个句子的结尾</p>
+<p><img src="figs/skip-thoughts.png" /></p>
+<p>当前句<span class="math inline">\(s_{i}\)</span>预测上下句<span class="math inline">\(s_{i-1}\)</span>和<span class="math inline">\(s_{i+1}\)</span></p>
+</div>
+<div id="结构" class="section level3" number="1.3.2">
+<h3><span class="header-section-number">1.3.2</span> 结构</h3>
+<blockquote>
+<p>We treat skip-thoughts in the framework of encoder-decoder models
+<span class="math inline">\(1 .\)</span> That is, an encoder maps words to a sentence vector and a
+decoder is used to generate the surrounding sentences. Encoderdecoder
+models have gained a lot of traction for neural machine translation.
+In this setting, an encoder is used to map e.g. an English sentence
+into a vector. The decoder then conditions on this vector to generate
+a translation for the source English sentence. Several choices of
+encoder-decoder pairs have been explored, including ConvNet-RNN [10],
+RNN-RNN [11] and LSTM-LSTM [12]. The source sentence representation
+can also dynamically change through the use of an attention mechanism
+[13] to take into account only the relevant words for translation at
+any given time. In our model, we use an RNN encoder with GRU [14]
+activations and an RNN decoder with a conditional GRU. This model
+combination is nearly identical to the RNN encoder-decoder of [11]
+used in neural machine translation. GRU has been shown to perform as
+well as LSTM [2] on sequence modelling tasks [14] while being
+conceptually simpler. GRU units have only 2 gates and do not require
+the use of a cell. While we use RNNs for our model, any encoder and
+decoder can be used so long as we can backpropagate through it.</p>
+</blockquote>
+<p>常见的编码器和解码器的结构有ConvNet-RNN , RNN-RNN and LSTM-LSTM</p>
+<p>skip-thoughts是一个encoder-decoder的结构，编码器和解码器都是使用的GRU的结构。
+GRU对比LSTM从速度上面来说是应该是更快的，效果上来看，实际数据中差不多~</p>
+</div>
+<div id="encoder" class="section level3" number="1.3.3">
+<h3><span class="header-section-number">1.3.3</span> encoder</h3>
+<p>encoder-decoder上使用的GRU的结构</p>
+<blockquote>
+<p>Encoder. Let <span class="math inline">\(w_{i}^{1}, \ldots, w_{i}^{N}\)</span> be the words in sentence
+<span class="math inline">\(s_{i}\)</span> where <span class="math inline">\(N\)</span> is the number of words in the sentence. At each time
+step, the encoder produces a hidden state <span class="math inline">\(\mathbf{h}_{i}^{t}\)</span> which
+can be interpreted as the representation of the sequence
+<span class="math inline">\(w_{i}^{1}, \ldots, w_{i}^{t} .\)</span> The hidden state <span class="math inline">\(\mathbf{h}_{i}^{N}\)</span>
+thus represents the full sentence. To encode a sentence, we iterate
+the following sequence of equations (dropping the subscript <span class="math inline">\(i\)</span> ):</p>
+</blockquote>
+<p><span class="math display">\[
+\begin{aligned}
+\mathbf{r}^{t} &amp;=\sigma\left(\mathbf{W}_{r} \mathbf{x}^{t}+\mathbf{U}_{r} \mathbf{h}^{t-1}\right) \\
+\mathbf{z}^{t} &amp;=\sigma\left(\mathbf{W}_{z} \mathbf{x}^{t}+\mathbf{U}_{z} \mathbf{h}^{t-1}\right) \\
+\overline{\mathbf{h}}^{t} &amp;=\tanh \left(\mathbf{W} \mathbf{x}^{t}+\mathbf{U}\left(\mathbf{r}^{t} \odot \mathbf{h}^{t-1}\right)\right) \\
+\mathbf{h}^{t} &amp;=\left(1-\mathbf{z}^{t}\right) \odot \mathbf{h}^{t-1}+\mathbf{z}^{t} \odot \overline{\mathbf{h}}^{t}
+\end{aligned}
+\]</span> where <span class="math inline">\(\overline{\mathbf{h}}^{t}\)</span> is the proposed state update at
+time <span class="math inline">\(t, \mathbf{z}^{t}\)</span> is the update gate, <span class="math inline">\(\mathbf{r}_{t}\)</span> is the
+reset gate <span class="math inline">\((\odot)\)</span> denotes a component-wise product. Both update gates
+takes values between zero and one.</p>
+<p>encoder部分就是一个GRU的结构进行特征选择</p>
+<p>编码器的作用：编码器的作⽤是把⼀个不定⻓的输⼊序列变换成⼀个定⻓的背景变量
+c，并在该背景变量中编码输⼊序列信息。</p>
+</div>
+<div id="decoder" class="section level3" number="1.3.4">
+<h3><span class="header-section-number">1.3.4</span> decoder</h3>
+<blockquote>
+<p>Decoder. The decoder is a neural language model which conditions on
+the encoder output <span class="math inline">\(\mathbf{h}_{i} .\)</span> The computation is similar to
+that of the encoder except we introduce matrices
+<span class="math inline">\(\mathbf{C}_{z}, \mathbf{C}_{r}\)</span> and <span class="math inline">\(\mathbf{C}\)</span> that are used to
+bias the update gate, reset gate and hidden state computation by the
+sentence vector. One decoder is used for the next sentence <span class="math inline">\(s_{i+1}\)</span>
+while a second decoder is used for the previous sentence <span class="math inline">\(s_{i-1}\)</span>.
+Separate parameters are used for each decoder with the exception of
+the vocabulary matrix <span class="math inline">\(\mathbf{V}\)</span> which is the weight matrix
+connecting the decoder’s hidden state for computing a distribution
+over words. In what follows we describe the decoder for the next
+sentence <span class="math inline">\(s_{i+1}\)</span> although an analogous computation is used for the
+previous sentence <span class="math inline">\(s_{i-1}\)</span>. Let <span class="math inline">\(\mathbf{h}_{i+1}^{t}\)</span> denote the
+hidden state of the decoder at time <span class="math inline">\(t .\)</span> Decoding involves iterating
+through the following sequence of equations (dropping the subscript
+<span class="math inline">\(i+1\)</span> ):</p>
+</blockquote>
+<p>decoder的输入是encoder的输出，两个解码器分别对当前句的上下句进行解码。</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathbf{r}^{t} &amp;=\sigma\left(\mathbf{W}_{r}^{d} \mathbf{x}^{t-1}+\mathbf{U}_{r}^{d} \mathbf{h}^{t-1}+\mathbf{C}_{r} \mathbf{h}_{i}\right) \\
+\mathbf{z}^{t} &amp;=\sigma\left(\mathbf{W}_{z}^{d} \mathbf{x}^{t-1}+\mathbf{U}_{z}^{d} \mathbf{h}^{t-1}+\mathbf{C}_{z} \mathbf{h}_{i}\right) \\
+\overline{\mathbf{h}}^{t} &amp;=\tanh \left(\mathbf{W}^{d} \mathbf{x}^{t-1}+\mathbf{U}^{d}\left(\mathbf{r}^{t} \odot \mathbf{h}^{t-1}\right)+\mathbf{C h}_{i}\right) \\
+\mathbf{h}_{i+1}^{t} &amp;=\left(1-\mathbf{z}^{t}\right) \odot \mathbf{h}^{t-1}+\mathbf{z}^{t} \odot \overline{\mathbf{h}}^{t}
+\end{aligned}
+\]</span></p>
+<p>Given <span class="math inline">\(\mathbf{h}_{i+1}^{t},\)</span> the probability of word <span class="math inline">\(w_{i+1}^{t}\)</span>
+given the previous <span class="math inline">\(t-1\)</span> words and the encoder vector is <span class="math display">\[
+P\left(w_{i+1}^{t} \mid w_{i+1}^{&lt;t}, \mathbf{h}_{i}\right) \propto \exp \left(\mathbf{v}_{w_{i+1}^{t}} \mathbf{h}_{i+1}^{t}\right)
+\]</span> where <span class="math inline">\(\mathbf{v}_{w_{i+1}^{t}}\)</span> denotes the row of <span class="math inline">\(\mathbf{V}\)</span>
+corresponding to the word of <span class="math inline">\(w_{i+1}^{t} .\)</span> An analogous computation is
+performed for the previous sentence <span class="math inline">\(s_{i-1}\)</span>.</p>
+<p>解码器部分使用的网络结构也是GRU</p>
+</div>
+<div id="目标函数" class="section level3" number="1.3.5">
+<h3><span class="header-section-number">1.3.5</span> 目标函数</h3>
+<blockquote>
+<p>Objective. Given a tuple <span class="math inline">\(\left(s_{i-1}, s_{i}, s_{i+1}\right),\)</span> the
+objective optimized is the sum of the log-probabilities for the
+forward and backward sentences conditioned on the encoder
+representation: <span class="math display">\[
+\sum_{t} \log P\left(w_{i+1}^{t} \mid w_{i+1}^{&lt;t}, \mathbf{h}_{i}\right)+\sum_{t} \log P\left(w_{i-1}^{t} \mid w_{i-1}^{&lt;t}, \mathbf{h}_{i}\right)
+\]</span></p>
+</blockquote>
+<p>由前向传播和反向传播的交叉熵损失函数两部分构成的。</p>
+</div>
+<div id="词典的拓展" class="section level3" number="1.3.6">
+<h3><span class="header-section-number">1.3.6</span> 词典的拓展</h3>
+<blockquote>
+<p>We now describe how to expand our encoder’s vocabulary to words it has not seen during training. Suppose we have a model that was trained to induce word representations, such as word2vec. Let <span class="math inline">\(V_{w 2 v}\)</span> denote the word embedding space of these word representations and let <span class="math inline">\(V_{r n n}\)</span> denote the <span class="math inline">\(\mathrm{RNN}\)</span> word embedding space. We assume the vocabulary of <span class="math inline">\(\mathcal{V}_{w 2 v}\)</span> is much larger than that of <span class="math inline">\(\mathcal{V}_{r n n}\)</span>. Our goal is to construct a mapping <span class="math inline">\(f: \mathcal{V}_{w 2 v} \rightarrow \mathcal{V}_{r n n}\)</span> parameterized by a matrix <span class="math inline">\(\mathbf{W}\)</span> such that <span class="math inline">\(\mathbf{v}^{\prime}=\mathbf{W} \mathbf{v}\)</span> for <span class="math inline">\(\mathbf{v} \in \mathcal{V}_{w 2 v}\)</span> and <span class="math inline">\(\mathbf{v}^{\prime} \in \mathcal{V}_{r n n} .\)</span> Inspired by [15] , which learned linear mappings between translation word spaces, we solve an un-regularized L2 linear regression loss for the matrix <span class="math inline">\(\mathbf{W}\)</span>. Thus, any word from <span class="math inline">\(\mathcal{V}_{w 2 v}\)</span> can now be mapped into <span class="math inline">\(\mathcal{V}_{r n n}\)</span> for encoding sentences. Table 3 shows examples of nearest neighbour words for queries that did not appear in our training vocabulary.</p>
+</blockquote>
+<p>对于encoder部分，如何对词库中未出现的词进行编码。
+- [ ] 从w2vec词向量的词表中做一个映射到rnn的词表上，得到一个映射的矩阵</p>
+<p>这个是说加载预训练模型作为第一层的embedding吗？</p>
+<blockquote>
+<p>We note that there are alternate strategies for solving the vocabulary problem. One alternative is to initialize the RNN embedding space to that of pre-trained word vectors. This would require a more sophisticated softmax for decoding, or clipping the vocabulary of the decoder as it would be too computationally expensive to naively decode with vocabularies of hundreds of thousands of words. An alternative strategy is to avoid words altogether and train at the character level.</p>
+</blockquote>
+<p>以词作为预训练的词向量，需要非常复杂的softmax做解码，这样计算的代码比较大，确实。。每次算词频都需要遍历整个词库，计算量很大。。很慢。
+因此有了以字符为基本单位的可代替方案</p>
+<p>这一段的意义何在？skip-thoughts中还是以词为基本做的预训练，没有用到字符啊</p>
+</div>
+<div id="实验部分" class="section level3" number="1.3.7">
+<h3><span class="header-section-number">1.3.7</span> 实验部分</h3>
+<blockquote>
+<p>In our experiments, we evaluate the capability of our encoder as a generic feature extractor after training on the BookCorpus dataset. Our experimentation setup on each task is as follows:</p>
+</blockquote>
+<p>在BookCorpus数据集上进行训练，每个任务如下</p>
+<blockquote>
+<p>Using the learned encoder as a feature extractor, extract skip-thought vectors for all sentences.</p>
+</blockquote>
+<p>encoder部分：使用skip-th-vec提取所有句子特征</p>
+<blockquote>
+<p>If the task involves computing scores between pairs of sentences, compute component-wise features between pairs. This is described in more detail specifically for each experiment.</p>
+</blockquote>
+<blockquote>
+<p>Train a linear classifier on top of the extracted features, with no additional fine-tuning or backpropagation through the skip-thoughts model.</p>
+</blockquote>
+<blockquote>
+<p>We restrict ourselves to linear classifiers for two reasons. The first is to directly evaluate the representation quality of the computed vectors. It is possible that additional performance gains can be made throughout our experiments with non-linear models but this falls out of scope of our goal. Furthermore, it allows us to better analyze the strengths and weaknesses of the learned representations. The second reason is that reproducibility now becomes very straightforward.</p>
+</blockquote>
 </div>
 </div>
 </div>
