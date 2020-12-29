@@ -301,12 +301,17 @@ skip-gram是根据当前词预测上下文的词。目标不同。
 
 常见的编码器和解码器的结构有ConvNet-RNN , RNN-RNN and LSTM-LSTM
 
-skip-thoughts是一个encoder-decoder的结构，编码器和解码器都是使用的GRU的结构。
+Skip-Though模型希望通过编码中间的句子来预测其前一个句子和后一个句子，前一个句子和后一个句子分别用不同的解码器进行解码，也就是根据中间句子的句向量表示进行自回归的Decoder把句子解码出来，这借鉴了机器翻译中的思想。
+
+使用两个独立的Decoder分别建模前一句和后一句是为了用独立的语义去编码前一句和后一句。
+
+
+skip-thought模型的神经网络结构是在机器翻译中最常用的 Encoder-Decoder 结构，而在 Encoder-Decoder 架构中所使用的模型是GRU模型。因此在训练句子向量时同样要使用到词向量，编码器输出的结果为句子中最后一个词所输出的向量。
 GRU对比LSTM从速度上面来说是应该是更快的，效果上来看，实际数据中差不多~
 
 ### encoder
 
-encoder-decoder上使用的GRU的结构
+Skip-Thought模型的编码器部分使用GRU进行Encoder, GRU中有更新门和重置门，更新门对应 $z^{t},$ 重置门对应 $r^{t}$ 。更新门用于控制前一 个时刻的信息被带入当前时刻的程度, 更新门的值越大, 说明前一时刻的信息带入当前时刻越多。重置门控制的是前一时刻有多少信息被 写入到当前时刻的候选集。
 
 > Encoder. Let $w_{i}^{1}, \ldots, w_{i}^{N}$ be the words in sentence
 > $s_{i}$ where $N$ is the number of words in the sentence. At each time
@@ -353,6 +358,9 @@ c，并在该背景变量中编码输⼊序列信息。
 > $i+1$ ):
 
 decoder的输入是encoder的输出，两个解码器分别对当前句的上下句进行解码。
+下面给出了预测 $s_{i+1}$的，预测 $s_{i-1}$同上
+
+Decoder部分使用的同样是GRU，Decoder部分的GRU是带有条件信息的，也就是编码器得到的中间句子的编码信息$h_{i}$，从而使得Encoder部分的GRU每次都能携带中间句子的信息做出决策。
 
 
 $$
@@ -383,13 +391,19 @@ performed for the previous sentence $s_{i-1}$.
 > \sum_{t} \log P\left(w_{i+1}^{t} \mid w_{i+1}^{<t}, \mathbf{h}_{i}\right)+\sum_{t} \log P\left(w_{i-1}^{t} \mid w_{i-1}^{<t}, \mathbf{h}_{i}\right)
 > $$
 
-由前向传播和反向传播的交叉熵损失函数两部分构成的。
+预测上下句的损失函数之和。
 
 ### 词典的拓展
 
 >We now describe how to expand our encoder's vocabulary to words it has not seen during training. Suppose we have a model that was trained to induce word representations, such as word2vec. Let $V_{w 2 v}$ denote the word embedding space of these word representations and let $V_{r n n}$ denote the $\mathrm{RNN}$ word embedding space. We assume the vocabulary of $\mathcal{V}_{w 2 v}$ is much larger than that of $\mathcal{V}_{r n n}$. Our goal is to construct a mapping $f: \mathcal{V}_{w 2 v} \rightarrow \mathcal{V}_{r n n}$ parameterized by a matrix $\mathbf{W}$ such that $\mathbf{v}^{\prime}=\mathbf{W} \mathbf{v}$ for $\mathbf{v} \in \mathcal{V}_{w 2 v}$ and $\mathbf{v}^{\prime} \in \mathcal{V}_{r n n} .$ Inspired by [15] , which learned linear mappings between translation word spaces, we solve an un-regularized L2 linear regression loss for the matrix $\mathbf{W}$. Thus, any word from $\mathcal{V}_{w 2 v}$ can now be mapped into $\mathcal{V}_{r n n}$ for encoding sentences. Table 3 shows examples of nearest neighbour words for queries that did not appear in our training vocabulary.
 
 对于encoder部分，如何对词库中未出现的词进行编码。
+
+1) 用 $V_{w 2 v}$ 表示训练的词向量空间, 用 $V_{r n n}$ 表示模型中的词向量空间，在这里 $V_{w 2 v}$ 词的数量是远远大于 $V_{r n n}$ 的。
+2) 引入一个矩阵 $W$ 来构建一个映射函数: $\mathrm{f}: V_{r n n}->V_{w 2 v}$ 。使得有 $v \prime=W v,$ 其中 $v \in V_{w 2 v}, v \prime \in V_{r n n}$ 。
+3) 通过映射函数就可以将任何在 $V_{w 2 v}$ 中的词映射到 $V_{r n n}$ 中。
+
+
 - [ ] 从w2vec词向量的词表中做一个映射到rnn的词表上，得到一个映射的矩阵
 
 这个是说加载预训练模型作为第一层的embedding吗？
@@ -416,8 +430,32 @@ encoder部分：使用skip-th-vec提取所有句子特征
 
 >If the task involves computing scores between pairs of sentences, compute component-wise features between pairs. This is described in more detail specifically for each experiment.
 
+若需要计算两个句子之间的得分，则计算它们之间的成分特征。
+
+
 >Train a linear classifier on top of the extracted features, with no additional fine-tuning or backpropagation through the skip-thoughts model.
 
+在提取的特征上面训练一个线性的分类器，无需额外的微调和反向传播
+
 >We restrict ourselves to linear classifiers for two reasons. The first is to directly evaluate the representation quality of the computed vectors. It is possible that additional performance gains can be made throughout our experiments with non-linear models but this falls out of scope of our goal. Furthermore, it allows us to better analyze the strengths and weaknesses of the learned representations. The second reason is that reproducibility now becomes very straightforward.
+
+严格使用线性分类器有2个原因：
+
+- 第一种是直接评估计算出的向量的表征能力。对非线性模型的实验，有可能获得额外的性能提高，此外能更好地分析表征学习的优缺点。
+- 第二个原因是再现性变得非常直接。（这一点没有明白）
+
+
+### 实验部分
+
+![](figs/skip-th-vec-exp1.png)
+
+左边的部门是计算相似性的实验，评价指标是皮尔森相关系数和斯皮尔曼相关系数，无监督的实验。
+从结果上看skip-vec这个的结果不是最优的，属于中等偏上了。
+
+右边的是一个二分类的实验，评价指标是ACC和F1.
+
+还有计算句子相似语义的实验和情感分析等的实验，可以参考原文，此除略。
+
+
 
 
