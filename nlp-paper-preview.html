@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2020-12-29" />
+<meta name="date" content="2021-01-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -131,30 +131,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul class="summary">
 <li class="chapter" data-level="1" data-path=""><a href="#nlp-paper-preview"><i class="fa fa-check"></i><b>1</b> NLP paper preview</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path=""><a href="#fasttext"><i class="fa fa-check"></i><b>1.1</b> fasttext</a>
+<li class="chapter" data-level="1.1" data-path=""><a href="#word2vec"><i class="fa fa-check"></i><b>1.1</b> word2vec</a>
 <ul>
-<li class="chapter" data-level="1.1.1" data-path=""><a href="#hierarchical-softmax"><i class="fa fa-check"></i><b>1.1.1</b> Hierarchical softmax</a></li>
-<li class="chapter" data-level="1.1.2" data-path=""><a href="#n_gram-features"><i class="fa fa-check"></i><b>1.1.2</b> N_gram features</a></li>
-<li class="chapter" data-level="1.1.3" data-path=""><a href="#fasttext与word2vec对比"><i class="fa fa-check"></i><b>1.1.3</b> fasttext与word2vec对比</a></li>
-<li class="chapter" data-level="1.1.4" data-path=""><a href="#fasttext与cbow有两点不同"><i class="fa fa-check"></i><b>1.1.4</b> fasttext与CBOW有两点不同</a></li>
-<li class="chapter" data-level="1.1.5" data-path=""><a href="#实验和结果分析"><i class="fa fa-check"></i><b>1.1.5</b> 实验和结果分析</a></li>
+<li class="chapter" data-level="1.1.1" data-path=""><a href="#cbow"><i class="fa fa-check"></i><b>1.1.1</b> CBOW</a></li>
+<li class="chapter" data-level="1.1.2" data-path=""><a href="#skip-gram"><i class="fa fa-check"></i><b>1.1.2</b> skip-gram</a></li>
 </ul></li>
-<li class="chapter" data-level="1.2" data-path=""><a href="#doc2vec"><i class="fa fa-check"></i><b>1.2</b> Doc2vec</a>
+<li class="chapter" data-level="1.2" data-path=""><a href="#fasttext"><i class="fa fa-check"></i><b>1.2</b> fasttext</a>
 <ul>
-<li class="chapter" data-level="1.2.1" data-path=""><a href="#introduction"><i class="fa fa-check"></i><b>1.2.1</b> introduction</a></li>
-<li class="chapter" data-level="1.2.2" data-path=""><a href="#实验对比"><i class="fa fa-check"></i><b>1.2.2</b> 实验对比</a></li>
+<li class="chapter" data-level="1.2.1" data-path=""><a href="#hierarchical-softmax"><i class="fa fa-check"></i><b>1.2.1</b> Hierarchical softmax</a></li>
+<li class="chapter" data-level="1.2.2" data-path=""><a href="#n_gram-features"><i class="fa fa-check"></i><b>1.2.2</b> N_gram features</a></li>
+<li class="chapter" data-level="1.2.3" data-path=""><a href="#fasttext与word2vec对比"><i class="fa fa-check"></i><b>1.2.3</b> fasttext与word2vec对比</a></li>
+<li class="chapter" data-level="1.2.4" data-path=""><a href="#fasttext与cbow有两点不同"><i class="fa fa-check"></i><b>1.2.4</b> fasttext与CBOW有两点不同</a></li>
+<li class="chapter" data-level="1.2.5" data-path=""><a href="#实验和结果分析"><i class="fa fa-check"></i><b>1.2.5</b> 实验和结果分析</a></li>
 </ul></li>
-<li class="chapter" data-level="1.3" data-path=""><a href="#skip-thoughts"><i class="fa fa-check"></i><b>1.3</b> skip-thoughts</a>
+<li class="chapter" data-level="1.3" data-path=""><a href="#doc2vec"><i class="fa fa-check"></i><b>1.3</b> Doc2vec</a>
 <ul>
-<li class="chapter" data-level="1.3.1" data-path=""><a href="#introduction-1"><i class="fa fa-check"></i><b>1.3.1</b> introduction</a></li>
-<li class="chapter" data-level="1.3.2" data-path=""><a href="#结构"><i class="fa fa-check"></i><b>1.3.2</b> 结构</a></li>
-<li class="chapter" data-level="1.3.3" data-path=""><a href="#encoder"><i class="fa fa-check"></i><b>1.3.3</b> encoder</a></li>
-<li class="chapter" data-level="1.3.4" data-path=""><a href="#decoder"><i class="fa fa-check"></i><b>1.3.4</b> decoder</a></li>
-<li class="chapter" data-level="1.3.5" data-path=""><a href="#目标函数"><i class="fa fa-check"></i><b>1.3.5</b> 目标函数</a></li>
-<li class="chapter" data-level="1.3.6" data-path=""><a href="#词典的拓展"><i class="fa fa-check"></i><b>1.3.6</b> 词典的拓展</a></li>
-<li class="chapter" data-level="1.3.7" data-path=""><a href="#实验部分"><i class="fa fa-check"></i><b>1.3.7</b> 实验部分</a></li>
-<li class="chapter" data-level="1.3.8" data-path=""><a href="#实验部分-1"><i class="fa fa-check"></i><b>1.3.8</b> 实验部分</a></li>
+<li class="chapter" data-level="1.3.1" data-path=""><a href="#introduction"><i class="fa fa-check"></i><b>1.3.1</b> introduction</a></li>
+<li class="chapter" data-level="1.3.2" data-path=""><a href="#实验对比"><i class="fa fa-check"></i><b>1.3.2</b> 实验对比</a></li>
 </ul></li>
+<li class="chapter" data-level="1.4" data-path=""><a href="#skip-thoughts"><i class="fa fa-check"></i><b>1.4</b> skip-thoughts</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path=""><a href="#introduction-1"><i class="fa fa-check"></i><b>1.4.1</b> introduction</a></li>
+<li class="chapter" data-level="1.4.2" data-path=""><a href="#结构"><i class="fa fa-check"></i><b>1.4.2</b> 结构</a></li>
+<li class="chapter" data-level="1.4.3" data-path=""><a href="#encoder"><i class="fa fa-check"></i><b>1.4.3</b> encoder</a></li>
+<li class="chapter" data-level="1.4.4" data-path=""><a href="#decoder"><i class="fa fa-check"></i><b>1.4.4</b> decoder</a></li>
+<li class="chapter" data-level="1.4.5" data-path=""><a href="#目标函数"><i class="fa fa-check"></i><b>1.4.5</b> 目标函数</a></li>
+<li class="chapter" data-level="1.4.6" data-path=""><a href="#词典的拓展"><i class="fa fa-check"></i><b>1.4.6</b> 词典的拓展</a></li>
+<li class="chapter" data-level="1.4.7" data-path=""><a href="#实验部分"><i class="fa fa-check"></i><b>1.4.7</b> 实验部分</a></li>
+<li class="chapter" data-level="1.4.8" data-path=""><a href="#实验部分-1"><i class="fa fa-check"></i><b>1.4.8</b> 实验部分</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path=""><a href="#glove"><i class="fa fa-check"></i><b>1.5</b> Glove</a></li>
 </ul></li>
 </ul>
 
@@ -176,16 +182,55 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">NLP相关paper阅读</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2020-12-29</em></p>
+<p class="date"><em>2021-01-01</em></p>
 </div>
 <div id="nlp-paper-preview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> NLP paper preview</h1>
 <p>emmmmm…站在巨人的肩膀看世界~ 是件幸福的事情</p>
-<div id="fasttext" class="section level2" number="1.1">
-<h2><span class="header-section-number">1.1</span> fasttext</h2>
+<div id="word2vec" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> word2vec</h2>
+<p>这个工具包毕竟是梯子级别的~
+主要包括两个方法CBOW和SKIP-gram</p>
+<div id="cbow" class="section level3" number="1.1.1">
+<h3><span class="header-section-number">1.1.1</span> CBOW</h3>
+<p>Continuous Bag-of-Words 连续词袋模型</p>
+<p>目标函数</p>
+<p><span class="math display">\[
+\begin{array}{c}
+\frac{1}{T} \sum_{t=1}^{T} \log P\left(w_{t} \mid c_{t}\right) \\
+P\left(w_{t} \mid c_{t}\right)=\frac{\exp \left(e^{\prime}\left(w_{t}\right)^{T} x\right)}{\sum_{i=1}^{|V|} \exp \left(e^{\prime}\left(w_{i}\right)^{T} x\right)}, x=\sum_{i \in c} e\left(w_{i}\right)
+\end{array}
+\]</span></p>
+<blockquote>
+<p>CBOW没有隐藏层，本质上只有两层结构，输入层将目标词语境c中的每一个词向量简单求和（当然，也可以求平均）后得到语境向量，然后直接与目标词的输出向量求点积，目标函数也就是要让这个与目标词向量的点积取得最大值，对应的与非目标词的点积尽量取得最小值。从这可以看出，CBOW的第一个特点是取消了NNLM中的隐藏层，直接将输入层和输出层相连；第二个特点便是在求语境context向量时候，语境内的词序已经丢弃（这个是名字中Continuous的来源）；第三，因为最终的目标函数仍然是语言模型的目标函数，所以需要顺序遍历语料中的每一个词（这个是名字中Bag-of-Words的来源）。因此有了这些特点（尤其是第二点和第三点），Mikolov才把这个简单的模型取名叫做CBOW，简单却有效的典范。
+需要注意的是这里每个词对应到两个词向量, 在上面的公式中都有体现, 其中 <span class="math inline">\(e\left(w_{t}\right)\)</span> 是词的输入 向量, 而 <span class="math inline">\(e^{\prime}\left(w_{t}\right)\)</span> 则是词的输出向量, 或者更准确的来讲, 前者是CBOW输入层中跟词 <span class="math inline">\(w_{t}\)</span> 所在 位置相连的所有边的权值 (其实这就是词向量) 组合成的向量, 而是输出层中与词 <span class="math inline">\(w_{t}\)</span> 所在位置 相连的所有边的权值组合成的向量, 所以把这一向量叫做输出向量。</p>
+</blockquote>
+</div>
+<div id="skip-gram" class="section level3" number="1.1.2">
+<h3><span class="header-section-number">1.1.2</span> skip-gram</h3>
+<p>同样地, 和CBOW对应, Skip-gram的模型基本思想和CBOW非常类似, 只是换了一个方向： CBOW是让目标词的输出向量 <span class="math inline">\(e^{\prime}\left(w_{t}\right)\)</span> 拟合语境的向量 <span class="math inline">\(x\)</span>; 而Skip-gram则是让语境中每个词 的输出向量尽量拟合当前输入词的向量 <span class="math inline">\(e\left(w_{t}\right),\)</span> 和CBOW的方向相反, 因此它的目标函数如下：</p>
+<p><span class="math display">\[
+\begin{array}{c}
+\frac{1}{T} \sum_{t=1}^{T} \sum_{j \in c} \log P\left(w_{j} \mid w_{t}\right) \\
+P\left(w_{j} \mid w_{t}\right)=\frac{\exp \left(e^{\prime}\left(w_{j}\right)^{T} e\left(w_{t}\right)\right)}{\sum_{i=1}^{|V|} \exp \left(e^{\prime}\left(w_{i}\right)^{T} e\left(w_{t}\right)\right)}
+\end{array}
+\]</span></p>
+<p>可以看出目标函数中有两个求和符号, 最里面的求和符号的意义便是让当前的输入词分别和该词对 应语境中的每一个词都尽量接近, 从而便可以表现为该词与其上下文尽量接近。</p>
+<p>CBOW和skip-gram的两个目标函数是需要记得的，但是也要记得如果这么计算，去遍历每个词，那么一旦涉及大量的文本任务，其计算量会非常的大~</p>
+<p>因此有了优化算法Hierachical Softmax和负采样。前者是霍夫曼树的思想。后者具体解释下~</p>
+<p>负采样思想也是受了C&amp;W模型中构造负样本方法启发, 同时参考了Noise Contrastive Estimation (NCE)的思想, 用CBOW的框架简单来讲就是, 负采样 每遍历到一个目标词, 为了使得目标词的概率 <span class="math inline">\(P\left(w_{t} \mid c_{t}\right)\)</span> 最大，根据softmax函数的概率公式, 也 就是让分子中的 <span class="math inline">\(e^{\prime}\left(w_{t}\right)^{T} x\)</span> 最大, 而分母中其他非目标词的 <span class="math inline">\(e^{\prime}\left(w_{i}\right)^{T} x\)</span> 最小, 普通softmax的 计算量太大就是因为它把词典中所有其他非目标词都当做负例了，而负采样的思想特别简单，就是 每次按照一定概率随机采样一些词当做负例，从而就只需要计算这些负采样出来的负例了，那么概 率公式便相应变为</p>
+<p><span class="math display">\[
+P\left(w_{t} \mid c_{t}\right)=\frac{\exp \left(e^{\prime}\left(w_{t}\right)^{T} x\right)}{\sum_{i=1}^{K} \exp \left(e^{\prime}\left(w_{i}\right)^{T} x\right)}, x=\sum_{i \in c} e\left(w_{i}\right)
+\]</span>
+仔细和普通softmax进行比较便会发现，将原来的|V|分类问题变成了K分类问题, 这便把词典大小 对时间复杂度的影响变成了一个常数项, 而改动又非常的微小，不可谓不巧妙。</p>
+<p>非常的巧妙~</p>
+</div>
+</div>
+<div id="fasttext" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> fasttext</h2>
 <p>结构中比较重要的几个点</p>
-<div id="hierarchical-softmax" class="section level3" number="1.1.1">
-<h3><span class="header-section-number">1.1.1</span> Hierarchical softmax</h3>
+<div id="hierarchical-softmax" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Hierarchical softmax</h3>
 <p>这个没什么好说的，和word2vec里面的是一样的。具体解释忘记之前从哪里找来得了但私以为解释的8错</p>
 <blockquote>
 <p>When the number of classes is large, computing the linear classifier
@@ -236,8 +281,8 @@ Huffman树的构造过程保证了树的深度为 <span class="math inline">\(\l
 已经大大减小了。</p>
 </blockquote>
 </div>
-<div id="n_gram-features" class="section level3" number="1.1.2">
-<h3><span class="header-section-number">1.1.2</span> N_gram features</h3>
+<div id="n_gram-features" class="section level3" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> N_gram features</h3>
 <p><strong>这个是主要区别于word2vec的输入的部分了，为了更好的学习到上下文的语序特征</strong></p>
 <p>从bag of word 变成了bag of features</p>
 <blockquote>
@@ -257,8 +302,8 @@ bigrams, and <span class="math inline">\(100 \mathrm{M}\)</span> otherwise.</p>
 fasttext 文本分类的结构？</li>
 </ul>
 </div>
-<div id="fasttext与word2vec对比" class="section level3" number="1.1.3">
-<h3><span class="header-section-number">1.1.3</span> fasttext与word2vec对比</h3>
+<div id="fasttext与word2vec对比" class="section level3" number="1.2.3">
+<h3><span class="header-section-number">1.2.3</span> fasttext与word2vec对比</h3>
 <p>感觉读paper的时候并没有很仔细的找出fasttext和word2vec的区别</p>
 <blockquote>
 <p>word2vec和GloVe都不需要人工标记的监督数据，只需要语言内部存在的监督信号即可以完成训练。而与此相对应的，fastText则是利用带有监督标记的文本分类数据完成训练，本质上没有什么特殊的，模型框架就是CBOW。</p>
@@ -268,8 +313,8 @@ fasttext 文本分类的结构？</li>
 word2vec是为了得到embedding的矩阵，word2vec本质是一个词袋模型:bag of
 word。</p>
 </div>
-<div id="fasttext与cbow有两点不同" class="section level3" number="1.1.4">
-<h3><span class="header-section-number">1.1.4</span> fasttext与CBOW有两点不同</h3>
+<div id="fasttext与cbow有两点不同" class="section level3" number="1.2.4">
+<h3><span class="header-section-number">1.2.4</span> fasttext与CBOW有两点不同</h3>
 <blockquote>
 <p>分别是输入数据和预测目标的不同 -
 在输入数据上，CBOW输入的是一段区间中除去目标词之外的所有其他词的向量加和或平均，而fastText为了利用更多的语序信息，将bag-of-words变成了bag-of-features，也就是下图中的输入x不再仅仅是一个词，还可以加上bigram或者是trigram的信息等等；</p>
@@ -291,8 +336,8 @@ Softmax技巧来加速训练。</p>
 h-softmax 也会生成一系列的向量，但最终都被抛弃，不会使用。
 fasttext则充分利用了h-softmax的分类功能，遍历分类树的所有叶节点，找到概率最大的label（一个或者N个）</p>
 </div>
-<div id="实验和结果分析" class="section level3" number="1.1.5">
-<h3><span class="header-section-number">1.1.5</span> 实验和结果分析</h3>
+<div id="实验和结果分析" class="section level3" number="1.2.5">
+<h3><span class="header-section-number">1.2.5</span> 实验和结果分析</h3>
 <p><em>情感分析实验</em></p>
 <p>在8个数据集上面acc对比，对比了6个模型，可以看出在绝大部分的数据集上面fasttext的acc是最好的。
 加入bgram的效果要优于不加的</p>
@@ -305,10 +350,10 @@ fasttext则充分利用了h-softmax的分类功能，遍历分类树的所有叶
 <p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-77B0769C.png" /></p>
 </div>
 </div>
-<div id="doc2vec" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> Doc2vec</h2>
-<div id="introduction" class="section level3" number="1.2.1">
-<h3><span class="header-section-number">1.2.1</span> introduction</h3>
+<div id="doc2vec" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Doc2vec</h2>
+<div id="introduction" class="section level3" number="1.3.1">
+<h3><span class="header-section-number">1.3.1</span> introduction</h3>
 <blockquote>
 <p>However, the bag-of-words (BOW) has many disadvantages. The word order
 is lost, and thus different sentences can have exactly the same
@@ -372,8 +417,8 @@ table添加相应的列，然后重新走一遍训练流程，只不过此时固
 table，收敛后便可以得到新文档对应的向量了。</p>
 <p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-64854E74.png" /></p>
 </div>
-<div id="实验对比" class="section level3" number="1.2.2">
-<h3><span class="header-section-number">1.2.2</span> 实验对比</h3>
+<div id="实验对比" class="section level3" number="1.3.2">
+<h3><span class="header-section-number">1.3.2</span> 实验对比</h3>
 <p>Treebank Dataset 情感分析结果对比 基本都是不同长度的句子</p>
 <p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-CE415F36.png" /></p>
 <p>情感分析结果对比，段落和文章上</p>
@@ -388,8 +433,8 @@ Doc2VEC是否可以直接使用word2vec的结果？</li>
 <p>个人人为应该可以使用，但是这里的句向量的计算的方式应该挺多的，计算出来句向量直接concat到词向量上面，理论上来说就是该篇文章的思想。</p>
 </div>
 </div>
-<div id="skip-thoughts" class="section level2" number="1.3">
-<h2><span class="header-section-number">1.3</span> skip-thoughts</h2>
+<div id="skip-thoughts" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> skip-thoughts</h2>
 <blockquote>
 <p>Using the continuity of text from books, we train an encoderdecoder
 model that tries to reconstruct the surrounding sentences of an
@@ -401,8 +446,8 @@ vocabulary to a million words.</p>
 </blockquote>
 <p>skip-thoughts也是一种encoder-decoder结构，直接根据当前句预测上下文。</p>
 <p>skip-gram是根据当前词预测上下文的词。目标不同。</p>
-<div id="introduction-1" class="section level3" number="1.3.1">
-<h3><span class="header-section-number">1.3.1</span> introduction</h3>
+<div id="introduction-1" class="section level3" number="1.4.1">
+<h3><span class="header-section-number">1.4.1</span> introduction</h3>
 <blockquote>
 <p>In this paper we abstract away from the composition methods themselves
 and consider an alternative loss function that can be applied with any
@@ -425,8 +470,8 @@ called skip-thought vectors.</p>
 <p><img src="figs/skip-thoughts.png" /></p>
 <p>当前句<span class="math inline">\(s_{i}\)</span>预测上下句<span class="math inline">\(s_{i-1}\)</span>和<span class="math inline">\(s_{i+1}\)</span></p>
 </div>
-<div id="结构" class="section level3" number="1.3.2">
-<h3><span class="header-section-number">1.3.2</span> 结构</h3>
+<div id="结构" class="section level3" number="1.4.2">
+<h3><span class="header-section-number">1.4.2</span> 结构</h3>
 <blockquote>
 <p>We treat skip-thoughts in the framework of encoder-decoder models
 <span class="math inline">\(1 .\)</span> That is, an encoder maps words to a sentence vector and a
@@ -454,8 +499,8 @@ decoder can be used so long as we can backpropagate through it.</p>
 <p>skip-thought模型的神经网络结构是在机器翻译中最常用的 Encoder-Decoder 结构，而在 Encoder-Decoder 架构中所使用的模型是GRU模型。因此在训练句子向量时同样要使用到词向量，编码器输出的结果为句子中最后一个词所输出的向量。
 GRU对比LSTM从速度上面来说是应该是更快的，效果上来看，实际数据中差不多~</p>
 </div>
-<div id="encoder" class="section level3" number="1.3.3">
-<h3><span class="header-section-number">1.3.3</span> encoder</h3>
+<div id="encoder" class="section level3" number="1.4.3">
+<h3><span class="header-section-number">1.4.3</span> encoder</h3>
 <p>Skip-Thought模型的编码器部分使用GRU进行Encoder, GRU中有更新门和重置门，更新门对应 <span class="math inline">\(z^{t},\)</span> 重置门对应 <span class="math inline">\(r^{t}\)</span> 。更新门用于控制前一 个时刻的信息被带入当前时刻的程度, 更新门的值越大, 说明前一时刻的信息带入当前时刻越多。重置门控制的是前一时刻有多少信息被 写入到当前时刻的候选集。</p>
 <blockquote>
 <p>Encoder. Let <span class="math inline">\(w_{i}^{1}, \ldots, w_{i}^{N}\)</span> be the words in sentence
@@ -481,8 +526,8 @@ takes values between zero and one.</p>
 <p>编码器的作用：编码器的作⽤是把⼀个不定⻓的输⼊序列变换成⼀个定⻓的背景变量
 c，并在该背景变量中编码输⼊序列信息。</p>
 </div>
-<div id="decoder" class="section level3" number="1.3.4">
-<h3><span class="header-section-number">1.3.4</span> decoder</h3>
+<div id="decoder" class="section level3" number="1.4.4">
+<h3><span class="header-section-number">1.4.4</span> decoder</h3>
 <blockquote>
 <p>Decoder. The decoder is a neural language model which conditions on
 the encoder output <span class="math inline">\(\mathbf{h}_{i} .\)</span> The computation is similar to
@@ -520,8 +565,8 @@ corresponding to the word of <span class="math inline">\(w_{i+1}^{t} .\)</span> 
 performed for the previous sentence <span class="math inline">\(s_{i-1}\)</span>.</p>
 <p>解码器部分使用的网络结构也是GRU</p>
 </div>
-<div id="目标函数" class="section level3" number="1.3.5">
-<h3><span class="header-section-number">1.3.5</span> 目标函数</h3>
+<div id="目标函数" class="section level3" number="1.4.5">
+<h3><span class="header-section-number">1.4.5</span> 目标函数</h3>
 <blockquote>
 <p>Objective. Given a tuple <span class="math inline">\(\left(s_{i-1}, s_{i}, s_{i+1}\right),\)</span> the
 objective optimized is the sum of the log-probabilities for the
@@ -532,8 +577,8 @@ representation: <span class="math display">\[
 </blockquote>
 <p>预测上下句的损失函数之和。</p>
 </div>
-<div id="词典的拓展" class="section level3" number="1.3.6">
-<h3><span class="header-section-number">1.3.6</span> 词典的拓展</h3>
+<div id="词典的拓展" class="section level3" number="1.4.6">
+<h3><span class="header-section-number">1.4.6</span> 词典的拓展</h3>
 <blockquote>
 <p>We now describe how to expand our encoder’s vocabulary to words it has not seen during training. Suppose we have a model that was trained to induce word representations, such as word2vec. Let <span class="math inline">\(V_{w 2 v}\)</span> denote the word embedding space of these word representations and let <span class="math inline">\(V_{r n n}\)</span> denote the <span class="math inline">\(\mathrm{RNN}\)</span> word embedding space. We assume the vocabulary of <span class="math inline">\(\mathcal{V}_{w 2 v}\)</span> is much larger than that of <span class="math inline">\(\mathcal{V}_{r n n}\)</span>. Our goal is to construct a mapping <span class="math inline">\(f: \mathcal{V}_{w 2 v} \rightarrow \mathcal{V}_{r n n}\)</span> parameterized by a matrix <span class="math inline">\(\mathbf{W}\)</span> such that <span class="math inline">\(\mathbf{v}^{\prime}=\mathbf{W} \mathbf{v}\)</span> for <span class="math inline">\(\mathbf{v} \in \mathcal{V}_{w 2 v}\)</span> and <span class="math inline">\(\mathbf{v}^{\prime} \in \mathcal{V}_{r n n} .\)</span> Inspired by [15] , which learned linear mappings between translation word spaces, we solve an un-regularized L2 linear regression loss for the matrix <span class="math inline">\(\mathbf{W}\)</span>. Thus, any word from <span class="math inline">\(\mathcal{V}_{w 2 v}\)</span> can now be mapped into <span class="math inline">\(\mathcal{V}_{r n n}\)</span> for encoding sentences. Table 3 shows examples of nearest neighbour words for queries that did not appear in our training vocabulary.</p>
 </blockquote>
@@ -555,8 +600,8 @@ representation: <span class="math display">\[
 因此有了以字符为基本单位的可代替方案</p>
 <p>这一段的意义何在？skip-thoughts中还是以词为基本做的预训练，没有用到字符啊</p>
 </div>
-<div id="实验部分" class="section level3" number="1.3.7">
-<h3><span class="header-section-number">1.3.7</span> 实验部分</h3>
+<div id="实验部分" class="section level3" number="1.4.7">
+<h3><span class="header-section-number">1.4.7</span> 实验部分</h3>
 <blockquote>
 <p>In our experiments, we evaluate the capability of our encoder as a generic feature extractor after training on the BookCorpus dataset. Our experimentation setup on each task is as follows:</p>
 </blockquote>
@@ -582,14 +627,17 @@ representation: <span class="math display">\[
 <li>第二个原因是再现性变得非常直接。（这一点没有明白）</li>
 </ul>
 </div>
-<div id="实验部分-1" class="section level3" number="1.3.8">
-<h3><span class="header-section-number">1.3.8</span> 实验部分</h3>
+<div id="实验部分-1" class="section level3" number="1.4.8">
+<h3><span class="header-section-number">1.4.8</span> 实验部分</h3>
 <p><img src="figs/skip-th-vec-exp1.png" /></p>
 <p>左边的部门是计算相似性的实验，评价指标是皮尔森相关系数和斯皮尔曼相关系数，无监督的实验。
 从结果上看skip-vec这个的结果不是最优的，属于中等偏上了。</p>
 <p>右边的是一个二分类的实验，评价指标是ACC和F1.</p>
-<p>还有计算句子相似语义的实验和情感分析等的实验，可以参考原文，此处略。</p>
+<p>还有计算句子相似语义的实验和情感分析等的实验，可以参考原文，略。</p>
 </div>
+</div>
+<div id="glove" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> Glove</h2>
 </div>
 </div>
             </section>

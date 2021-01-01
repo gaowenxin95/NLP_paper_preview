@@ -17,6 +17,58 @@ editor_options:
 
 emmmmm...站在巨人的肩膀看世界\~ 是件幸福的事情
 
+
+## word2vec
+
+这个工具包毕竟是梯子级别的~
+主要包括两个方法CBOW和SKIP-gram
+
+### CBOW
+
+Continuous Bag-of-Words 连续词袋模型
+
+目标函数
+
+$$
+\begin{array}{c}
+\frac{1}{T} \sum_{t=1}^{T} \log P\left(w_{t} \mid c_{t}\right) \\
+P\left(w_{t} \mid c_{t}\right)=\frac{\exp \left(e^{\prime}\left(w_{t}\right)^{T} x\right)}{\sum_{i=1}^{|V|} \exp \left(e^{\prime}\left(w_{i}\right)^{T} x\right)}, x=\sum_{i \in c} e\left(w_{i}\right)
+\end{array}
+$$
+
+>CBOW没有隐藏层，本质上只有两层结构，输入层将目标词语境c中的每一个词向量简单求和（当然，也可以求平均）后得到语境向量，然后直接与目标词的输出向量求点积，目标函数也就是要让这个与目标词向量的点积取得最大值，对应的与非目标词的点积尽量取得最小值。从这可以看出，CBOW的第一个特点是取消了NNLM中的隐藏层，直接将输入层和输出层相连；第二个特点便是在求语境context向量时候，语境内的词序已经丢弃（这个是名字中Continuous的来源）；第三，因为最终的目标函数仍然是语言模型的目标函数，所以需要顺序遍历语料中的每一个词（这个是名字中Bag-of-Words的来源）。因此有了这些特点（尤其是第二点和第三点），Mikolov才把这个简单的模型取名叫做CBOW，简单却有效的典范。
+需要注意的是这里每个词对应到两个词向量, 在上面的公式中都有体现, 其中 $e\left(w_{t}\right)$ 是词的输入 向量, 而 $e^{\prime}\left(w_{t}\right)$ 则是词的输出向量, 或者更准确的来讲, 前者是CBOW输入层中跟词 $w_{t}$ 所在 位置相连的所有边的权值 (其实这就是词向量) 组合成的向量, 而是输出层中与词 $w_{t}$ 所在位置 相连的所有边的权值组合成的向量, 所以把这一向量叫做输出向量。
+
+
+### skip-gram
+
+同样地, 和CBOW对应, Skip-gram的模型基本思想和CBOW非常类似, 只是换了一个方向： CBOW是让目标词的输出向量 $e^{\prime}\left(w_{t}\right)$ 拟合语境的向量 $x$; 而Skip-gram则是让语境中每个词 的输出向量尽量拟合当前输入词的向量 $e\left(w_{t}\right),$ 和CBOW的方向相反, 因此它的目标函数如下：
+
+$$
+\begin{array}{c}
+\frac{1}{T} \sum_{t=1}^{T} \sum_{j \in c} \log P\left(w_{j} \mid w_{t}\right) \\
+P\left(w_{j} \mid w_{t}\right)=\frac{\exp \left(e^{\prime}\left(w_{j}\right)^{T} e\left(w_{t}\right)\right)}{\sum_{i=1}^{|V|} \exp \left(e^{\prime}\left(w_{i}\right)^{T} e\left(w_{t}\right)\right)}
+\end{array}
+$$
+
+可以看出目标函数中有两个求和符号, 最里面的求和符号的意义便是让当前的输入词分别和该词对 应语境中的每一个词都尽量接近, 从而便可以表现为该词与其上下文尽量接近。
+
+
+CBOW和skip-gram的两个目标函数是需要记得的，但是也要记得如果这么计算，去遍历每个词，那么一旦涉及大量的文本任务，其计算量会非常的大~
+
+因此有了优化算法Hierachical Softmax和负采样。前者是霍夫曼树的思想。后者具体解释下~
+
+负采样思想也是受了C\&W模型中构造负样本方法启发, 同时参考了Noise Contrastive Estimation (NCE)的思想, 用CBOW的框架简单来讲就是, 负采样 每遍历到一个目标词, 为了使得目标词的概率 $P\left(w_{t} \mid c_{t}\right)$ 最大，根据softmax函数的概率公式, 也 就是让分子中的 $e^{\prime}\left(w_{t}\right)^{T} x$ 最大, 而分母中其他非目标词的 $e^{\prime}\left(w_{i}\right)^{T} x$ 最小, 普通softmax的 计算量太大就是因为它把词典中所有其他非目标词都当做负例了，而负采样的思想特别简单，就是 每次按照一定概率随机采样一些词当做负例，从而就只需要计算这些负采样出来的负例了，那么概 率公式便相应变为
+
+$$
+P\left(w_{t} \mid c_{t}\right)=\frac{\exp \left(e^{\prime}\left(w_{t}\right)^{T} x\right)}{\sum_{i=1}^{K} \exp \left(e^{\prime}\left(w_{i}\right)^{T} x\right)}, x=\sum_{i \in c} e\left(w_{i}\right)
+$$
+仔细和普通softmax进行比较便会发现，将原来的|V|分类问题变成了K分类问题, 这便把词典大小 对时间复杂度的影响变成了一个常数项, 而改动又非常的微小，不可谓不巧妙。
+
+非常的巧妙~
+
+跳词模型也有非常多的变形~后面的skip-thoughts就源于此
+
 ## fasttext
 
 结构中比较重要的几个点
@@ -454,7 +506,15 @@ encoder部分：使用skip-th-vec提取所有句子特征
 
 右边的是一个二分类的实验，评价指标是ACC和F1.
 
-还有计算句子相似语义的实验和情感分析等的实验，可以参考原文，此处略。
+还有计算句子相似语义的实验和情感分析等的实验，可以参考原文，略。
+
+
+## Glove
+
+
+
+
+
 
 
 
