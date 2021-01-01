@@ -1,3 +1,6 @@
 # NLP_paper_preview
 
-[NLP相关论文阅读](https://gaowenxin95.github.io/NLP_paper_preview/nlp-paper-preview.html)
+[预训练相关论文阅读](https://gaowenxin95.github.io/NLP_paper_preview/nlp-paper-preview.html)
+
+[多标签问题相关论文阅读](https://gaowenxin95.github.io/NLP_paper_preview/multi_label.html)
+
