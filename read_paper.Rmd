@@ -509,6 +509,29 @@ encoder部分：使用skip-th-vec提取所有句子特征
 还有计算句子相似语义的实验和情感分析等的实验，可以参考原文，略。
 
 
+## ELMO
+
+
+### introduction
+
+> ELMo representations are deep, in the sense that they are a function of all of the internal layers of the biLM. More speciﬁcally, we learn a linear combination of the vectors stacked above each input word for each end task, which markedly improves performance over just using the top LSTM layer.
+
+ELMo是双向的语言模型，学习了在每个结束任务的每个输入词之上堆叠的向量的线性组合，这比仅仅使用LSTM顶层显著提高了性能
+
+也就是bilstm做stacking，后文中有介绍具体的结构
+
+
+>Combining the internal states in this manner allows for very rich word representations. Using intrinsic evaluations, we show that the higher-level LSTM states capture context-dependent aspects of word meaning (e.g., they can be used without modiﬁcation to perform well on supervised word sense disambiguation tasks) while lower-level states model aspects of syntax (e.g., they can be used to do part-of-speech tagging). Simultaneously exposing all of these signals is highly beneﬁcial, allowing the learned models select the types of semi-supervision that are most useful for each end task
+
+以这种方式组合内部状态可以实现非常丰富的单词表示。使用内在的评价,高级LSTM捕获词义的上下文相关的方面(例如,他们可以使用不需要修改监督词义消歧任务上的表现良好)虽然低级状态模型方面的语法(例如,他们可以用来做词性标注)。同时暴露所有这些信号是非常有益的，允许学习模型选择对每个最终任务最有用的半监督类型
+
+这里提到了消岐任务
+
+但是具体是如何做到消岐的？
+
+
+
+
 ## Glove
 
 

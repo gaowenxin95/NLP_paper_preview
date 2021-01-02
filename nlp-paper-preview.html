@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2021-01-01" />
+<meta name="date" content="2021-01-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -160,7 +160,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.4.7" data-path=""><a href="#实验部分"><i class="fa fa-check"></i><b>1.4.7</b> 实验部分</a></li>
 <li class="chapter" data-level="1.4.8" data-path=""><a href="#实验部分-1"><i class="fa fa-check"></i><b>1.4.8</b> 实验部分</a></li>
 </ul></li>
-<li class="chapter" data-level="1.5" data-path=""><a href="#glove"><i class="fa fa-check"></i><b>1.5</b> Glove</a></li>
+<li class="chapter" data-level="1.5" data-path=""><a href="#elmo"><i class="fa fa-check"></i><b>1.5</b> ELMO</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path=""><a href="#introduction-2"><i class="fa fa-check"></i><b>1.5.1</b> introduction</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path=""><a href="#glove"><i class="fa fa-check"></i><b>1.6</b> Glove</a></li>
 </ul></li>
 </ul>
 
@@ -182,7 +186,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">NLP相关paper阅读</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2021-01-01</em></p>
+<p class="date"><em>2021-01-02</em></p>
 </div>
 <div id="nlp-paper-preview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> NLP paper preview</h1>
@@ -224,6 +228,7 @@ P\left(w_{t} \mid c_{t}\right)=\frac{\exp \left(e^{\prime}\left(w_{t}\right)^{T}
 \]</span>
 仔细和普通softmax进行比较便会发现，将原来的|V|分类问题变成了K分类问题, 这便把词典大小 对时间复杂度的影响变成了一个常数项, 而改动又非常的微小，不可谓不巧妙。</p>
 <p>非常的巧妙~</p>
+<p>跳词模型也有非常多的变形~后面的skip-thoughts就源于此</p>
 </div>
 </div>
 <div id="fasttext" class="section level2" number="1.2">
@@ -636,8 +641,25 @@ representation: <span class="math display">\[
 <p>还有计算句子相似语义的实验和情感分析等的实验，可以参考原文，略。</p>
 </div>
 </div>
-<div id="glove" class="section level2" number="1.5">
-<h2><span class="header-section-number">1.5</span> Glove</h2>
+<div id="elmo" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> ELMO</h2>
+<div id="introduction-2" class="section level3" number="1.5.1">
+<h3><span class="header-section-number">1.5.1</span> introduction</h3>
+<blockquote>
+<p>ELMo representations are deep, in the sense that they are a function of all of the internal layers of the biLM. More speciﬁcally, we learn a linear combination of the vectors stacked above each input word for each end task, which markedly improves performance over just using the top LSTM layer.</p>
+</blockquote>
+<p>ELMo是双向的语言模型，学习了在每个结束任务的每个输入词之上堆叠的向量的线性组合，这比仅仅使用LSTM顶层显著提高了性能</p>
+<p>也就是bilstm做stacking，后文中有介绍具体的结构</p>
+<blockquote>
+<p>Combining the internal states in this manner allows for very rich word representations. Using intrinsic evaluations, we show that the higher-level LSTM states capture context-dependent aspects of word meaning (e.g., they can be used without modiﬁcation to perform well on supervised word sense disambiguation tasks) while lower-level states model aspects of syntax (e.g., they can be used to do part-of-speech tagging). Simultaneously exposing all of these signals is highly beneﬁcial, allowing the learned models select the types of semi-supervision that are most useful for each end task</p>
+</blockquote>
+<p>以这种方式组合内部状态可以实现非常丰富的单词表示。使用内在的评价,高级LSTM捕获词义的上下文相关的方面(例如,他们可以使用不需要修改监督词义消歧任务上的表现良好)虽然低级状态模型方面的语法(例如,他们可以用来做词性标注)。同时暴露所有这些信号是非常有益的，允许学习模型选择对每个最终任务最有用的半监督类型</p>
+<p>这里提到了消岐任务</p>
+<p>但是具体是如何做到消岐的？</p>
+</div>
+</div>
+<div id="glove" class="section level2" number="1.6">
+<h2><span class="header-section-number">1.6</span> Glove</h2>
 </div>
 </div>
             </section>
