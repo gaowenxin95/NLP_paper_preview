@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2021-01-02" />
+<meta name="date" content="2021-01-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -163,8 +163,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.5" data-path=""><a href="#elmo"><i class="fa fa-check"></i><b>1.5</b> ELMO</a>
 <ul>
 <li class="chapter" data-level="1.5.1" data-path=""><a href="#introduction-2"><i class="fa fa-check"></i><b>1.5.1</b> introduction</a></li>
+<li class="chapter" data-level="1.5.2" data-path=""><a href="#双向语言模型"><i class="fa fa-check"></i><b>1.5.2</b> 双向语言模型</a></li>
+<li class="chapter" data-level="1.5.3" data-path=""><a href="#elmo结构"><i class="fa fa-check"></i><b>1.5.3</b> elmo结构</a></li>
+<li class="chapter" data-level="1.5.4" data-path=""><a href="#evaluation"><i class="fa fa-check"></i><b>1.5.4</b> Evaluation</a></li>
+<li class="chapter" data-level="1.5.5" data-path=""><a href="#analysis"><i class="fa fa-check"></i><b>1.5.5</b> analysis</a></li>
 </ul></li>
-<li class="chapter" data-level="1.6" data-path=""><a href="#glove"><i class="fa fa-check"></i><b>1.6</b> Glove</a></li>
+<li class="chapter" data-level="1.6" data-path=""><a href="#gpt"><i class="fa fa-check"></i><b>1.6</b> GPT</a></li>
 </ul></li>
 </ul>
 
@@ -186,7 +190,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">NLP相关paper阅读</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2021-01-02</em></p>
+<p class="date"><em>2021-01-03</em></p>
 </div>
 <div id="nlp-paper-preview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> NLP paper preview</h1>
@@ -646,20 +650,143 @@ representation: <span class="math display">\[
 <div id="introduction-2" class="section level3" number="1.5.1">
 <h3><span class="header-section-number">1.5.1</span> introduction</h3>
 <blockquote>
-<p>ELMo representations are deep, in the sense that they are a function of all of the internal layers of the biLM. More speciﬁcally, we learn a linear combination of the vectors stacked above each input word for each end task, which markedly improves performance over just using the top LSTM layer.</p>
+<p>Our representations differ from traditional word type embeddings in that each token is assigned a representation that is a function of the entire input sentence. We use vectors derived from a bidirectional LSTM that is trained with a coupled language model (LM) objective on a large text corpus. For this reason, we call them ELMo (Embeddings from Language Models) representations. Unlike previous approaches for learning contextualized word vectors (Peters et al., 2017; McCann et al., 2017 ), ELMo representations are deep, in the sense that they are a function of all of the internal layers of the biLM. More specifically, we learn a linear combination of the vectors stacked above each input word for each end task, which markedly improves performance over just using the top LSTM layer.</p>
 </blockquote>
-<p>ELMo是双向的语言模型，学习了在每个结束任务的每个输入词之上堆叠的向量的线性组合，这比仅仅使用LSTM顶层显著提高了性能</p>
-<p>也就是bilstm做stacking，后文中有介绍具体的结构</p>
+<p>ELMo是双向的语言模型：两个BILSTM，ELMO学习了在每个结束任务的每个输入词之上堆叠的向量的线性组合，这比仅仅使用LSTM顶层显著提高了性能。</p>
 <blockquote>
 <p>Combining the internal states in this manner allows for very rich word representations. Using intrinsic evaluations, we show that the higher-level LSTM states capture context-dependent aspects of word meaning (e.g., they can be used without modiﬁcation to perform well on supervised word sense disambiguation tasks) while lower-level states model aspects of syntax (e.g., they can be used to do part-of-speech tagging). Simultaneously exposing all of these signals is highly beneﬁcial, allowing the learned models select the types of semi-supervision that are most useful for each end task</p>
 </blockquote>
-<p>以这种方式组合内部状态可以实现非常丰富的单词表示。使用内在的评价,高级LSTM捕获词义的上下文相关的方面(例如,他们可以使用不需要修改监督词义消歧任务上的表现良好)虽然低级状态模型方面的语法(例如,他们可以用来做词性标注)。同时暴露所有这些信号是非常有益的，允许学习模型选择对每个最终任务最有用的半监督类型</p>
-<p>这里提到了消岐任务</p>
-<p>但是具体是如何做到消岐的？</p>
+<p>以这种方式组合内部状态可以实现非常丰富的单词表示。使用内在的评价,高级LSTM捕获词义的上下文相关的方面(例如,他们可以使用不需要修改监督词义消歧任务上的表现良好)虽然低级状态模型方面的语法(例如,他们可以用来做词性标注)。同时暴露所有这些信号是非常有益的，允许学习模型选择对每个最终任务最有用的半监督类型。</p>
+<ul class="task-list">
+<li><p><input type="checkbox" disabled="" />
+产生上下文相关的词向量，怎么产生的？</p></li>
+<li><p><input type="checkbox" disabled="" />
+这里提到了消岐任务，但是具体是如何做到消岐的？</p></li>
+</ul>
+</div>
+<div id="双向语言模型" class="section level3" number="1.5.2">
+<h3><span class="header-section-number">1.5.2</span> 双向语言模型</h3>
+<blockquote>
+<p>Given a sequence of <span class="math inline">\(N\)</span> tokens, <span class="math inline">\(\left(t_{1}, t_{2}, \ldots, t_{N}\right),\)</span> a forward language model computes the probability of the sequence by modeling the probability of token <span class="math inline">\(t_{k}\)</span> given the history <span class="math inline">\(\left(t_{1}, \ldots, t_{k-1}\right)\)</span></p>
+</blockquote>
+<p>给定一个含有N个tokens的序列，根据上文计算当前的token，前向的表示为</p>
+<p><span class="math display">\[
+p\left(t_{1}, t_{2}, \ldots, t_{N}\right)=\prod_{k=1}^{N} p\left(t_{k} \mid t_{1}, t_{2}, \ldots, t_{k-1}\right)
+\]</span></p>
+<blockquote>
+<p>Recent state-of-the-art neural language models (Józefowicz et al., <span class="math inline">\(2016 ;\)</span> Melis et al., <span class="math inline">\(2017 ;\)</span> Merity et al., 2017 ) compute a context-independent token representation <span class="math inline">\(\mathrm{x}_{k}^{L M}\)</span> (via token embeddings or a CNN over characters) then pass it through <span class="math inline">\(L\)</span> layers of forward LSTMs. At each position <span class="math inline">\(k,\)</span> each LSTM layer outputs a context-dependent representation <span class="math inline">\(\overrightarrow{\mathbf{h}}_{k, j}^{L M}\)</span> where <span class="math inline">\(j=1, \ldots, L .\)</span> The top layer LSTM output, <span class="math inline">\(\overrightarrow{\mathbf{h}}_{k, L}^{L M},\)</span> is used to predict the next token <span class="math inline">\(t_{k+1}\)</span> with a Softmax layer.</p>
+</blockquote>
+<p>输入的token是<span class="math inline">\({x}_{k}^{L M}\)</span>,L是lstm的层数，在每一个位置 k ，每一个LSTM 层都输出相应的context-dependent的表征<span class="math inline">\(\overrightarrow{\mathbf{h}}_{k, j}^{L M}\)</span>，j=1,2….L,通过Softmax layer预测下一个<span class="math inline">\(t_{k+1}\)</span></p>
+<blockquote>
+<p>A backward LM is similar to a forward LM, except it runs over the sequence in reverse, predicting the previous token given the future context:</p>
+</blockquote>
+<p>后向语言模型：学习下文的知识，后向的表示为</p>
+<p><span class="math display">\[
+p\left(t_{1}, t_{2}, \ldots, t_{N}\right)=\prod_{k=1}^{N} p\left(t_{k} \mid t_{k+1}, t_{k+2}, \ldots, t_{N}\right)
+\]</span></p>
+<blockquote>
+<p>It can be implemented in an analogous way to a forward LM, with each backward LSTM layer <span class="math inline">\(j\)</span> in a <span class="math inline">\(L\)</span> layer deep model producing representations <span class="math inline">\(\overleftarrow{\mathbf{h}}_{k, j}^{L M}\)</span> of <span class="math inline">\(t_{k}\)</span> given <span class="math inline">\(\left(t_{k+1}, \ldots, t_{N}\right)\)</span></p>
+</blockquote>
+<p>前向的语言模型是一个lstm网络层，后向的也是一个lstm网络层，相当于两个lstm做stacking</p>
+<blockquote>
+<p>A biLM combines both a forward and backward LM. Our formulation jointly maximizes the log likelihood of the forward and backward directions:</p>
+</blockquote>
+<p>目标函数就是前向后向语言模型的最大似然函数之和</p>
+<p><span class="math display">\[
+\begin{array}{l}
+\sum_{k=1}^{N}\left(\log p\left(t_{k} \mid t_{1}, \ldots, t_{k-1} ; \Theta_{x}, \vec{\Theta}_{L S T M}, \Theta_{s}\right)\right. \\
+\left.\quad+\log p\left(t_{k} \mid t_{k+1}, \ldots, t_{N} ; \Theta_{x}, \overleftarrow{\Theta}_{L S T M}, \Theta_{s}\right)\right)
+\end{array}
+\]</span>
+We tie the parameters for both the token representation <span class="math inline">\(\left(\Theta_{x}\right)\)</span> and Softmax layer <span class="math inline">\(\left(\Theta_{s}\right)\)</span> in the forward and backward direction while maintaining separate parameters for the LSTMs in each direction. Overall, this formulation is similar to the approach of Peters et al. ( 2017 ), with the exception that we share some weights between directions instead of using completely independent parameters. In the next section, we depart from previous work by introducing a new approach for learning word representations that are a linear combination of the biLM layers.</p>
+<p>两个lstm层的参数不共享，单独训练
+但是在两个lstm之间会有一些共享权重参数</p>
+</div>
+<div id="elmo结构" class="section level3" number="1.5.3">
+<h3><span class="header-section-number">1.5.3</span> elmo结构</h3>
+<blockquote>
+<p>ELMo is a task speciﬁc combination of the intermediate layer representations in the biLM. For each token <span class="math inline">\(t_{k},\)</span> a <span class="math inline">\(L\)</span> -layer biLM computes a set of <span class="math inline">\(2 L+1\)</span> representations</p>
+</blockquote>
+<p>ELMo是biLM中中间层表示的特定于任务的组合.对于每个token，一个L层的biLM要计算出 2L+1 个表征</p>
+<p><span class="math display">\[
+\begin{aligned}
+R_{k} &amp;=\left\{\mathbf{x}_{k}^{L M}, \overrightarrow{\mathbf{h}}_{k, j}^{L M}, \overline{\mathbf{h}}_{k, j}^{L M} \mid j=1, \ldots, L\right\} \\
+&amp;=\left\{\mathbf{h}_{k, j}^{L M} \mid j=0, \ldots, L\right\}
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(\mathbf{h}_{k=0}^{L M}\)</span> is the token layer and <span class="math inline">\(\mathbf{h}_{k, j}^{L M}=\)</span> <span class="math inline">\(\left[\overrightarrow{\mathbf{h}}_{k, j}^{L M} ; \overleftarrow{\mathbf{h}}_{k, j}^{L M}\right],\)</span> for each biLSTM layer.</p>
+<p>在上面 <span class="math inline">\(X_{k}^{L M}\)</span> 等于 <span class="math inline">\(h_{k, j}^{L M},\)</span> 表示的是token层的值。</p>
+<p>For inclusion in a downstream model, ELMo collapses all layers in <span class="math inline">\(R\)</span> into a single vector, <span class="math inline">\(\mathbf{E L M o}_{k}=E\left(R_{k} ; \Theta_{e}\right) .\)</span> In the simplest case ELMo just selects the top layer, <span class="math inline">\(E\left(R_{k}\right)=\mathbf{h}_{k, L}^{L M}\)</span> as in TagLM (Peters et al., 2017 ) and CoVe (McCann et al., 2017 ). More generally, we compute a task specific weighting of all biLM layers:</p>
+<p>在下游的任务中, ELMo把所有层的R压缩在一起形成一个向量。(在最简单的情况下, 可以只保留最后一层的 <span class="math inline">\(h_{k, L}^{L M}\)</span> 。 <span class="math inline">\()\)</span></p>
+<p><span class="math display">\[
+\mathbf{E L M o}_{k}^{\text {task}}=E\left(R_{k} ; \Theta^{\text {task}}\right)=\gamma^{\text {task}} \sum_{j=0}^{L} s_{j}^{\text {task}} \mathbf{h}_{k, j}^{L M}
+\]</span>
+In (1), s <span class="math inline">\(^{\text {task }}\)</span> are softmax-normalized weights and the scalar parameter <span class="math inline">\(\gamma^{\text {task}}\)</span> allows the task model to scale the entire ELMo vector. <span class="math inline">\(\gamma\)</span> is of practical importance to aid the optimization process (see supplemental material for details). Considering that the activations of each biLM layer have a different distribution, in some cases it also helped to apply layer normalization (Ba et al., 2016 ) to each biLM layer before weighting.</p>
+<p>e</p>
+<p>其中 } <span class="math inline">\(s_{j}^{task }\)</span>是softmax标准化权重,<span class="math inline">\(\gamma^{\text {task}}\)</span>是缩放系数，允许任务模型去缩放整个ELMO向量。</p>
+<div id="using-bilms-for-supervised-nlp-tasks" class="section level4" number="1.5.3.1">
+<h4><span class="header-section-number">1.5.3.1</span> Using biLMs for supervised NLP tasks</h4>
+<p>双向语言模型在有监督NLP的任务上如何做representations</p>
+<blockquote>
+<p>Given a pretrained biLM and a supervised architecture for a target NLP task, it is a simple process to use the biLM to improve the task model. We simply run the biLM and record all of the layer representations for each word. Then, we let the end task model learn a linear combination of these representations, as described below.</p>
+</blockquote>
+<p>给定一个预先训练好的biLM和一个目标NLP任务的监督架构，使用biLM来改进任务模型是一个简单的过程。只需运行biLM并记录每个单词的所有层表示。然后让最终任务模型学习这些表示的线性组合。</p>
+<blockquote>
+<p>First consider the lowest layers of the supervised model without the biLM. Most supervised NLP models share a common architecture at the
+lowest layers, allowing us to add ELMo in a consistent, unified manner. Given a sequence of tokens <span class="math inline">\(\left(t_{1}, \ldots, t_{N}\right),\)</span> it is standard to form a context-independent token representation <span class="math inline">\(\mathbf{x}_{k}\)</span> for each token position using pre-trained word embeddings and optionally character-based representations. Then, the model forms a context-sensitive representation <span class="math inline">\(\mathbf{h}_{k},\)</span> typically using either bidirectional RNNs, CNNs, or feed forward networks.</p>
+</blockquote>
+<blockquote>
+<p>To add ELMo to the supervised model, we first freeze the weights of the biLM and then concatenate the ELMo vector ELMo <span class="math inline">\(_{k}^{\text {task}}\)</span> with <span class="math inline">\(\mathrm{x}_{k}\)</span> and pass the ELMo enhanced representation <span class="math inline">\(\left[\mathrm{x}_{k} ;\right.\)</span> ELMo <span class="math inline">\(\left._{k}^{\text {task }}\right]\)</span> into the task RNN. For some tasks (e.g., SNLI, SQuAD), we observe further improvements by also including ELMo at the output of the task RNN by introducing another set of output specific linear weights and replacing <span class="math inline">\(\mathbf{h}_{k}\)</span> with <span class="math inline">\(\left[\mathbf{h}_{k} ; \mathbf{E L M o}_{k}^{\text {task}}\right] .\)</span> As the remainder of the supervised model remains unchanged, these additions can happen within the context of more complex neural models. For example, see the SNLI experiments in Sec. 4 where a bi-attention layer follows the biLSTMs, or the coreference resolution experiments where a clustering model is layered on top of the biLSTMs.</p>
+</blockquote>
+<p>使用预训练的ELMO embedding</p>
+<blockquote>
+<p>Finally, we found it beneficial to add a moderate amount of dropout to ELMo (Srivastava et al.,
+2014) and in some cases to regularize the ELMo weights by adding <span class="math inline">\(\lambda\|\mathbf{w}\|_{2}^{2}\)</span> to the loss. This imposes an inductive bias on the ELMo weights to stay close to an average of all biLM layers.</p>
+</blockquote>
+<p>在bilm后增加dropout正则化方式</p>
+<p>这对ELMo权重施加了一种诱导偏差，以保持接近所有biLM层的平均值。</p>
+</div>
+<div id="pre-trained-bidirectional-language-model-architecture" class="section level4" number="1.5.3.2">
+<h4><span class="header-section-number">1.5.3.2</span> Pre-trained bidirectional language model architecture</h4>
+<p>预训练的双向语言模型</p>
+<blockquote>
+<p>The pre-trained biLMs in this paper are similar to the architectures in Józefowicz et al. (2016) and Kim et al. (2015), but modified to support joint training of both directions and add a residual connection between LSTM layers. We focus on large scale biLMs in this work, as Peters et al. (2017) highlighted the importance of using biLMs over forward-only LMs and large scale training.</p>
+</blockquote>
+<ul>
+<li><p>产生pre-trained biLM模型。模型由两层bi-LSTM组成，之间用residual connection连接起来。</p></li>
+<li><p>在任务语料上(注意是语料，忽略label)fine tuning上一步得到的biLM模型。可以把这一步看为biLM的domain transfer。</p></li>
+<li><p>利用ELMo的word embedding来对任务进行训练。通常的做法是把它们作为输入加到已有的模型中，一般能够明显的提高原模型的表现。</p></li>
+</ul>
 </div>
 </div>
-<div id="glove" class="section level2" number="1.6">
-<h2><span class="header-section-number">1.6</span> Glove</h2>
+<div id="evaluation" class="section level3" number="1.5.4">
+<h3><span class="header-section-number">1.5.4</span> Evaluation</h3>
+<p><img src="figs/ELMO_ACC.png" /></p>
+<p>对比在几个数据集上之前stoa的acc和f1,从结果来看，效果都有刷新之前的sota
+SQuAD是斯坦福的一个问答的数据集</p>
+<p><img src="figs/ELMO-RE.png" /></p>
+<p>表2是增加了正则化参数之后</p>
+</div>
+<div id="analysis" class="section level3" number="1.5.5">
+<h3><span class="header-section-number">1.5.5</span> analysis</h3>
+<blockquote>
+<p>since adding ELMo improves task performance over word vectors alone, the biLM’s contextual representations must encode information generally useful for NLP tasks that is not captured in word vectors. Intuitively, the biLM must be disambiguating the meaning of words using their context. Consider “play”, a highly polysemous word. The top of Table 4 lists nearest neighbors to “play” using GloVe vectors. They are spread across several parts of speech (e.g., “played”, “playing” as verbs, and “player”, “game” as nouns) but concentrated in the sportsrelated senses of “play”. In contrast, the bottom two rows show nearest neighbor sentences from the SemCor dataset (see below) using the biLM’s context representation of “play” in the source sentence. In these cases, the biLM is able to disambiguate both the part of speech and word sense in the source sentence.
+intrinsic evaluation of the contextual representations similar to Belinkov et al. (2017). To isolate the information encoded by the biLM, the representations are used to directly make predictions for a fine grained word sense disambiguation (WSD) task and a POS tagging task. Using this approach, it is also possible to compare to CoVe, and across each of the individual layers.
+Word sense disambiguation Given a sentence, we can use the biLM representations to predict the sense of a target word using a simple 1 nearest neighbor approach, similar to Melamud et al. (2016). To do so, we first use the biLM to compute representations for all words in SemCor 3.0 , our training corpus (Miller et al., 1994 ), and then take the average representation for each sense. At test time, we again use the biLM to compute representations for a given target word and take the nearest neighbor sense from the training set, falling back to the first sense from WordNet for lemmas not observed during training.</p>
+</blockquote>
+<p>由于添加ELMo比单独使用词向量提高了任务性能，因此biLM的上下文表示必须编码在词向量中没有捕捉到的通常对NLP任务有用的信息。直观地说，biLM必须使用上下文来消除词语的歧义。以“play”为例，这是一个高度多义词。表4的顶部列出了使用手套矢量“玩”的最近邻居。它们分布在几个词性中(例如，“玩”、“玩”作为动词，“玩家”、“游戏”作为名词)，但集中在与体育运动相关的“玩”含义中。相比之下，底部两行显示SemCor数据集(见下)中使用源句子中“play”的biLM上下文表示的最近的句子。在这些情况下，biLM能够消除源句子中的词性和词义的歧义。与Belinkov等人类似，上下文表征的内在评估。为了隔离由biLM编码的信息，表示用于直接预测细粒度词义消歧(WSD)任务和词性标记任务。使用这种方法，还可以跨每个单独的层与CoVe进行比较。单词词义消歧对于一个句子，可以使用biLM表示来预测目标单词的意义，使用简单的1最近邻方法，类似于Melamud等人。为此，首先使用biLM来计算训练语料库SemCor 3.0中所有单词的表示，然后取每种SENSE的平均表示。在测试时，再次使用biLM来计算给定目标词的表示，并从训练集中获取最近邻的意义，对于训练期间未观察到的引理，则返回到WordNet的第一个意义。</p>
+<p>因为ELMO能学习到上下文的语义信息，使用上下文的语义进行消岐</p>
+<blockquote>
+<p>Table 5 compares WSD results using the evaluation framework from Raganato et al. (2017b) across the same suite of four test sets in Raganato et
+al. (2017a). Overall, the biLM top layer representations have <span class="math inline">\(\mathrm{F}_{1}\)</span> of 69.0 and are better at WSD then the first layer. This is competitive with a state-of-the-art WSD-specific supervised model using hand crafted features (Iacobacci et al., 2016 ) and a task specific biLSTM that is also trained with auxiliary coarse-grained semantic labels and POS tags (Raganato et al., 2017a). The CoVe biLSTM layers follow a similar pattern to those from the biLM (higher overall performance at the second layer compared to the first); however, our biLM outperforms the CoVe biLSTM, which trails the WordNet first sense baseline.</p>
+</blockquote>
+<p><img src="figs/ELMO-DS.png" /></p>
+<p>表5比较了Raganato et al. 使用Raganato et al. 的评估框架在Raganato et al. 的同一套四组测试集上的WSD结果。总的来说，biLM顶层表示的<span class="math inline">\(\mathrm{F}_{1}\)</span>为69.0，在WSD方面优于第一层。这与使用手工制作特性的最先进的特定于wsd的监督模型(Iacobacci等人)和使用辅助粗粒度语义标签和POS标签训练的特定于任务的biLSTM 竞争。</p>
+</div>
+</div>
+<div id="gpt" class="section level2" number="1.6">
+<h2><span class="header-section-number">1.6</span> GPT</h2>
+<p>单项语言模型</p>
 </div>
 </div>
             </section>
