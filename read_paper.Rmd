@@ -685,6 +685,18 @@ al. (2017a). Overall, the biLM top layer representations have $\mathrm{F}_{1}$ o
 
 
 
+
+```{r child='analysis/transformer.Rmd'}
+
+```
+
+tranformer这里最近看了一篇还不错的分享，等空了把重点内容，之前理解没到位的记录下
+这里先放一个链接
+
+[万能的transformer](https://mp.weixin.qq.com/s?__biz=MzI4MDYzNzg4Mw==&mid=2247521353&idx=6&sn=5c1d369457feb0e85d2dc0ce15013551&chksm=ebb7ac9ddcc0258b844f4c3e96e0a4e6092908eae6101582998d9023472fda4f853195d0483d&mpshare=1&scene=23&srcid=0103cJP102hkdnRNQfXSAOuQ&sharer_sharetime=1609723757487&sharer_shareid=df15c342306c746b0423e3fd6ee52a86#rd)
+
+- [ ] 补充bibtex 养成好的习惯蛤！！
+
 ## GPT
 
 单项语言模型
