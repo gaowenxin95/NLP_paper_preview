@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2021-01-12" />
+<meta name="date" content="2021-01-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -198,7 +198,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">NLP相关paper阅读</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2021-01-12</em></p>
+<p class="date"><em>2021-01-13</em></p>
 </div>
 <div id="nlp-paper-preview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> NLP paper preview</h1>
@@ -674,7 +674,7 @@ representation: <span class="math display">\[
 <blockquote>
 <p>Our representations differ from traditional word type embeddings in that each token is assigned a representation that is a function of the entire input sentence. We use vectors derived from a bidirectional LSTM that is trained with a coupled language model (LM) objective on a large text corpus. For this reason, we call them ELMo (Embeddings from Language Models) representations. Unlike previous approaches for learning contextualized word vectors (Peters et al., 2017; McCann et al., 2017 ), ELMo representations are deep, in the sense that they are a function of all of the internal layers of the biLM. More specifically, we learn a linear combination of the vectors stacked above each input word for each end task, which markedly improves performance over just using the top LSTM layer.</p>
 </blockquote>
-<p>ELMo是双向的语言模型：两个BILSTM，ELMO学习了在每个结束任务的每个输入词之上堆叠的向量的线性组合，这比仅仅使用LSTM顶层显著提高了性能。</p>
+<p>ELMo是双向的语言模型：两个BILSTM做stacking，ELMO学习了在每个结束任务的每个输入词之上堆叠的向量的线性组合，这比仅仅使用LSTM顶层显著提高了性能。</p>
 <blockquote>
 <p>Combining the internal states in this manner allows for very rich word representations. Using intrinsic evaluations, we show that the higher-level LSTM states capture context-dependent aspects of word meaning (e.g., they can be used without modiﬁcation to perform well on supervised word sense disambiguation tasks) while lower-level states model aspects of syntax (e.g., they can be used to do part-of-speech tagging). Simultaneously exposing all of these signals is highly beneﬁcial, allowing the learned models select the types of semi-supervision that are most useful for each end task</p>
 </blockquote>
@@ -1280,13 +1280,36 @@ Overall, the only extra parameters we require during fine-tuning are <span class
 <blockquote>
 <p>Unsupervised pre-training We use the BooksCorpus dataset [71] for training the language model. It contains over 7,000 unique unpublished books from a variety of genres including Adventure, Fantasy, and Romance. Crucially, it contains long stretches of contiguous text, which allows the generative model to learn to condition on long-range information. An alternative dataset, the <span class="math inline">\(1 \mathrm{~B}\)</span> Word Benchmark, which is used by a similar approach, ELMo [44] , is approximately the same size</p>
 </blockquote>
-<p>预料库是BooksCorpus数据集，elmo也是这个</p>
+<p>预料库是BooksCorpus数据集，elmo好像也是这个</p>
 <blockquote>
 <p>but is shufﬂed at a sentence level - destroying long-range structure. Our language model achieves a very low token level perplexity of 18.4 on this corpus.</p>
 </blockquote>
 <ul class="task-list">
 <li><input type="checkbox" disabled="" />
 token级别的困惑度是什么?</li>
+</ul>
+<blockquote>
+<p>Model specifications <span class="math inline">\(\quad\)</span> Our model largely follows the original transformer work <span class="math inline">\([62] .\)</span> We trained a 12-layer decoder-only transformer with masked self-attention heads ( 768 dimensional states and 12 attention heads). For the position-wise feed-forward networks, we used 3072 dimensional inner states. We used the Adam optimization scheme [27] with a max learning rate of <span class="math inline">\(2.5 \mathrm{e}-4 .\)</span> The learning rate was increased linearly from zero over the first 2000 updates and annealed to 0 using a cosine schedule. We train for 100 epochs on minibatches of 64 randomly sampled, contiguous sequences of 512 tokens. Since layernorm [2] is used extensively throughout the model, a simple weight initialization of <span class="math inline">\(N(0,0.02)\)</span> was sufficient. We used a bytepair encoding (BPE) vocabulary with 40,000 merges [53] and residual, embedding, and attention dropouts with a rate of 0.1 for regularization. We also employed a modified version of <span class="math inline">\(L 2\)</span> regularization proposed in [37] , with <span class="math inline">\(w=0.01\)</span> on all non bias or gain weights. For the activation function, we used the Gaussian Error Linear Unit (GELU) <span class="math inline">\([18] .\)</span> We used learned position embeddings instead of the sinusoidal version proposed in the original work. We use the <span class="math inline">\(f t f y\)</span> library <span class="math inline">\([\)</span> to clean the raw text in BooksCorpus, standardize some punctuation and whitespace, and use the spa <span class="math inline">\(C y\)</span> tokenizer</p>
+</blockquote>
+<ul>
+<li><p>语言模型采用12层的transformer decoder(768 dimensional states and 12 attention heads).</p></li>
+<li><p>position-wise前馈网络部分设置为3072维.</p></li>
+<li><p>优化方法采用Adam, 同时设置最大学习率为$ 2.5e^{-4}$</p></li>
+<li><p>epoch: 100</p></li>
+<li><p>batch size: 64</p></li>
+<li><p>每个输入包含512个token</p></li>
+<li><p>L2正则: 0.01</p></li>
+<li><p>激活函数: GELU(LU系列)</p></li>
+<li><p>用fifty和spaCy库对语料进行预处理</p></li>
+</ul>
+<p>Fine-tuning details Unless specified, we reuse the hyperparameter settings from unsupervised pre-training. We add dropout to the classifier with a rate of <span class="math inline">\(0.1 .\)</span> For most tasks, we use a learning rate of <span class="math inline">\(6.25 \mathrm{e}-5\)</span> and a batchsize of <span class="math inline">\(32 .\)</span> Our model finetunes quickly and 3 epochs of training was sufficient for most cases. We use a linear learning rate decay schedule with warmup over <span class="math inline">\(0.2 \%\)</span> of training. <span class="math inline">\(\lambda\)</span> was set to 0.5 .</p>
+<p>Fine-tuning部分</p>
+<ul>
+<li><p>fine-tuning阶段加上0.1的dropout</p></li>
+<li><p>learning rate: <span class="math inline">\(6.25e−5\)</span></p></li>
+<li><p>batch size: 32</p></li>
+<li><p>epoch: 只需要3个epoch</p></li>
+<li><p>0.2% warmup</p></li>
 </ul>
 </div>
 </div>
