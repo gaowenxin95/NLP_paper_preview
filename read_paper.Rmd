@@ -748,12 +748,27 @@ Wq,Wk,Wv会根据任务目标更新变化，保证了自注意力机制的效果
 
 ## GPT
 
-单项语言模型,准确的来说是单项的transformer
+单项语言模型,准确的来说是单项的transformer，只用到了transformer中的decodder
+
+### introduction
+
+> We employ a two-stage training procedure. First, we use a language modeling objective onthe unlabeled data to learn the initial parameters of a neural network model. Subsequently, we adapt these parameters to a target task using the corresponding supervised objective.
+
+GPT是一个包含两阶段的训练的过程
+
+- 在无标签的海量数据中训练语言模型，学习神经网络模型的参数。
+
+- 阶段一训练完成模型参数用相关标签数据训练target task。
+
 
 
 ### Framework
 
 这里主要是看下GPT的结构
+
+### Unsupervised pre-training
+
+无监督的预训练的过程
 
 首先是无监督的预训练部分
 
@@ -771,8 +786,9 @@ where $k$ is the size of the context window, and the conditional probability $P$
 
 In our experiments, we use a multi-layer Transformer decoder [34] for the language model, which is a variant of the transformer $[62] .$ This model applies a multi-headed self-attention operation over the input context tokens followed by position-wise feedforward layers to produce an output distribution over target tokens:
 
-使用了多层transformer decoder建立模型，这个模型使用了多头注意力机制，以及带有位置信息的前馈神经网络作为input
+使用transformer中的decoder来建立模型
 
+模型的输入上下文使用的是多头注意力机制，然后对位置前馈全连接层进行应用，以在目标token上产生输出分布：
 
 
 $$
@@ -782,7 +798,39 @@ h_{l} &=\text { transformer_block }\left(h_{l-1}\right) \forall i \in[1, n] \\
 P(u) &=\operatorname{softmax}\left(h_{n} W_{e}^{T}\right)
 \end{aligned}
 $$
+
 where $U=\left(u_{-k}, \ldots, u_{-1}\right)$ is the context vector of tokens, $n$ is the number of layers, $W_{e}$ is the token embedding matrix, and $W_{p}$ is the position embedding matrix.
+
+$U=\left(u_{-k}, \ldots, u_{-1}\right)$是上下文向量的token，$n$是层数，$W_{e}$是词向量的嵌入矩阵，$W_{p}$是位置embedding的矩阵，其他部分都是transformer中的decoder的结构。
+
+### Supervised ﬁne-tuning
+
+有监督的微调的阶段
+
+>After training the model with the objective in Eq. 1 , we adapt the parameters to the supervised target task. We assume a labeled dataset $\mathcal{C},$ where each instance consists of a sequence of input tokens, $x^{1}, \ldots, x^{m},$ along with a label $y .$ The inputs are passed through our pre-trained model to obtain the final transformer block's activation $h_{l}^{m},$ which is then fed into an added linear output layer with parameters $W_{y}$ to predict $y:$
+
+在公式1的目标函数训练的模型,将训练获得的参数应用于有监督的目标任务。假定有带标签的数据集C，包含的每个实例是词序列, 如 $x^{1}, \ldots, x^{m},$ 带有标签y, 首先作为输入通过已经预训练好的pre-trained model获得最终transformer block's activation $h_{l}^{m}$,然后输入带有 Wy的线性输出层来预测y。
+
+简单的来说就是将第一阶段无监督训练的作为embedding层。
+
+$$
+P\left(y \mid x^{1}, \ldots, x^{m}\right)=\operatorname{softmax}\left(h_{l}^{m} W_{y}\right)
+$$
+
+
+
+This gives us the following objective to maximize:
+
+$$
+L_{2}(\mathcal{C})=\sum_{(x, y)} \log P\left(y \mid x^{1}, \ldots, x^{m}\right)
+$$
+We additionally found that including language modeling as an auxiliary objective to the fine-tuning helped learning by (a) improving generalization of the supervised model, and (b) accelerating convergence. This is in line with prior work [50,43] , who also observed improved performance with such an auxiliary objective. Specifically, we optimize the following objective (with weight $\lambda$ ):
+$$
+L_{3}(\mathcal{C})=L_{2}(\mathcal{C})+\lambda * L_{1}(\mathcal{C})
+$$
+Overall, the only extra parameters we require during fine-tuning are $W_{y}$, and embeddings for delimiter tokens (described below in Section 3.3
+
+
 
 
 

@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2021-01-06" />
+<meta name="date" content="2021-01-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -169,7 +169,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.5.5" data-path=""><a href="#analysis"><i class="fa fa-check"></i><b>1.5.5</b> analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="1.6" data-path=""><a href="#attention-is-all-you-need"><i class="fa fa-check"></i><b>1.6</b> Attention is all you need</a></li>
-<li class="chapter" data-level="1.7" data-path=""><a href="#gpt"><i class="fa fa-check"></i><b>1.7</b> GPT</a></li>
+<li class="chapter" data-level="1.7" data-path=""><a href="#gpt"><i class="fa fa-check"></i><b>1.7</b> GPT</a>
+<ul>
+<li class="chapter" data-level="1.7.1" data-path=""><a href="#introduction-3"><i class="fa fa-check"></i><b>1.7.1</b> introduction</a></li>
+<li class="chapter" data-level="1.7.2" data-path=""><a href="#framework"><i class="fa fa-check"></i><b>1.7.2</b> Framework</a></li>
+<li class="chapter" data-level="1.7.3" data-path=""><a href="#unsupervised-pre-training"><i class="fa fa-check"></i><b>1.7.3</b> Unsupervised pre-training</a></li>
+<li class="chapter" data-level="1.7.4" data-path=""><a href="#supervised-ﬁne-tuning"><i class="fa fa-check"></i><b>1.7.4</b> Supervised ﬁne-tuning</a></li>
+</ul></li>
 </ul></li>
 </ul>
 
@@ -191,7 +197,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">NLP相关paper阅读</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2021-01-06</em></p>
+<p class="date"><em>2021-01-12</em></p>
 </div>
 <div id="nlp-paper-preview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> NLP paper preview</h1>
@@ -345,6 +351,20 @@ Softmax技巧来加速训练。</p>
 <p>Wordvec的目的是得到词向量，该词向量 最终是在输入层得到，输出层对应的
 h-softmax 也会生成一系列的向量，但最终都被抛弃，不会使用。
 fasttext则充分利用了h-softmax的分类功能，遍历分类树的所有叶节点，找到概率最大的label（一个或者N个）</p>
+<ul>
+<li>fasttext为什么快？</li>
+</ul>
+<blockquote>
+<p>其实fasttext使用的模型与word2vec的模型在结构上是一样的，拿cbow来说，不同的只是在于word2vec cbow的目标是通过当前词的前后N个词来预测当前词，在使用层次softmax的时候，huffman树叶子节点处是训练语料里所有词的向量。</p>
+</blockquote>
+<p>下面这个解释原文中在hf的论述中并无很向下的介绍</p>
+<blockquote>
+<p>而fasttext在进行文本分类时，huffmax树叶子节点处是每一个类别标签的词向量，在训练的过程中，训练语料的每一个词也会得到对应的词向量，输入为一个window内的词对应的词向量，hidden layer为这几个词的线性相加，相加的结果作为该文档的向量，再通过层次softmax得到预测标签，结合文档的真实标签计算loss，梯度与迭代更新词向量。</p>
+</blockquote>
+<p>这样的话树的深度会小，因此遍历时间短了？</p>
+<blockquote>
+<p>fasttext有别于word2vec的另一点是加了ngram切分这个trick，将长词再通过ngram切分为几个短词，这样对于未登录词也可以通过切出来的ngram词向量合并为一个词。由于中文的词大多比较短，这对英文语料的用处会比中文语料更大。</p>
+</blockquote>
 </div>
 <div id="实验和结果分析" class="section level3" number="1.2.5">
 <h3><span class="header-section-number">1.2.5</span> 实验和结果分析</h3>
@@ -1107,6 +1127,38 @@ attention_output经过一个hidden_size为768的dense层，然后对hidden层进
 <p>tranformer这里最近看了一篇还不错的分享，等空了把重点内容，之前理解没到位的记录下
 这里先放一个链接</p>
 <p><a href="https://mp.weixin.qq.com/s?__biz=MzI4MDYzNzg4Mw==&amp;mid=2247521353&amp;idx=6&amp;sn=5c1d369457feb0e85d2dc0ce15013551&amp;chksm=ebb7ac9ddcc0258b844f4c3e96e0a4e6092908eae6101582998d9023472fda4f853195d0483d&amp;mpshare=1&amp;scene=23&amp;srcid=0103cJP102hkdnRNQfXSAOuQ&amp;sharer_sharetime=1609723757487&amp;sharer_shareid=df15c342306c746b0423e3fd6ee52a86#rd">万能的transformer</a></p>
+<p>上面这个文章中回答了一些在看attention is all you need 论文中的没有讲清楚的几个问题</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" />
+transformer中Q,K,V的作用是什么？</li>
+</ul>
+<p>Transformer 中采用的是多头自注意力机制。在 Encoder 中，Q、K、V均为输入的序列编码，而多头的线性层可以方便地扩展模型参数。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>Q  =<span class="st"> </span>x <span class="op">*</span><span class="st"> </span>Wq</span>
+<span id="cb2-2"><a href="#cb2-2"></a>K  =<span class="st"> </span>x <span class="op">*</span><span class="st"> </span>Wk</span>
+<span id="cb2-3"><a href="#cb2-3"></a>V  =<span class="st"> </span>x <span class="op">*</span><span class="st"> </span>Wv</span></code></pre></div>
+<p>此处应该有个图</p>
+<p>x对应信息V的注意力权重 与 Q*K.tranpose 成正比
+等于说：x的注意力权重，由x自己来决定，所以叫自注意力。
+Wq,Wk,Wv会根据任务目标更新变化，保证了自注意力机制的效果。
+<a href="https://www.zhihu.com/question/427629601/answer/1545963545">赵明明</a></p>
+<p>换一个通俗易懂的解释</p>
+<blockquote>
+<p>你有一个问题Q，然后去搜索引擎里面搜，搜索引擎里面有好多文章，每个文章V有一个能代表其正文内容的标题K，然后搜索引擎用你的问题Q和那些文章V的标题K进行一个匹配，看看相关度（QK —&gt;attention值），然后你想用这些检索到的不同相关度的文章V来表示你的问题，就用这些相关度将检索的文章V做一个加权和，那么你就得到了一个新的Q’，这个Q’融合了相关性强的文章V更多信息，而融合了相关性弱的文章V较少的信息。这就是注意力机制，注意力度不同，重点关注（权值大）与你想要的东西相关性强的部分，稍微关注（权值小）相关性弱的部分。<a href="https://www.zhihu.com/question/427629601/answer/1558216827">Leetuter</a></p>
+</blockquote>
+<ul>
+<li>多头注意力机制为什么能解决长依赖的问题？</li>
+</ul>
+<blockquote>
+<p>同一序列中词的关系直接由 score 值计算得到，不会因为时序、传播的限制而造成信息损失，有利于模拟长程依赖，但也有工作通过实验表明[7]，多头注意力机制解决长程依赖是由于参数量的增加，若在同规模下对比，相对CNN，RNN并未有明显提升。</p>
+</blockquote>
+<ul>
+<li>下游任务是什么?</li>
+</ul>
+<blockquote>
+<p>预训练技术是指预先设计多层网络结构，将编码后的数据输入到网络结构中进行训练，增加模型的泛化能力。预先设计的网络结构通常被称为预训练模型，它的作用是初始化下游任务。将预训练好的模型参数应用到后续的其他特定任务上，这些特定任务通常被称为“下游任务”</p>
+</blockquote>
+<p>现在非常多的任务都是预训练+微调这种方式进行的，相当于冻结预训练部分的参数，将预训练模型应用到小的数据集上，只需要微调下游任务的参数即可。word2vec，glooe，elmo，bert等都是这种形式。</p>
+<p>同样的这些也都是无监督的模型。fastext作为预训练模型的时候也是无监督的，用作分类时时有监督的</p>
 <ul class="task-list">
 <li><input type="checkbox" disabled="" />
 补充bibtex 养成好的习惯蛤！！</li>
@@ -1114,7 +1166,66 @@ attention_output经过一个hidden_size为768的dense层，然后对hidden层进
 </div>
 <div id="gpt" class="section level2" number="1.7">
 <h2><span class="header-section-number">1.7</span> GPT</h2>
-<p>单项语言模型</p>
+<p>单项语言模型,准确的来说是单项的transformer，只用到了transformer中的decodder</p>
+<div id="introduction-3" class="section level3" number="1.7.1">
+<h3><span class="header-section-number">1.7.1</span> introduction</h3>
+<blockquote>
+<p>We employ a two-stage training procedure. First, we use a language modeling objective onthe unlabeled data to learn the initial parameters of a neural network model. Subsequently, we adapt these parameters to a target task using the corresponding supervised objective.</p>
+</blockquote>
+<p>GPT是一个包含两阶段的训练的过程</p>
+<ul>
+<li><p>在无标签的海量数据中训练语言模型，学习神经网络模型的参数。</p></li>
+<li><p>阶段一训练完成模型参数用相关标签数据训练target task。</p></li>
+</ul>
+</div>
+<div id="framework" class="section level3" number="1.7.2">
+<h3><span class="header-section-number">1.7.2</span> Framework</h3>
+<p>这里主要是看下GPT的结构</p>
+</div>
+<div id="unsupervised-pre-training" class="section level3" number="1.7.3">
+<h3><span class="header-section-number">1.7.3</span> Unsupervised pre-training</h3>
+<p>无监督的预训练的过程</p>
+<p>首先是无监督的预训练部分</p>
+<p>Given an unsupervised corpus of tokens <span class="math inline">\(\mathcal{U}=\left\{u_{1}, \ldots, u_{n}\right\},\)</span> we use a standard language modeling objective to maximize the following likelihood:</p>
+<p>语言模型的最大似然函数</p>
+<p><span class="math display">\[
+L_{1}(\mathcal{U})=\sum_{i} \log P\left(u_{i} \mid u_{i-k}, \ldots, u_{i-1} ; \Theta\right)
+\]</span></p>
+<p>where <span class="math inline">\(k\)</span> is the size of the context window, and the conditional probability <span class="math inline">\(P\)</span> is modeled using a neural network with parameters <span class="math inline">\(\Theta\)</span>. These parameters are trained using stochastic gradient descent [51] .</p>
+<p>In our experiments, we use a multi-layer Transformer decoder [34] for the language model, which is a variant of the transformer <span class="math inline">\([62] .\)</span> This model applies a multi-headed self-attention operation over the input context tokens followed by position-wise feedforward layers to produce an output distribution over target tokens:</p>
+<p>使用transformer中的decoder来建立模型</p>
+<p>模型的输入上下文使用的是多头注意力机制，然后对位置前馈全连接层进行应用，以在目标token上产生输出分布：</p>
+<p><span class="math display">\[
+\begin{aligned}
+h_{0} &amp;=U W_{e}+W_{p} \\
+h_{l} &amp;=\text { transformer_block }\left(h_{l-1}\right) \forall i \in[1, n] \\
+P(u) &amp;=\operatorname{softmax}\left(h_{n} W_{e}^{T}\right)
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(U=\left(u_{-k}, \ldots, u_{-1}\right)\)</span> is the context vector of tokens, <span class="math inline">\(n\)</span> is the number of layers, <span class="math inline">\(W_{e}\)</span> is the token embedding matrix, and <span class="math inline">\(W_{p}\)</span> is the position embedding matrix.</p>
+<p><span class="math inline">\(U=\left(u_{-k}, \ldots, u_{-1}\right)\)</span>是上下文向量的token，<span class="math inline">\(n\)</span>是层数，<span class="math inline">\(W_{e}\)</span>是词向量的嵌入矩阵，<span class="math inline">\(W_{p}\)</span>是位置embedding的矩阵，其他部分都是transformer中的decoder的结构。</p>
+</div>
+<div id="supervised-ﬁne-tuning" class="section level3" number="1.7.4">
+<h3><span class="header-section-number">1.7.4</span> Supervised ﬁne-tuning</h3>
+<p>有监督的微调的阶段</p>
+<blockquote>
+<p>After training the model with the objective in Eq. 1 , we adapt the parameters to the supervised target task. We assume a labeled dataset <span class="math inline">\(\mathcal{C},\)</span> where each instance consists of a sequence of input tokens, <span class="math inline">\(x^{1}, \ldots, x^{m},\)</span> along with a label <span class="math inline">\(y .\)</span> The inputs are passed through our pre-trained model to obtain the final transformer block’s activation <span class="math inline">\(h_{l}^{m},\)</span> which is then fed into an added linear output layer with parameters <span class="math inline">\(W_{y}\)</span> to predict <span class="math inline">\(y:\)</span></p>
+</blockquote>
+<p>在公式1的目标函数训练的模型,将训练获得的参数应用于有监督的目标任务。假定有带标签的数据集C，包含的每个实例是词序列, 如 <span class="math inline">\(x^{1}, \ldots, x^{m},\)</span> 带有标签y, 首先作为输入通过已经预训练好的pre-trained model获得最终transformer block’s activation <span class="math inline">\(h_{l}^{m}\)</span>,然后输入带有 Wy的线性输出层来预测y。</p>
+<p>简单的来说就是将第一阶段无监督训练的作为embedding层。</p>
+<p><span class="math display">\[
+P\left(y \mid x^{1}, \ldots, x^{m}\right)=\operatorname{softmax}\left(h_{l}^{m} W_{y}\right)
+\]</span></p>
+<p>This gives us the following objective to maximize:</p>
+<p><span class="math display">\[
+L_{2}(\mathcal{C})=\sum_{(x, y)} \log P\left(y \mid x^{1}, \ldots, x^{m}\right)
+\]</span>
+We additionally found that including language modeling as an auxiliary objective to the fine-tuning helped learning by (a) improving generalization of the supervised model, and (b) accelerating convergence. This is in line with prior work [50,43] , who also observed improved performance with such an auxiliary objective. Specifically, we optimize the following objective (with weight <span class="math inline">\(\lambda\)</span> ):
+<span class="math display">\[
+L_{3}(\mathcal{C})=L_{2}(\mathcal{C})+\lambda * L_{1}(\mathcal{C})
+\]</span>
+Overall, the only extra parameters we require during fine-tuning are <span class="math inline">\(W_{y}\)</span>, and embeddings for delimiter tokens (described below in Section 3.3</p>
+</div>
 </div>
 </div>
             </section>
