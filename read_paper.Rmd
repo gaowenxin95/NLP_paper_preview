@@ -560,6 +560,37 @@ $$
 
 输入的token是${x}_{k}^{L M}$,L是lstm的层数，在每一个位置 k ，每一个LSTM 层都输出相应的context-dependent的表征$\overrightarrow{\mathbf{h}}_{k, j}^{L M}$，j=1,2....L,通过Softmax layer预测下一个$t_{k+1}$
 
+ELMO的输入不再是基于词的了，而是char-based CNN(把单词拆成字母级别，通过CNN网络嵌入模型) ,为什么选择这这种结构?需要看下16年谷歌那篇paper
+
+>输入层和输出层都使用了这种 CNN 结构，先来看看输出层使用这种结构怎么用，以及有什么优势。我们都知道，在 CBOW 中的普通 Softmax 方法中，为了计算每个词的概率大小，使用的如下公式的计算方法：
+
+
+$$
+P\left(w_{t} \mid c_{t}\right)=\frac{\exp \left(e^{\prime}\left(w_{t}\right)^{T} x\right)}{\sum_{i=1}^{|V|} \exp \left(e^{\prime}\left(w_{i}\right)^{T} x\right)}, x=\sum_{i \in c} e\left(w_{i}\right)
+$$
+
+>说白了，也就是先通过向量点乘的形式计算得到 logits，然后再通过 softmax 变成概率意义，这本质上和普通分类没什么区别，只不过是一个较大的 |V| 分类问题。
+现在假定 char-based CNN 模型是现成已有的，对于任意一个目标词都可以得到一个向量表示 CNN(tk) ，当前时刻的 LSTM 的输出向量为 h，那么便可以通过同样的方法得到目标词的概率大小：[NLP巨人肩膀下](https://blog.csdn.net/qq_27231343/article/details/108078679)
+
+
+$$
+p\left(t_{k} \mid t_{1}, \ldots, t_{k-1}\right)=\frac{\exp \left(C N N\left(t_{k}\right)^{T} h\right)}{\sum_{i=1}^{|V|} \exp \left(C N N\left(t_{i}\right)^{T} h\right)}, h=\operatorname{LSTM}\left(t_{k} \mid t_{1}, \ldots, t_{k-1}\right)
+$$
+
+1. CNN 能减少普通做 Softmax 时全连接层中的必须要有的 |V|h 的参数规模，只需保持 CNN 内部的参数大小即可。一般来说，CNN 中的参数规模都要比 |V|h 的参数规模小得多；
+
+2. CNN 可以解决 OOV （Out-of-Vocabulary）问题，这个在翻译问题中尤其头疼；
+
+3. 在预测阶段，CNN 对于每一个词向量的计算可以预先做好，更能够减轻 inference 阶段的计算压力。
+
+补充一句，普通 Softmax 在大词典上的计算压力，都是因为来自于这种方法需要把一个神经网络的输出通过全连接层映射为单个值（而每个类别需要一个映射一次。
+
+一次 h 大小的计算规模，|V| 次映射便需要总共 |V|*h 这么多次的映射规模），对于每个类别的映射参数都不同，而 CNN Softmax 的好处就在于能够做到对于不同的词，映射参数都是共享的，这个共享便体现在使用的 CNN 中的参数都是同一套，从而大大减少参数的规模。 
+
+同样的，对于输入层，ELMo 也是用了一样的 CNN 结构，只不过参数不一样而已。和输出层中的分析类似，输入层中 CNN 的引入同样可以减少参数规模。不过 Exploring the Limits of Language Modeling 文中也指出了训练时间会略微增加，因为原来的 look-up 操作可以做到更快一些，对 OOV 问题也能够比较好的应对，从而把词典大小不再限定在一个固定的词典大小上。
+
+
+
 
 
 >A backward LM is similar to a forward LM, except it runs over the sequence in reverse, predicting the previous token given the future context:
@@ -612,7 +643,7 @@ where $\mathbf{h}_{k=0}^{L M}$ is the token layer and $\mathbf{h}_{k, j}^{L M}=$
 
 For inclusion in a downstream model, ELMo collapses all layers in $R$ into a single vector, $\mathbf{E L M o}_{k}=E\left(R_{k} ; \Theta_{e}\right) .$ In the simplest case ELMo just selects the top layer, $E\left(R_{k}\right)=\mathbf{h}_{k, L}^{L M}$ as in TagLM (Peters et al., 2017 ) and CoVe (McCann et al., 2017 ). More generally, we compute a task specific weighting of all biLM layers:
 
-在下游的任务中, ELMo把所有层的R压缩在一起形成一个向量。(在最简单的情况下, 可以只保留最后一层的 $h_{k, L}^{L M}$ 。 $)$
+在下游的任务中, ELMo把所有层的R压缩在一起形成一个向量。(在最简单的情况下, 可以只保留最后一层的 $h_{k, L}^{L M}$ )
 
 $$
 \mathbf{E L M o}_{k}^{\text {task}}=E\left(R_{k} ; \Theta^{\text {task}}\right)=\gamma^{\text {task}} \sum_{j=0}^{L} s_{j}^{\text {task}} \mathbf{h}_{k, j}^{L M}
