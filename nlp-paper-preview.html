@@ -175,6 +175,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.7.2" data-path=""><a href="#framework"><i class="fa fa-check"></i><b>1.7.2</b> Framework</a></li>
 <li class="chapter" data-level="1.7.3" data-path=""><a href="#unsupervised-pre-training"><i class="fa fa-check"></i><b>1.7.3</b> Unsupervised pre-training</a></li>
 <li class="chapter" data-level="1.7.4" data-path=""><a href="#supervised-ﬁne-tuning"><i class="fa fa-check"></i><b>1.7.4</b> Supervised ﬁne-tuning</a></li>
+<li class="chapter" data-level="1.7.5" data-path=""><a href="#实验部分-2"><i class="fa fa-check"></i><b>1.7.5</b> 实验部分</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -1212,19 +1213,59 @@ P(u) &amp;=\operatorname{softmax}\left(h_{n} W_{e}^{T}\right)
 <p>After training the model with the objective in Eq. 1 , we adapt the parameters to the supervised target task. We assume a labeled dataset <span class="math inline">\(\mathcal{C},\)</span> where each instance consists of a sequence of input tokens, <span class="math inline">\(x^{1}, \ldots, x^{m},\)</span> along with a label <span class="math inline">\(y .\)</span> The inputs are passed through our pre-trained model to obtain the final transformer block’s activation <span class="math inline">\(h_{l}^{m},\)</span> which is then fed into an added linear output layer with parameters <span class="math inline">\(W_{y}\)</span> to predict <span class="math inline">\(y:\)</span></p>
 </blockquote>
 <p>在公式1的目标函数训练的模型,将训练获得的参数应用于有监督的目标任务。假定有带标签的数据集C，包含的每个实例是词序列, 如 <span class="math inline">\(x^{1}, \ldots, x^{m},\)</span> 带有标签y, 首先作为输入通过已经预训练好的pre-trained model获得最终transformer block’s activation <span class="math inline">\(h_{l}^{m}\)</span>,然后输入带有 Wy的线性输出层来预测y。</p>
-<p>简单的来说就是将第一阶段无监督训练的作为embedding层。</p>
+<p>简单的来说就是将第一阶段无监督预训练的词向量的作为embedding层。</p>
+<p>在最后一个transformer block后跟一层全连接和softmax构成task classifier，预测每个类别的概率。</p>
 <p><span class="math display">\[
 P\left(y \mid x^{1}, \ldots, x^{m}\right)=\operatorname{softmax}\left(h_{l}^{m} W_{y}\right)
 \]</span></p>
 <p>This gives us the following objective to maximize:</p>
+<p>在输入所有的token后，预测true类别的概率最大，目标函数为</p>
 <p><span class="math display">\[
 L_{2}(\mathcal{C})=\sum_{(x, y)} \log P\left(y \mid x^{1}, \ldots, x^{m}\right)
-\]</span>
-We additionally found that including language modeling as an auxiliary objective to the fine-tuning helped learning by (a) improving generalization of the supervised model, and (b) accelerating convergence. This is in line with prior work [50,43] , who also observed improved performance with such an auxiliary objective. Specifically, we optimize the following objective (with weight <span class="math inline">\(\lambda\)</span> ):
-<span class="math display">\[
+\]</span></p>
+<p>We additionally found that including language modeling as an auxiliary objective to the fine-tuning helped learning by (a) improving generalization of the supervised model, and (b) accelerating convergence. This is in line with prior work [50,43] , who also observed improved performance with such an auxiliary objective. Specifically, we optimize the following objective (with weight <span class="math inline">\(\lambda\)</span> ):</p>
+<p>为了更好的fine-tuning分类器，更快的收敛，修改目标函数为task classifier和text prediction相结合：</p>
+<p><span class="math display">\[
 L_{3}(\mathcal{C})=L_{2}(\mathcal{C})+\lambda * L_{1}(\mathcal{C})
 \]</span>
 Overall, the only extra parameters we require during fine-tuning are <span class="math inline">\(W_{y}\)</span>, and embeddings for delimiter tokens (described below in Section 3.3</p>
+<p><img src="figs/gpt_1.png" /></p>
+<blockquote>
+<p>For some tasks, like text classification, we can directly fine-tune our model as described above. Certain other tasks, like question answering or textual entailment, have structured inputs such as ordered sentence pairs, or triplets of document, question, and answers. Since our pre-trained model was trained on contiguous sequences of text, we require some modifications to apply it to these tasks. Previous work proposed learning task specific architectures on top of transferred representations [44] . Such an approach re-introduces a significant amount of task-specific customization and does not use transfer learning for these additional architectural components. Instead, we use a traversal-style approach <span class="math inline">\([52],\)</span> where we convert structured inputs into an ordered sequence that our pre-trained model can process. These input transformations allow us to avoid making extensive changes to the architecture across tasks. We provide a brief description of these input transformations below and Figure <span class="math inline">\(\square\)</span> provides a visual illustration. All transformations include adding randomly initialized start and end tokens <span class="math inline">\((\langle s\rangle,\langle e\rangle)\)</span>.</p>
+</blockquote>
+<p>figure1是是GPT针对不同的任务选择的不同的transformer结构。</p>
+<ul>
+<li><p>文本分类是1层transformer+liner层</p></li>
+<li><p>文本相似度分析是2层transformer+liner层</p></li>
+</ul>
+<p>不同的任务处理方式不同。</p>
+<p>通过提升参数量来提升任务的效果，不知道这种代价在实际应用中是否划算。</p>
+<blockquote>
+<p>Textual entailment For entailment tasks, we concatenate the premise <span class="math inline">\(p\)</span> and hypothesis <span class="math inline">\(h\)</span> token sequences, with a delimiter token ($) in between.</p>
+</blockquote>
+<p>entailment：因输入有前提和假说两个句子，那就在两个句子中加入分隔符（delim）连接两条句子，作为输入，经过语言模型送入分类器。</p>
+<blockquote>
+<p>Similarity For similarity tasks, there is no inherent ordering of the two sentences being compared. To reflect this, we modify the input sequence to contain both possible sentence orderings (with a delimiter in between) and process each independently to produce two sequence representations <span class="math inline">\(h_{l}^{m}\)</span> which are added element-wise before being fed into the linear output layer.</p>
+</blockquote>
+<p>similarity：因两条句子的顺序不影响结果，就按两种顺序分别放入语言模型得到各自的hidden state，将两种hidden state相加，送入分类器。</p>
+<blockquote>
+<p>Question Answering and Commonsense Reasoning For these tasks, we are given a context document <span class="math inline">\(z,\)</span> a question <span class="math inline">\(q,\)</span> and a set of possible answers <span class="math inline">\(\left\{a_{k}\right\} .\)</span> We concatenate the document context and question with each possible answer, adding a delimiter token in between to get <span class="math inline">\(\left[z ; q ; \$ ; a_{k}\right]\)</span>. Each of these sequences are processed independently with our model and then normalized via a softmax layer to produce an output distribution over possible answers.</p>
+</blockquote>
+<p>multiple choice：对于每个答案，都将context、问题、该答案以分隔符隔开连接起来，作为输入，经过语言模型送入分类器得到一个向量，将所有答案的向量送入softmax。</p>
+</div>
+<div id="实验部分-2" class="section level3" number="1.7.5">
+<h3><span class="header-section-number">1.7.5</span> 实验部分</h3>
+<blockquote>
+<p>Unsupervised pre-training We use the BooksCorpus dataset [71] for training the language model. It contains over 7,000 unique unpublished books from a variety of genres including Adventure, Fantasy, and Romance. Crucially, it contains long stretches of contiguous text, which allows the generative model to learn to condition on long-range information. An alternative dataset, the <span class="math inline">\(1 \mathrm{~B}\)</span> Word Benchmark, which is used by a similar approach, ELMo [44] , is approximately the same size</p>
+</blockquote>
+<p>预料库是BooksCorpus数据集，elmo也是这个</p>
+<blockquote>
+<p>but is shufﬂed at a sentence level - destroying long-range structure. Our language model achieves a very low token level perplexity of 18.4 on this corpus.</p>
+</blockquote>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" />
+token级别的困惑度是什么?</li>
+</ul>
 </div>
 </div>
 </div>
