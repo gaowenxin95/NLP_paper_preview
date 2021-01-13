@@ -178,6 +178,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.7.5" data-path=""><a href="#实验部分-2"><i class="fa fa-check"></i><b>1.7.5</b> 实验部分</a></li>
 <li class="chapter" data-level="1.7.6" data-path=""><a href="#实验分析"><i class="fa fa-check"></i><b>1.7.6</b> 实验分析</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path=""><a href="#参考文献"><i class="fa fa-check"></i>参考文献</a></li>
 </ul></li>
 </ul>
 
@@ -1194,7 +1195,7 @@ Wq,Wk,Wv会根据任务目标更新变化，保证了自注意力机制的效果
 <div id="introduction-3" class="section level3" number="1.7.1">
 <h3><span class="header-section-number">1.7.1</span> introduction</h3>
 <blockquote>
-<p>We employ a two-stage training procedure. First, we use a language modeling objective onthe unlabeled data to learn the initial parameters of a neural network model. Subsequently, we adapt these parameters to a target task using the corresponding supervised objective.</p>
+<p>We employ a two-stage training procedure. First, we use a language modeling objective onthe unlabeled data to learn the initial parameters of a neural network model. Subsequently, we adapt these parameters to a target task using the corresponding supervised objective.<span class="citation">(Radford et al. 2018)</span></p>
 </blockquote>
 <p>GPT是一个包含两阶段的训练的过程</p>
 <ul>
@@ -1303,7 +1304,9 @@ token级别的困惑度是什么?</li>
 <li><p>激活函数: GELU(LU系列)</p></li>
 <li><p>用fifty和spaCy库对语料进行预处理</p></li>
 </ul>
+<blockquote>
 <p>Fine-tuning details Unless specified, we reuse the hyperparameter settings from unsupervised pre-training. We add dropout to the classifier with a rate of <span class="math inline">\(0.1 .\)</span> For most tasks, we use a learning rate of <span class="math inline">\(6.25 \mathrm{e}-5\)</span> and a batchsize of <span class="math inline">\(32 .\)</span> Our model finetunes quickly and 3 epochs of training was sufficient for most cases. We use a linear learning rate decay schedule with warmup over <span class="math inline">\(0.2 \%\)</span> of training. <span class="math inline">\(\lambda\)</span> was set to 0.5 .</p>
+</blockquote>
 <p>Fine-tuning部分</p>
 <ul>
 <li><p>fine-tuning阶段加上0.1的dropout</p></li>
@@ -1323,7 +1326,33 @@ token级别的困惑度是什么?</li>
 </blockquote>
 <p>研究迁移学习的层数模型效果的关系</p>
 <p><img src="figs/gpt_4.png" /></p>
-<p>zero-shot?</p>
+<ul>
+<li><p>左图：利用Transformer的decoder作为语言模型，transformer的层数越多表现越好。</p></li>
+<li><p>右图：预训练的迭代次数越多，模型学到的内容越多，学的到表示越好。从而表现
+到微调后的目标任务上的表现就更好.</p></li>
+<li><p><input type="checkbox" disabled="" />
+zero-shot?</p></li>
+</ul>
+<p>零次学习
+正好有几个概念一起学习一下</p>
+<ul class="task-list">
+<li><p><input type="checkbox" disabled="" />
+元学习，对话系统经常看见</p></li>
+<li><p><input type="checkbox" disabled="" />
+启发式学习</p></li>
+<li><p><input type="checkbox" disabled="" />
+迁移学习</p></li>
+<li><p><input type="checkbox" disabled="" />
+强化学习</p></li>
+</ul>
+</div>
+</div>
+<div id="参考文献" class="section level2 unnumbered" number="">
+<h2>参考文献</h2>
+<div id="refs" class="references hanging-indent">
+<div>
+<p>Radford, Alec, Karthik Narasimhan, Tim Salimans, and Ilya Sutskever. 2018. “Improving Language Understanding by Generative Pre-Training.”</p>
+</div>
 </div>
 </div>
 </div>

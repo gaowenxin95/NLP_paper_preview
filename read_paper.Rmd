@@ -783,7 +783,7 @@ Wq,Wk,Wv会根据任务目标更新变化，保证了自注意力机制的效果
 
 ### introduction
 
-> We employ a two-stage training procedure. First, we use a language modeling objective onthe unlabeled data to learn the initial parameters of a neural network model. Subsequently, we adapt these parameters to a target task using the corresponding supervised objective.
+> We employ a two-stage training procedure. First, we use a language modeling objective onthe unlabeled data to learn the initial parameters of a neural network model. Subsequently, we adapt these parameters to a target task using the corresponding supervised objective.[@radford2018improving]
 
 GPT是一个包含两阶段的训练的过程
 
@@ -929,7 +929,7 @@ multiple choice：对于每个答案，都将context、问题、该答案以分�
 
 - 用fifty和spaCy库对语料进行预处理
 
-Fine-tuning details Unless specified, we reuse the hyperparameter settings from unsupervised pre-training. We add dropout to the classifier with a rate of $0.1 .$ For most tasks, we use a learning rate of $6.25 \mathrm{e}-5$ and a batchsize of $32 .$ Our model finetunes quickly and 3 epochs of training was sufficient for most cases. We use a linear learning rate decay schedule with warmup over $0.2 \%$ of training. $\lambda$ was set to 0.5 .
+>Fine-tuning details Unless specified, we reuse the hyperparameter settings from unsupervised pre-training. We add dropout to the classifier with a rate of $0.1 .$ For most tasks, we use a learning rate of $6.25 \mathrm{e}-5$ and a batchsize of $32 .$ Our model finetunes quickly and 3 epochs of training was sufficient for most cases. We use a linear learning rate decay schedule with warmup over $0.2 \%$ of training. $\lambda$ was set to 0.5 .
 
 
 Fine-tuning部分
@@ -959,4 +959,26 @@ Fine-tuning部分
 
 ![](figs/gpt_4.png)
 
-zero-shot?
+
+
+- 左图：利用Transformer的decoder作为语言模型，transformer的层数越多表现越好。
+
+- 右图：预训练的迭代次数越多，模型学到的内容越多，学的到表示越好。从而表现
+到微调后的目标任务上的表现就更好.
+
+
+- [ ] zero-shot?
+
+零次学习
+正好有几个概念一起学习一下
+
+- [ ] 元学习，对话系统经常看见
+
+- [ ] 启发式学习
+
+- [ ] 迁移学习
+
+- [ ] 强化学习
+
+
+## 参考文献
