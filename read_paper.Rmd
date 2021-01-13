@@ -946,5 +946,17 @@ Fine-tuning部分
 - 0.2% warmup
 
 
+在四个任务上慢分别做测试，在部分或者所选全部数据集上均能达到sota,自然语言推理，问答系统，文本相似度分析，文本分类任务等。
 
+![](figs/gpt_2.png)
+![](figs/gpt_3.png)
 
+### 实验分析
+
+>Impact of number of layers transferred We observed the impact of transferring a variable number of layers from unsupervised pre-training to the supervised target task. Figure 2 (left) illustrates the performance of our approach on MultiNLI and RACE as a function of the number of layers transferred. We observe the standard result that transferring embeddings improves performance and that each transformer layer provides further benefits up to $9 \%$ for full transfer on MultiNLI. This indicates that each layer in the pre-trained model contains useful functionality for solving target tasks.
+
+研究迁移学习的层数模型效果的关系
+
+![](figs/gpt_4.png)
+
+zero-shot?

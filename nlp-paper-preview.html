@@ -176,6 +176,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.7.3" data-path=""><a href="#unsupervised-pre-training"><i class="fa fa-check"></i><b>1.7.3</b> Unsupervised pre-training</a></li>
 <li class="chapter" data-level="1.7.4" data-path=""><a href="#supervised-ﬁne-tuning"><i class="fa fa-check"></i><b>1.7.4</b> Supervised ﬁne-tuning</a></li>
 <li class="chapter" data-level="1.7.5" data-path=""><a href="#实验部分-2"><i class="fa fa-check"></i><b>1.7.5</b> 实验部分</a></li>
+<li class="chapter" data-level="1.7.6" data-path=""><a href="#实验分析"><i class="fa fa-check"></i><b>1.7.6</b> 实验分析</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -1311,6 +1312,18 @@ token级别的困惑度是什么?</li>
 <li><p>epoch: 只需要3个epoch</p></li>
 <li><p>0.2% warmup</p></li>
 </ul>
+<p>在四个任务上慢分别做测试，在部分或者所选全部数据集上均能达到sota,自然语言推理，问答系统，文本相似度分析，文本分类任务等。</p>
+<p><img src="figs/gpt_2.png" />
+<img src="figs/gpt_3.png" /></p>
+</div>
+<div id="实验分析" class="section level3" number="1.7.6">
+<h3><span class="header-section-number">1.7.6</span> 实验分析</h3>
+<blockquote>
+<p>Impact of number of layers transferred We observed the impact of transferring a variable number of layers from unsupervised pre-training to the supervised target task. Figure 2 (left) illustrates the performance of our approach on MultiNLI and RACE as a function of the number of layers transferred. We observe the standard result that transferring embeddings improves performance and that each transformer layer provides further benefits up to <span class="math inline">\(9 \%\)</span> for full transfer on MultiNLI. This indicates that each layer in the pre-trained model contains useful functionality for solving target tasks.</p>
+</blockquote>
+<p>研究迁移学习的层数模型效果的关系</p>
+<p><img src="figs/gpt_4.png" /></p>
+<p>zero-shot?</p>
 </div>
 </div>
 </div>
