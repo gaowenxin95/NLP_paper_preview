@@ -330,4 +330,8 @@ P E_{(p o s, 2 i+1)} &=\cos \left(p o s / 10000^{2 i / d_{\text {model }}}\right
 
 总结的很到位
 
+Transformer里最为核心的机制是Self-attention，正是因为Self-attention的存在，才使得Transformer在做类似翻译问题的时候，可以让其Encoder不用做序列输入，而是将整个序列一次全输入，并且超长序列的输入也变得可能
+
 OOV就是out-of-vocabulary，不在词库里的意思。
+
+-   新词产生，这个问题的解决方式？

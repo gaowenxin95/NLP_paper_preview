@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2021-01-13" />
+<meta name="date" content="2021-01-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -178,6 +178,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.7.5" data-path=""><a href="#实验部分-2"><i class="fa fa-check"></i><b>1.7.5</b> 实验部分</a></li>
 <li class="chapter" data-level="1.7.6" data-path=""><a href="#实验分析"><i class="fa fa-check"></i><b>1.7.6</b> 实验分析</a></li>
 </ul></li>
+<li class="chapter" data-level="1.8" data-path=""><a href="#ulmfit"><i class="fa fa-check"></i><b>1.8</b> ULMFit</a></li>
+<li class="chapter" data-level="1.9" data-path=""><a href="#bert"><i class="fa fa-check"></i><b>1.9</b> BERT</a>
+<ul>
+<li class="chapter" data-level="1.9.1" data-path=""><a href="#introduction-4"><i class="fa fa-check"></i><b>1.9.1</b> introduction</a></li>
+<li class="chapter" data-level="1.9.2" data-path=""><a href="#bert结构"><i class="fa fa-check"></i><b>1.9.2</b> bert结构</a></li>
+<li class="chapter" data-level="1.9.3" data-path=""><a href="#input-output"><i class="fa fa-check"></i><b>1.9.3</b> input output</a></li>
+<li class="chapter" data-level="1.9.4" data-path=""><a href="#mlm"><i class="fa fa-check"></i><b>1.9.4</b> MLM</a></li>
+</ul></li>
+<li class="chapter" data-level="1.10" data-path=""><a href="#xlnet"><i class="fa fa-check"></i><b>1.10</b> XLNET</a></li>
 <li class="chapter" data-level="" data-path=""><a href="#参考文献"><i class="fa fa-check"></i>参考文献</a></li>
 </ul></li>
 </ul>
@@ -200,11 +209,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">NLP相关paper阅读</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2021-01-13</em></p>
+<p class="date"><em>2021-01-17</em></p>
 </div>
 <div id="nlp-paper-preview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> NLP paper preview</h1>
-<p>emmmmm…站在巨人的肩膀看世界~ 是件幸福的事情</p>
 <div id="word2vec" class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> word2vec</h2>
 <p>这个工具包毕竟是梯子级别的~
@@ -1148,7 +1156,11 @@ Attention之后还有一个线性的dense层，即multi-head
 attention_output经过一个hidden_size为768的dense层，然后对hidden层进行dropout，最后加上resnet并进行normalization（tensor的最后一维，即feature维进行）。</p>
 </blockquote>
 <p>总结的很到位</p>
+<p>Transformer里最为核心的机制是Self-attention，正是因为Self-attention的存在，才使得Transformer在做类似翻译问题的时候，可以让其Encoder不用做序列输入，而是将整个序列一次全输入，并且超长序列的输入也变得可能</p>
 <p>OOV就是out-of-vocabulary，不在词库里的意思。</p>
+<ul>
+<li>新词产生，这个问题的解决方式？</li>
+</ul>
 <p>tranformer这里最近看了一篇还不错的分享，等空了把重点内容，之前理解没到位的记录下
 这里先放一个链接</p>
 <p><a href="https://mp.weixin.qq.com/s?__biz=MzI4MDYzNzg4Mw==&amp;mid=2247521353&amp;idx=6&amp;sn=5c1d369457feb0e85d2dc0ce15013551&amp;chksm=ebb7ac9ddcc0258b844f4c3e96e0a4e6092908eae6101582998d9023472fda4f853195d0483d&amp;mpshare=1&amp;scene=23&amp;srcid=0103cJP102hkdnRNQfXSAOuQ&amp;sharer_sharetime=1609723757487&amp;sharer_shareid=df15c342306c746b0423e3fd6ee52a86#rd">万能的transformer</a></p>
@@ -1314,6 +1326,8 @@ token级别的困惑度是什么?</li>
 <li><p>batch size: 32</p></li>
 <li><p>epoch: 只需要3个epoch</p></li>
 <li><p>0.2% warmup</p></li>
+<li><p><input type="checkbox" disabled="" />
+warmup ?</p></li>
 </ul>
 <p>在四个任务上慢分别做测试，在部分或者所选全部数据集上均能达到sota,自然语言推理，问答系统，文本相似度分析，文本分类任务等。</p>
 <p><img src="figs/gpt_2.png" />
@@ -1331,21 +1345,134 @@ token级别的困惑度是什么?</li>
 <li><p>右图：预训练的迭代次数越多，模型学到的内容越多，学的到表示越好。从而表现
 到微调后的目标任务上的表现就更好.</p></li>
 <li><p><input type="checkbox" disabled="" />
-zero-shot?</p></li>
+zero-shot? 零次学习</p></li>
 </ul>
-<p>零次学习
-正好有几个概念一起学习一下</p>
+<p>正好有几个概念一起学习一下：</p>
 <ul class="task-list">
 <li><p><input type="checkbox" disabled="" />
-元学习，对话系统经常看见</p></li>
+元学习</p></li>
 <li><p><input type="checkbox" disabled="" />
 启发式学习</p></li>
 <li><p><input type="checkbox" disabled="" />
 迁移学习</p></li>
 <li><p><input type="checkbox" disabled="" />
 强化学习</p></li>
+<li><p><input type="checkbox" disabled="" />
+联邦学习</p></li>
 </ul>
 </div>
+</div>
+<div id="ulmfit" class="section level2" number="1.8">
+<h2><span class="header-section-number">1.8</span> ULMFit</h2>
+<p>这个模型里面的基础框架也是LSTM结构，这个文章简单的看下思路，感觉有很多调参的经验可以平时用一些</p>
+<blockquote>
+<p>We propose a new method, Universal Language Model Fine-tuning (ULMFiT) that addresses these issues and enables robust inductive transfer learning for any NLP task, akin to fine-tuning ImageNet models: The same 3-layer LSTM architecturewith the same hyperparameters and no additions other than tuned dropout hyperparameters outperforms highly engineered models and transfer learning approaches on six widely studied text classification tasks. On IMDb, with 100 labeled examples, ULMFiT matches the performance of training from scratch with <span class="math inline">\(10 \times\)</span> and- given <span class="math inline">\(50 \mathrm{k}\)</span> unlabeled examples-with <span class="math inline">\(100 \times\)</span> more data.</p>
+</blockquote>
+<blockquote>
+<p>Contributions <span class="math inline">\(\quad\)</span> Our contributions are the following:
+1) We propose Universal Language Model Fine-tuning (ULMFiT), a method that can be used to achieve CV-like transfer learning for any task for NLP. 2) We propose discriminative fine-tuning, slanted triangular learning rates, and gradual unfreezing, novel techniques to retain previous knowledge and avoid catastrophic forgetting during fine-tuning. 3 ) We significantly outperform the state-of-the-art on six representative text classification datasets, with an error reduction of <span class="math inline">\(18-24 \%\)</span> on the majority of datasets. 4) We show that our method enables extremely sample-efficient transfer learning and perform an extensive ablation analysis. 5) We make the pretrained models and our code available to enable wider adoption.</p>
+</blockquote>
+</div>
+<div id="bert" class="section level2" number="1.9">
+<h2><span class="header-section-number">1.9</span> BERT</h2>
+<div id="introduction-4" class="section level3" number="1.9.1">
+<h3><span class="header-section-number">1.9.1</span> introduction</h3>
+<blockquote>
+<p>In this paper, we improve the fine-tuning based approaches by proposing BERT: Bidirectional <span class="math inline">\(\begin{array}{ll}\text { Encoder } &amp; \text { Representations } &amp; \text { from } &amp; \text { Transformers. }\end{array}\)</span> BERT alleviates the previously mentioned unidirectionality constraint by using a “masked language model” (MLM) pre-training objective, inspired by the Cloze task (Taylor, 1953). The masked language model randomly masks some of the tokens from the input, and the objective is to predict the original vocabulary id of the masked word based only on its context. Unlike left-toright language model pre-training, the MLM objective enables the representation to fuse the left and the right context, which allows us to pretrain a deep bidirectional Transformer. In addition to the masked language model, we also use a “next sentence prediction” task that jointly pretrains text-pair representations. The contributions of our paper are as follows:</p>
+</blockquote>
+<ul>
+<li><p>We demonstrate the importance of bidirectional pre-training for language representations. Unlike Radford et al. (2018), which uses unidirectional language models for pre-training, BERT uses masked language models to enable pretrained deep bidirectional representations. This is also in contrast to Peters et al. <span class="math inline">\((2018 \mathrm{a}),\)</span> which uses a shallow concatenation of independently trained left-to-right and right-to-left LMs.</p></li>
+<li><p>We show that pre-trained representations reduce the need for many heavily-engineered taskspecific architectures. BERT is the first finetuning based representation model that achieves state-of-the-art performance on a large suite of sentence-level and token-level tasks, outperforming many task-specific architectures.</p></li>
+<li><p>BERT advances the state of the art for eleven NLP tasks. The code and pre-trained models are available at https: / / github. com/ google-research/bert.</p></li>
+</ul>
+<p>在本文中，通过提出BERT：变换器的双向编码器表示来改进基于微调的方法。 BERT通过提出一个新的预训练目标来解决前面提到的单向约束：“掩盖语言模型”（MLM），受到完形任务的启发（Taylor，1953）。MLM从输入中随机地掩盖一些标记，并且目标是仅基于其上下文来预测被掩盖的单词的原始词汇id。与从左到右的语言模型预训练不同，MLM目标允许表示融合左右上下文，预训练一个深度双向变换器。除了MLM，我们还引入了一个“下一句预测”任务，联合预训练文本对表示。</p>
+<p>bert是两部分组成的</p>
+<ul>
+<li>MLM :掩盖语言模型</li>
+<li>next sentence prediction：下一句预测</li>
+</ul>
+<p>本文的贡献如下：</p>
+<ul>
+<li><p>证明了双向预训练对语言表达的重要性。与Radford等人不同。 （2018），其使用单向语言模型进行预训练，BERT使用mask语言模型来实现预训练任务的的深度双向表示。这也与Peters等人(2018年)形成了鲜明对比，Peters等人使用的是一种由独立训练的从左到右和从右到左的LMs的浅层连接。</p></li>
+<li><p>展示了预先训练的表示消除了许多经过大量工程设计的特定于任务的体系结构的需求。BERT是第一个基于微调的表示模型，它在大量的句子级和token任务上实现了最先进的性能，优于许多具有任务特定体系结构的系统。预训练+微调</p></li>
+<li><p>BERT推进了11项NLP任务的最新技术。</p></li>
+</ul>
+</div>
+<div id="bert结构" class="section level3" number="1.9.2">
+<h3><span class="header-section-number">1.9.2</span> bert结构</h3>
+<blockquote>
+<p>We introduce BERT and its detailed implementation in this section. There are two steps in our framcwork: pre-training and fine-tuning. During pre-training, the model is trained on unlabeled data over different pre-training tasks. For finetuning, the BERT model is first initialized with the pre-trained parameters, and all of the parameters are fine-tuned using labeled data from the downstream tasks. Each downstream task has separate fine-tuned models, even though they are initialized with the same pre-trained parameters. The question-answering example in Figure 1 will serve as a running example for this section.</p>
+</blockquote>
+<p>bert也是两阶段的任务预训练的任务+微调的任务</p>
+<blockquote>
+<p>A distinctive feature of BERT is its unified architecture across different tasks. There is minimal difference between the pre-trained architecture and the final downstream architecture.</p>
+</blockquote>
+<p>针对不同的下游任务会有不同的预训练的模型</p>
+<p>Model Architecture BERT’s model architecture is a multi-layer bidirectional Transformer encoder based on the original implementation described in Vaswani et al. (2017) and released in the tensor2tensor library. <span class="math inline">\({ }^{1}\)</span> Because the use of Transformers has become common and our implementation is almost identical to the original, we will omit an exhaustive background description of the model architecture and refer readers to
+Vaswani et al. (2017) as well as excellent guides such as “The Annotated Transformer.”</p>
+<p>BERT是多层双向Transformer编码器，基于Vaswani等人（2017）中描述的原始实现，并在tensor2tensor库中发布。</p>
+<blockquote>
+<p>In this work, we denote the number of layers (i.c., Transformcr blocks) as <span class="math inline">\(L,\)</span> the hiddcn sizc as <span class="math inline">\(H,\)</span> and the number of self-attention heads as <span class="math inline">\(A .^{3}\)</span>
+We primarily report results on two model sizes:
+<span class="math inline">\(\mathbf{B E R T}_{\mathbf{B A S E}}(\mathrm{L}=12, \mathrm{H}=768, \mathrm{~A}=12,\)</span> Total Param-
+eters <span class="math inline">\(=110 \mathrm{M}\)</span> ) and <span class="math inline">\(\mathbf{B E R T}_{\text {LARGE }}(\mathrm{L}=24, \mathrm{H}=1024\)</span>
+<span class="math inline">\(\mathrm{A}=16,\)</span> Total Parameters <span class="math inline">\(=340 \mathrm{M}\)</span> ). BERT <span class="math inline">\(_{\text {BASE }}\)</span> was chosen to have the same model size as OpenAI GPT for comparison purposes. Critically, however, the BERT Transformer uses bidirectional self-attention, while the GPT Transformer uses constrained self-attention where every token can only attend to context to its left.</p>
+</blockquote>
+<ul>
+<li>L是transformer中的block块的层数</li>
+<li>H是隐藏层数量</li>
+<li>A是注意力的头数</li>
+</ul>
+<p>base bert和large bert参数规模的设置如下：</p>
+<p><span class="math inline">\(\mathbf{B E R T}_{\mathbf{B A S E}}(\mathrm{L}=12, \mathrm{H}=768, \mathrm{~A}=12,\)</span> Total Param-
+eters <span class="math inline">\(=110 \mathrm{M}\)</span> ) and <span class="math inline">\(\mathbf{B E R T}_{\text {LARGE }}(\mathrm{L}=24, \mathrm{H}=1024\)</span>
+<span class="math inline">\(\mathrm{A}=16,\)</span> Total Parameters <span class="math inline">\(=340 \mathrm{M}\)</span> ).</p>
+<p>base bert的参数量级和openai的gpt的参数量是一样的。</p>
+<p>对比两个模型，bert是使用了双向的self-attention，GPT是是单项的self-attention,只能学到从左侧的上下文语义。</p>
+</div>
+<div id="input-output" class="section level3" number="1.9.3">
+<h3><span class="header-section-number">1.9.3</span> input output</h3>
+<blockquote>
+<p>Input/Output Representations To make BERT handle a variety of down-stream tasks, our input representation is able to unambiguously represent both a single sentence and a pair of sentences (e.g., <span class="math inline">\(\langle\)</span> Question, Answer <span class="math inline">\(\rangle\)</span> ) in one token sequence. Throughout this work, a “sentence” can be an arbitrary span of contiguous text, rather than an actual linguistic sentence. A “sequence” refers to the input token sequence to BERT, which may be a single sentence or two sentences packed together. We use WordPiece embeddings (Wu et al.,
+2016) with a 30,000 token vocabulary. The first token of every sequence is always a special classification token ( <span class="math inline">\([\mathrm{CLS}]\)</span> ). The final hidden state corresponding to this token is used as the aggregate sequence representation for classification tasks. Sentence pairs are packed together into a single sequence. We differentiate the sentences in two ways. First, we separate them with a special token ( <span class="math inline">\([\mathrm{SEP}])\)</span>. Second, we add a learned embedding to every token indicating whether it belongs to sentence <span class="math inline">\(A\)</span> or sentence <span class="math inline">\(B\)</span>. As shown in Figure 1 . we denote input embedding as <span class="math inline">\(E,\)</span> the final hidden vector of the special [CLS] token as <span class="math inline">\(C \in \mathbb{R}^{H}\)</span>, and the final hidden vector for the <span class="math inline">\(i^{\text {th }}\)</span> input token as <span class="math inline">\(T_{i} \in \mathbb{R}^{H}\)</span>
+For a given token, its input representation is constructed by summing the corresponding token, segment, and position embeddings. A visualization of this construction can be seen in Figure 2</p>
+</blockquote>
+<p>输入表示能够在一个token序列中明确地表示单个文本句子或一对文本句子（例如，[问题，答案]）。对于给定的标记，其输入表示通过token embedding ,segment embedding ,position embedding三个部分求和来表示。输入表示的可视化表示在图2中给出。具体是：</p>
+<p><img src="figs/bert-2.png" /></p>
+<ul>
+<li><p>输入/输出表示 为了使bert处理一系列的下游任务，输入表示能够在一个token序列中明确的表示单个句子和一对句子。在整个工作中，一个“句子”可是是任意一段连续的文本，而不是实际语言的句子。一个“句子”指的是输入BERT的token序列，这个序列可以是单个序列或者是两个序列连在一起。</p></li>
+<li><p>使用带有30,000个token的词汇表做WordPiece嵌入，每个序列的第一个token都是一个特殊的分类符号（[CLS]）。与该token相对应的最终隐藏状态用作分类任务的合计序列表示。句子对打包在一起成为单个序列</p></li>
+</ul>
+<p>有两种方式区分句子。</p>
+<ul>
+<li>第一使用特殊的token（[SEP]）将句子分开，其次，在每个标记中加入一个学习嵌入，表明它是属于句子a还是句子B。如图1所示，用E表示输入嵌入，特殊token[CLS]的最终的影藏向量为C，和 ith 输入token最终隐藏向量为<span class="math inline">\(T_i\)</span>。</li>
+</ul>
+<p><img src="figs/bert_1.png" /></p>
+</div>
+<div id="mlm" class="section level3" number="1.9.4">
+<h3><span class="header-section-number">1.9.4</span> MLM</h3>
+<p>掩盖语言模型：</p>
+<blockquote>
+<p>Task #1: Masked LM <span class="math inline">\(\quad\)</span> Intuitively, it is reasonable to believe that a deep bidirectional model is strictly more powerful than either a left-to-righ model or the shallow concatenation of a left-toright and a right-to-left model. Unfortunately standard conditional language models can only be trained left-to-right or right-to-left, since bidirec tional conditioning would allow each word to in directly “see itself”, and the model could trivially predict the target word in a multi-layered context.
+In order to train a deep bidirectional representation, we simply mask some percentage of the input tokens at random, and then predict those masked tokens. We refer to this procedure as a “masked LM” (MLM), although it is often referred to as a Cloze task in the literature (Taylor, 1953<span class="math inline">\()\)</span>. In this case, the final hidden vectors corresponding to the mask tokens are fed into an output softmax over the vocabulary, as in a standard LM. In all of our experiments, we mask <span class="math inline">\(15 \%\)</span> of all WordPiece tokens in each sequence at random. In contrast to denoising auto-encoders (Vincent et al., 2008 ), we only predict the masked words rather than reconstructing the entire input.
+Although this allows us to obtain a bidirectional pre-trained model, a downside is that we are creating a mismatch between pre-training and fine-tuning, since the [MASK] token does not appear during fine-tuning. To mitigate this, we do not always replace “masked” words with the actual [MASK] token. The training data generator chooses <span class="math inline">\(15 \%\)</span> of the token positions at random for prediction. If the <span class="math inline">\(i\)</span> -th token is chosen, we replace the <span class="math inline">\(i\)</span> -th token with (1) the [MASK] token <span class="math inline">\(80 \%\)</span> of the time (2) a random token <span class="math inline">\(10 \%\)</span> of the time (3) the unchanged <span class="math inline">\(i\)</span> -th token <span class="math inline">\(10 \%\)</span> of the time. Then, <span class="math inline">\(T_{i}\)</span> will be used to predict the original token with cross entropy loss. We compare variations of this procedure in Appendix <span class="math inline">\(\mathrm{C.} .2 .\)</span></p>
+</blockquote>
+<p>任务1：Masked LM直观的说，双向模型的效果比单项的好,因为双向调节会允许每个单词间接地“看到自己”，并且模型可以在多层次的语境中对目标词进行简单的预测。</p>
+<p>前者通常被称为“transformer encoder”，然而仅仅用于上下文的版本被称为“transformer decoder”，因此它可以被用于文本生成。</p>
+<p>为了训练深度双向的表示，只是随机的屏蔽一定百分比的输入token，然后去预测那些遮盖掉的token。将这个过程称为是“masked LM”（MLM），尽管它在文献中通常被称为完形任务。在这种情况下，对应于mask token的最终的隐藏向量通过词汇表输出softmax，如标准的LM。在所有的实验中，随机屏蔽每个序列中所有的WordPiece token的15%。和去燥的auto-encoder相比，只预测掩蔽的单词而不是重建整个输入。</p>
+<p>虽然这允许获得双向预训练模型，但缺点是在预训练和微调之间产生不匹配，因为微调期间 [MASK] 不会出现。为了缓解这个问题，并不总是用实际的 [MASK] token替换“masked”词。训练数据生成器随机选择15％的token位置进行预测。如果选择了第i个token，就将第i个token</p>
+<ul>
+<li><p>（1）80%的情况替换为[MASK]token</p></li>
+<li><p>（2）10%的情况替换为随机的token</p></li>
+<li><p>（3）10%的情况保持不变。</p></li>
+</ul>
+<p>然后<span class="math inline">\(T_i\)</span>将用于预测具有交叉熵损失的原始token。比较了附录C.2中该过程的变化。</p>
+<p>附录东西跟多，可以好好看看</p>
+<p>BERT实际上是Transformer的Encoder，为了在语言模型的训练中，使用上下文信息又不泄露标签信息，采用了Masked LM，简单来说就是随机的选择序列的部分token用 [Mask] 标记代替。</p>
+</div>
+</div>
+<div id="xlnet" class="section level2" number="1.10">
+<h2><span class="header-section-number">1.10</span> XLNET</h2>
 </div>
 <div id="参考文献" class="section level2 unnumbered" number="">
 <h2>参考文献</h2>
