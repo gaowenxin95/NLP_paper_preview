@@ -846,7 +846,7 @@ $$
 
 This gives us the following objective to maximize:
 
-在输入所有的token后，预测true类别的概率最大，目标函数为
+在输入所有的token后，预测true类别的概率最大，目标函数为：
 
 $$
 L_{2}(\mathcal{C})=\sum_{(x, y)} \log P\left(y \mid x^{1}, \ldots, x^{m}\right)
@@ -1106,14 +1106,95 @@ Although this allows us to obtain a bidirectional pre-trained model, a downside 
 
 BERT实际上是Transformer的Encoder，为了在语言模型的训练中，使用上下文信息又不泄露标签信息，采用了Masked LM，简单来说就是随机的选择序列的部分token用 [Mask] 标记代替。
 
+- [ ] mask有一个非常大的缺点是mask的操作只存在于pre-train中，fine-tune中没有，这就使得，mask在下游任务中是失效的。
 
 
+但是，mask有效不是因为特征穿越的原因嘛？
+
+可以考虑下几个问题：
+
+- mask中的特征穿越问题？
+
+- mask中过程是无法知道预测的是上文还是下文的token
+
+- mask与滑动窗口的关系？
 
 
+### Next Sentence Prediction
+
+>Many important downstream tasks such as Question Answering (QA) and Natural Language Inference (NLI) are based on understanding the relationship between two sentences, which is not directly captured by language modeling. In order to train a model that understands sentence relationships, we pre-train for a binarized next sentence prediction task that can be trivially generated from any monolingual corpus. Specifically, when choosing the sentences $A$ and $B$ for each pretraining example, $50 \%$ of the time $B$ is the actual next sentence that follows A (labeled as IsNext), and $50 \%$ of the time it is a random sentence from the corpus (labeled as NotNext). As we show in Figure $1, C$ is used for next sentence prediction (NSP). $^{5}$ Despite its simplicity, we demonstrate in Section 5.1 that pre-training towards this task is very beneficial to both QA and NLI.
+The NSP task is closely related to representationlearning objectives used in Jernite et al. (2017) and Logeswaran and Lee (2018). However, in prior work, only sentence embeddings are transferred to down-stream tasks, where BERT transfers all parameters to initialize end-task model parameters.
+Pre-training data The pre-training procedure largely follows the existing literature on language model pre-training. For the pre-training corpus we use the BooksCorpus (800M words) (Zhu et al., 2015 ) and English Wikipedia $(2,500 \mathrm{M}$ words $)$. For Wikipedia we extract only the text passages and ignore lists, tables, and headers. It is critical to use a document-level corpus rather than a shuffled sentence-level corpus such as the Billion Word Benchmark (Chelba et al., 2013 ) in order to extract long contiguous sequences.
 
 
+BERT这里是借鉴了Skip-thoughts方法中的句子预测，具体做法则是将两个句子组合成一个序列，当然组合方式会按照下面将要介绍的方式，然后让模型预测这两个句子是否是先后近邻的两个句子，也就是会把"Next Sentence Prediction"问题建模成为一个二分类问题。训练的时候，数据中有50%的情况这两个句子是先后关系，而另外50%的情况下，这两个句子是随机从语料中凑到一起的，也就是不具备先后关系，以此来构造训练数据。句子级别的预测思路和之前介绍的Skip-thoughts基本一致，当然更本质的思想来源还是来自于word2vec中的skip-gram模型。
+
+### Fine-tuning BERT
+
+bert的微调过程
+
+>Fine-tuning is straightforward since the self-attention mechanism in the Transformer al-
+lows BERT to model many downstream tasks whether they involve single text or text pairs-by swapping out the appropriate inputs and outputs. For applications involving text pairs, a common pattern is to independently encode text pairs before applying bidirectional cross attention, such as Parikh et al. (2016); Seo et al. (2017). BERT instead uses the self-attention mechanism to unify these two stages, as encoding a concatenated text pair with self-attention effectively includes bidirectional cross attention between two sentences.
+For each task, we simply plug in the task specific inputs and outputs into BERT and finetune all the parameters end-to-end. At the input, sentence $A$ and sentence $B$ from pre-training are analogous to (1) sentence pairs in paraphrasing, (2) hypothesis-premise pairs in entailment, (3) question-passage pairs in question answering, and (4) a degenerate text- $\varnothing$ pair in text classification or sequence tagging. At the output, the token representations are fed into an output layer for tokenlevel tasks, such as sequence tagging or question answering, and the [CLS] representation is fed into an output layer for classification, such as entailment or sentiment analysis.
+
+Compared to pre-training, fine-tuning is relatively inexpensive. All of the results in the paper can be replicated in at most 1 hour on a single Cloud TPU, or a few hours on a GPU, starting from the exact same pre-trained model. $^{7}$ We describe the task-specific details in the corresponding subsections of Section $4 .$ More details can be found in Appendix A.5.
+
+对比预训练的过程，微调的过程就没那么的耗费资源了。这篇文中所有的实验的结果使用单个tpu至少1个h，或者几个小时gpu。附录中有介绍。
 
 
+### 实验部分
+
+
+>The General Language Understanding Evaluation (GLUE) benchmark (Wang et al., $2018 \mathrm{a}$ ) is a collection of diverse natural language understanding tasks. Detailed descriptions of GLUE datasets are included in Appendix B.1.
+
+使用的是自然语言理解类的数据集GLUE
+
+To fine-tune on GLUE, we represent the input sequence (for single sentence or sentence pairs) as described in Section $3,$ and use the final hidden vector $C \in \mathbb{R}^{H}$ corresponding to the first input token ( [ CLS ] ) as the aggregate representation. The only new parameters introduced during fine-tuning are classification layer weights $W \in$ $\mathbb{R}^{K \times H}$, where $K$ is the number of labels. We compute a standard classification loss with $C$ and $W$, i.e., $\log \left(\operatorname{softmax}\left(C W^{T}\right)\right)$.
+
+
+>We use a batch size of 32 and fine-tune for 3
+epochs over the data for all GLUE tasks. For each task, we selected the best fine-tuning learning rate (among $5 \mathrm{e}-5,4 \mathrm{e}-5,3 \mathrm{e}-5,$ and $2 \mathrm{e}-5)$ on the Dev set. Additionally, for BERT $_{\text {LARGE }}$ we found that finetuning was sometimes unstable on small datasets, so we ran several random restarts and selected the
+best model on the Dev set. With random restarts, we use the same pre-trained checkpoint but perform different fine-tuning data shuffling and classifier layer initialization. $^{9}$ Results are presented in Table
+1. Both
+BERT $_{\text {BASE }}$ and BERT $_{\text {LARGE }}$ outperform all systems on all tasks by a substantial margin, obtaining $4.5 \%$ and $7.0 \%$ respective average accuracy improvement over the prior state of the art. Note that BERT $_{\text {BASE }}$ and OpenAI GPT are nearly identical in terms of model architecture apart from the attention masking. For the largest and most widely reported GLUE task, MNLI, BERT obtains a $4.6 \%$ absolute accuracy improvement. On the official GLUE leaderboard $^{10}$, BERT $_{\text {LARGE Obtains a score }}$ of $80.5,$ compared to OpenAI GPT, which obtains 72.8 as of the date of writing.
+We find that BERT $_{\text {LARGE }}$ significantly outperforms BERT $_{\text {BASE }}$ across all tasks, especially those with very little training data. The effect of model size is explored more thoroughly in Section 5.2.
+
+
+实验参数设置：
+- batchsize：32
+
+- 学习率：$5 \mathrm{e}-5,4 \mathrm{e}-5,3 \mathrm{e}-5,$ and $2 \mathrm{e}-5)$
+
+![](figs/bert_3.png)
+
+largebert在小的数据集上比basebert的效果来说可能不稳定
+
+从table的实验结果来看large-bert的效果在所有任务上都是最好的。
+
+
+在问答数据集SQuADv1.1上的效果
+
+
+>The Stanford Question Answering Dataset (SQuAD v1.1) is a collection of $100 \mathrm{k}$ crowdsourced question/answer pairs (Rajpurkar et al.,2016). Given a question and a passage from Wikipedia containing the answer, the task is to predict the answer text span in the passage.
+As shown in Figure $1,$ in the question answering task, we represent the input question and passage as a single packed sequence, with the question using the $A$ embedding and the passage using the $B$ embedding. We only introduce a start vector $S \in \mathbb{R}^{H}$ and an end vector $E \in \mathbb{R}^{H}$ during fine-tuning. The probability of word $i$ being the start of the answer span is computed as a dot product between $T_{i}$ and $S$ followed by a softmax over all of the words in the paragraph: $P_{i}=\frac{e^{S \cdot T_{i}}}{\sum_{j} e^{S \cdot T_{j}}}$
+The analogous formula is used for the end of the answer span. The score of a candidate span from position $i$ to position $j$ is defined as $S \cdot T_{i}+E \cdot T_{j}$ and the maximum scoring span where $j \geq i$ is used as a prediction. The training objective is the sum of the log-likelihoods of the correct start and end positions. We fine-tune for 3 epochs with a learning rate of $5 \mathrm{e}-5$ and a batch size of 32 .
+
+这个实验中的参数设置：3个epoch,学习率：$5 \mathrm{e}-5$，batchsize:32
+
+
+>Table 2 shows top leaderboard entries as well as results from top published systems (Seo et al., $2017 ;$ Clark and Gardner, 2018 ; Peters et al., 2018a; Hu et al., 2018). The top results from the SQuAD leaderboard do not have up-to-date public system descriptions available, ${ }^{11}$ and are allowed to use any public data when training their systems. We therefore use modest data augmentation in our system by first fine-tuning on TriviaQA (Joshi et al., 2017 ) befor fine-tuning on SQuAD.
+
+Our best performing system outperforms the top leaderboard system by $+1.5 \mathrm{~F} 1$ in ensembling and $+1.3 \mathrm{~F} 1$ as a single system. In fact, our single BERT model outperforms the top ensemble system in terms of $\mathrm{F} 1$ score. Without TriviaQA fine-tuning data, we only lose 0.1-0.4 F1, still outperforming all existing systems by a wide margin.
+
+实验太多了，这里写一个吧~1，图2中的实验对比结果，bert-large的效果是最好的。
+
+
+![](figs/bert_4.png)
+
+
+### Ablation Studies
+
+消融实验，这个名词第一回听说
 
 
 

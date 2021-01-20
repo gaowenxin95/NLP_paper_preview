@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2021-01-17" />
+<meta name="date" content="2021-01-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -185,6 +185,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.9.2" data-path=""><a href="#bert结构"><i class="fa fa-check"></i><b>1.9.2</b> bert结构</a></li>
 <li class="chapter" data-level="1.9.3" data-path=""><a href="#input-output"><i class="fa fa-check"></i><b>1.9.3</b> input output</a></li>
 <li class="chapter" data-level="1.9.4" data-path=""><a href="#mlm"><i class="fa fa-check"></i><b>1.9.4</b> MLM</a></li>
+<li class="chapter" data-level="1.9.5" data-path=""><a href="#next-sentence-prediction"><i class="fa fa-check"></i><b>1.9.5</b> Next Sentence Prediction</a></li>
+<li class="chapter" data-level="1.9.6" data-path=""><a href="#fine-tuning-bert"><i class="fa fa-check"></i><b>1.9.6</b> Fine-tuning BERT</a></li>
+<li class="chapter" data-level="1.9.7" data-path=""><a href="#实验部分-3"><i class="fa fa-check"></i><b>1.9.7</b> 实验部分</a></li>
+<li class="chapter" data-level="1.9.8" data-path=""><a href="#ablation-studies"><i class="fa fa-check"></i><b>1.9.8</b> Ablation Studies</a></li>
 </ul></li>
 <li class="chapter" data-level="1.10" data-path=""><a href="#xlnet"><i class="fa fa-check"></i><b>1.10</b> XLNET</a></li>
 <li class="chapter" data-level="" data-path=""><a href="#参考文献"><i class="fa fa-check"></i>参考文献</a></li>
@@ -209,7 +213,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">NLP相关paper阅读</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2021-01-17</em></p>
+<p class="date"><em>2021-01-20</em></p>
 </div>
 <div id="nlp-paper-preview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> NLP paper preview</h1>
@@ -1255,7 +1259,7 @@ P(u) &amp;=\operatorname{softmax}\left(h_{n} W_{e}^{T}\right)
 P\left(y \mid x^{1}, \ldots, x^{m}\right)=\operatorname{softmax}\left(h_{l}^{m} W_{y}\right)
 \]</span></p>
 <p>This gives us the following objective to maximize:</p>
-<p>在输入所有的token后，预测true类别的概率最大，目标函数为</p>
+<p>在输入所有的token后，预测true类别的概率最大，目标函数为：</p>
 <p><span class="math display">\[
 L_{2}(\mathcal{C})=\sum_{(x, y)} \log P\left(y \mid x^{1}, \ldots, x^{m}\right)
 \]</span></p>
@@ -1469,6 +1473,78 @@ Although this allows us to obtain a bidirectional pre-trained model, a downside 
 <p>然后<span class="math inline">\(T_i\)</span>将用于预测具有交叉熵损失的原始token。比较了附录C.2中该过程的变化。</p>
 <p>附录东西跟多，可以好好看看</p>
 <p>BERT实际上是Transformer的Encoder，为了在语言模型的训练中，使用上下文信息又不泄露标签信息，采用了Masked LM，简单来说就是随机的选择序列的部分token用 [Mask] 标记代替。</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" />
+mask有一个非常大的缺点是mask的操作只存在于pre-train中，fine-tune中没有，这就使得，mask在下游任务中是失效的。</li>
+</ul>
+<p>但是，mask有效不是因为特征穿越的原因嘛？</p>
+<p>可以考虑下几个问题：</p>
+<ul>
+<li><p>mask中的特征穿越问题？</p></li>
+<li><p>mask中过程是无法知道预测的是上文还是下文的token</p></li>
+<li><p>mask与滑动窗口的关系？</p></li>
+</ul>
+</div>
+<div id="next-sentence-prediction" class="section level3" number="1.9.5">
+<h3><span class="header-section-number">1.9.5</span> Next Sentence Prediction</h3>
+<blockquote>
+<p>Many important downstream tasks such as Question Answering (QA) and Natural Language Inference (NLI) are based on understanding the relationship between two sentences, which is not directly captured by language modeling. In order to train a model that understands sentence relationships, we pre-train for a binarized next sentence prediction task that can be trivially generated from any monolingual corpus. Specifically, when choosing the sentences <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> for each pretraining example, <span class="math inline">\(50 \%\)</span> of the time <span class="math inline">\(B\)</span> is the actual next sentence that follows A (labeled as IsNext), and <span class="math inline">\(50 \%\)</span> of the time it is a random sentence from the corpus (labeled as NotNext). As we show in Figure <span class="math inline">\(1, C\)</span> is used for next sentence prediction (NSP). <span class="math inline">\(^{5}\)</span> Despite its simplicity, we demonstrate in Section 5.1 that pre-training towards this task is very beneficial to both QA and NLI.
+The NSP task is closely related to representationlearning objectives used in Jernite et al. (2017) and Logeswaran and Lee (2018). However, in prior work, only sentence embeddings are transferred to down-stream tasks, where BERT transfers all parameters to initialize end-task model parameters.
+Pre-training data The pre-training procedure largely follows the existing literature on language model pre-training. For the pre-training corpus we use the BooksCorpus (800M words) (Zhu et al., 2015 ) and English Wikipedia <span class="math inline">\((2,500 \mathrm{M}\)</span> words <span class="math inline">\()\)</span>. For Wikipedia we extract only the text passages and ignore lists, tables, and headers. It is critical to use a document-level corpus rather than a shuffled sentence-level corpus such as the Billion Word Benchmark (Chelba et al., 2013 ) in order to extract long contiguous sequences.</p>
+</blockquote>
+<p>BERT这里是借鉴了Skip-thoughts方法中的句子预测，具体做法则是将两个句子组合成一个序列，当然组合方式会按照下面将要介绍的方式，然后让模型预测这两个句子是否是先后近邻的两个句子，也就是会把“Next Sentence Prediction”问题建模成为一个二分类问题。训练的时候，数据中有50%的情况这两个句子是先后关系，而另外50%的情况下，这两个句子是随机从语料中凑到一起的，也就是不具备先后关系，以此来构造训练数据。句子级别的预测思路和之前介绍的Skip-thoughts基本一致，当然更本质的思想来源还是来自于word2vec中的skip-gram模型。</p>
+</div>
+<div id="fine-tuning-bert" class="section level3" number="1.9.6">
+<h3><span class="header-section-number">1.9.6</span> Fine-tuning BERT</h3>
+<p>bert的微调过程</p>
+<blockquote>
+<p>Fine-tuning is straightforward since the self-attention mechanism in the Transformer al-
+lows BERT to model many downstream tasks whether they involve single text or text pairs-by swapping out the appropriate inputs and outputs. For applications involving text pairs, a common pattern is to independently encode text pairs before applying bidirectional cross attention, such as Parikh et al. (2016); Seo et al. (2017). BERT instead uses the self-attention mechanism to unify these two stages, as encoding a concatenated text pair with self-attention effectively includes bidirectional cross attention between two sentences.
+For each task, we simply plug in the task specific inputs and outputs into BERT and finetune all the parameters end-to-end. At the input, sentence <span class="math inline">\(A\)</span> and sentence <span class="math inline">\(B\)</span> from pre-training are analogous to (1) sentence pairs in paraphrasing, (2) hypothesis-premise pairs in entailment, (3) question-passage pairs in question answering, and (4) a degenerate text- <span class="math inline">\(\varnothing\)</span> pair in text classification or sequence tagging. At the output, the token representations are fed into an output layer for tokenlevel tasks, such as sequence tagging or question answering, and the [CLS] representation is fed into an output layer for classification, such as entailment or sentiment analysis.</p>
+</blockquote>
+<p>Compared to pre-training, fine-tuning is relatively inexpensive. All of the results in the paper can be replicated in at most 1 hour on a single Cloud TPU, or a few hours on a GPU, starting from the exact same pre-trained model. <span class="math inline">\(^{7}\)</span> We describe the task-specific details in the corresponding subsections of Section <span class="math inline">\(4 .\)</span> More details can be found in Appendix A.5.</p>
+<p>对比预训练的过程，微调的过程就没那么的耗费资源了。这篇文中所有的实验的结果使用单个tpu至少1个h，或者几个小时gpu。附录中有介绍。</p>
+</div>
+<div id="实验部分-3" class="section level3" number="1.9.7">
+<h3><span class="header-section-number">1.9.7</span> 实验部分</h3>
+<blockquote>
+<p>The General Language Understanding Evaluation (GLUE) benchmark (Wang et al., <span class="math inline">\(2018 \mathrm{a}\)</span> ) is a collection of diverse natural language understanding tasks. Detailed descriptions of GLUE datasets are included in Appendix B.1.</p>
+</blockquote>
+<p>使用的是自然语言理解类的数据集GLUE</p>
+<p>To fine-tune on GLUE, we represent the input sequence (for single sentence or sentence pairs) as described in Section <span class="math inline">\(3,\)</span> and use the final hidden vector <span class="math inline">\(C \in \mathbb{R}^{H}\)</span> corresponding to the first input token ( [ CLS ] ) as the aggregate representation. The only new parameters introduced during fine-tuning are classification layer weights <span class="math inline">\(W \in\)</span> <span class="math inline">\(\mathbb{R}^{K \times H}\)</span>, where <span class="math inline">\(K\)</span> is the number of labels. We compute a standard classification loss with <span class="math inline">\(C\)</span> and <span class="math inline">\(W\)</span>, i.e., <span class="math inline">\(\log \left(\operatorname{softmax}\left(C W^{T}\right)\right)\)</span>.</p>
+<blockquote>
+<p>We use a batch size of 32 and fine-tune for 3
+epochs over the data for all GLUE tasks. For each task, we selected the best fine-tuning learning rate (among <span class="math inline">\(5 \mathrm{e}-5,4 \mathrm{e}-5,3 \mathrm{e}-5,\)</span> and <span class="math inline">\(2 \mathrm{e}-5)\)</span> on the Dev set. Additionally, for BERT <span class="math inline">\(_{\text {LARGE }}\)</span> we found that finetuning was sometimes unstable on small datasets, so we ran several random restarts and selected the
+best model on the Dev set. With random restarts, we use the same pre-trained checkpoint but perform different fine-tuning data shuffling and classifier layer initialization. <span class="math inline">\(^{9}\)</span> Results are presented in Table
+1. Both
+BERT <span class="math inline">\(_{\text {BASE }}\)</span> and BERT <span class="math inline">\(_{\text {LARGE }}\)</span> outperform all systems on all tasks by a substantial margin, obtaining <span class="math inline">\(4.5 \%\)</span> and <span class="math inline">\(7.0 \%\)</span> respective average accuracy improvement over the prior state of the art. Note that BERT <span class="math inline">\(_{\text {BASE }}\)</span> and OpenAI GPT are nearly identical in terms of model architecture apart from the attention masking. For the largest and most widely reported GLUE task, MNLI, BERT obtains a <span class="math inline">\(4.6 \%\)</span> absolute accuracy improvement. On the official GLUE leaderboard <span class="math inline">\(^{10}\)</span>, BERT <span class="math inline">\(_{\text {LARGE Obtains a score }}\)</span> of <span class="math inline">\(80.5,\)</span> compared to OpenAI GPT, which obtains 72.8 as of the date of writing.
+We find that BERT <span class="math inline">\(_{\text {LARGE }}\)</span> significantly outperforms BERT <span class="math inline">\(_{\text {BASE }}\)</span> across all tasks, especially those with very little training data. The effect of model size is explored more thoroughly in Section 5.2.</p>
+</blockquote>
+<p>实验参数设置：
+- batchsize：32</p>
+<ul>
+<li>学习率：<span class="math inline">\(5 \mathrm{e}-5,4 \mathrm{e}-5,3 \mathrm{e}-5,\)</span> and <span class="math inline">\(2 \mathrm{e}-5)\)</span></li>
+</ul>
+<p><img src="figs/bert_3.png" /></p>
+<p>largebert在小的数据集上比basebert的效果来说可能不稳定</p>
+<p>从table的实验结果来看large-bert的效果在所有任务上都是最好的。</p>
+<p>在问答数据集SQuADv1.1上的效果</p>
+<blockquote>
+<p>The Stanford Question Answering Dataset (SQuAD v1.1) is a collection of <span class="math inline">\(100 \mathrm{k}\)</span> crowdsourced question/answer pairs (Rajpurkar et al.,2016). Given a question and a passage from Wikipedia containing the answer, the task is to predict the answer text span in the passage.
+As shown in Figure <span class="math inline">\(1,\)</span> in the question answering task, we represent the input question and passage as a single packed sequence, with the question using the <span class="math inline">\(A\)</span> embedding and the passage using the <span class="math inline">\(B\)</span> embedding. We only introduce a start vector <span class="math inline">\(S \in \mathbb{R}^{H}\)</span> and an end vector <span class="math inline">\(E \in \mathbb{R}^{H}\)</span> during fine-tuning. The probability of word <span class="math inline">\(i\)</span> being the start of the answer span is computed as a dot product between <span class="math inline">\(T_{i}\)</span> and <span class="math inline">\(S\)</span> followed by a softmax over all of the words in the paragraph: <span class="math inline">\(P_{i}=\frac{e^{S \cdot T_{i}}}{\sum_{j} e^{S \cdot T_{j}}}\)</span>
+The analogous formula is used for the end of the answer span. The score of a candidate span from position <span class="math inline">\(i\)</span> to position <span class="math inline">\(j\)</span> is defined as <span class="math inline">\(S \cdot T_{i}+E \cdot T_{j}\)</span> and the maximum scoring span where <span class="math inline">\(j \geq i\)</span> is used as a prediction. The training objective is the sum of the log-likelihoods of the correct start and end positions. We fine-tune for 3 epochs with a learning rate of <span class="math inline">\(5 \mathrm{e}-5\)</span> and a batch size of 32 .</p>
+</blockquote>
+<p>这个实验中的参数设置：3个epoch,学习率：<span class="math inline">\(5 \mathrm{e}-5\)</span>，batchsize:32</p>
+<blockquote>
+<p>Table 2 shows top leaderboard entries as well as results from top published systems (Seo et al., <span class="math inline">\(2017 ;\)</span> Clark and Gardner, 2018 ; Peters et al., 2018a; Hu et al., 2018). The top results from the SQuAD leaderboard do not have up-to-date public system descriptions available, <span class="math inline">\({ }^{11}\)</span> and are allowed to use any public data when training their systems. We therefore use modest data augmentation in our system by first fine-tuning on TriviaQA (Joshi et al., 2017 ) befor fine-tuning on SQuAD.</p>
+</blockquote>
+<p>Our best performing system outperforms the top leaderboard system by <span class="math inline">\(+1.5 \mathrm{~F} 1\)</span> in ensembling and <span class="math inline">\(+1.3 \mathrm{~F} 1\)</span> as a single system. In fact, our single BERT model outperforms the top ensemble system in terms of <span class="math inline">\(\mathrm{F} 1\)</span> score. Without TriviaQA fine-tuning data, we only lose 0.1-0.4 F1, still outperforming all existing systems by a wide margin.</p>
+<p>实验太多了，这里写一个吧~1，图2中的实验对比结果，bert-large的效果是最好的。</p>
+<p><img src="figs/bert_4.png" /></p>
+</div>
+<div id="ablation-studies" class="section level3" number="1.9.8">
+<h3><span class="header-section-number">1.9.8</span> Ablation Studies</h3>
+<p>消融实验，这个名词第一回听说</p>
 </div>
 </div>
 <div id="xlnet" class="section level2" number="1.10">
