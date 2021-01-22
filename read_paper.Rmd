@@ -1239,7 +1239,13 @@ We recognize that it would also be possible to train separate LTR and RTL models
 
 ![](figs/bert_7.png)
 
+- [ ] bert中的posititon和transformer中的是不一样的？
 
+前者是初始化一个矩阵自己训练参数，后者是正弦余弦函数计算控制距离的
+
+- [ ] bert中的双向和elmo中的双向有什么不同？
+
+emlo的本质是单向，单项训练完concat两个方向到一起，算是函数也是分开计算的，bert中的双向是真正的双向，双向的transformer，继承了transformer中的大部分结构但不是全部。
 
 
 
