@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2021-01-20" />
+<meta name="date" content="2021-01-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -213,7 +213,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">NLP相关paper阅读</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2021-01-20</em></p>
+<p class="date"><em>2021-01-22</em></p>
 </div>
 <div id="nlp-paper-preview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> NLP paper preview</h1>
@@ -1545,6 +1545,38 @@ The analogous formula is used for the end of the answer span. The score of a can
 <div id="ablation-studies" class="section level3" number="1.9.8">
 <h3><span class="header-section-number">1.9.8</span> Ablation Studies</h3>
 <p>消融实验，这个名词第一回听说</p>
+<div id="nsp对预训练模型的效果" class="section level4" number="1.9.8.1">
+<h4><span class="header-section-number">1.9.8.1</span> NSP对预训练模型的效果</h4>
+<blockquote>
+<p>We demonstrate the importance of the deep bidirectionality of BERT by evaluating two pretraining objectives using exactly the same pretraining data, fine-tuning scheme, and hyperparameters as BERT <span class="math inline">\(_{\text {BASE }}\)</span> :</p>
+</blockquote>
+<p>No NSP: A bidirectional model which is trained using the “masked LM” (MLM) but without the “next sentence prediction” (NSP) task. LTR &amp; No NSP: A left-context-only model which is trained using a standard Left-to-Right (LTR) LM, rather than an MLM. The left-only constraint was also applied at fine-tuning, because removing it introduced a pre-train/fine-tune mismatch that degraded downstream performance. Additionally, this model was pre-trained without the NSP task. This is directly comparable to OpenAI GPT, but using our larger training dataset, our input representation, and our fine-tuning scheme.</p>
+<p>对于base bert中，设置对照组，双向LM无NSP，是LTR(从左到右)的单项任务无NSP，保留MLM任务，与GPT进行对比，实验效果如下</p>
+<p>We first examine the impact brought by the NSP task. In Table <span class="math inline">\(5,\)</span> we show that removing NSP hurts performance significantly on QNLI, MNLI, and SQuAD 1.1. Next, we evaluate the impact of training bidirectional representations by comparing “No NSP” to “LTR &amp; No NSP”. The LTR model performs worse than the MLM model on all tasks, with large drops on MRPC and SQuAD. For SQuAD it is intuitively clear that a LTR model will perform poorly at token predictions, since the token-level hidden states have no rightside context. In order to make a good faith attempt at strengthening the LTR system, we added a randomly initialized BiLSTM on top. This does significantly improve results on SQuAD, but the results are still far worse than those of the pretrained bidirectional models. The BiLSTM hurts performance on the GLUE tasks.</p>
+<p>表格5中的结果是去掉NSP的结果，对QNLI, MNLI, and SQuAD 1.1. 产生了比较显著的影响；接着评价双向任务中去掉NSP的和LTR单项任务中去掉NSP的效果，LTR任务且去掉NSP的是最差的，仅仅只是去掉NSP感觉并没有相差很大，</p>
+<p><img src="figs/bert_5.png" /></p>
+<p>We recognize that it would also be possible to train separate LTR and RTL models and represent each token as the concatenation of the two models, as ELMo does. However:</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>this is twice as expensive as a single bidirectional model;</p></li>
+<li><p>this is non-intuitive for tasks like QA, since the RTL model would not be able to condition the answer on the question;</p></li>
+<li><p>this it is strictly less powerful than a deep bidirectional model, since it can use both left and right context at every layer.</p></li>
+</ol>
+<p>可以训练单独的LTR和RTL模型，并像ELMo一样，将每个词表示为两个模型的拼接。然而:</p>
+<p>( a )训练成本是一个双向模型的两倍；
+( b )对于像QA这样的任务来说，这是不直观的，因为RTL模型无法对这个问题的答案进行限定；
+( c )这严格来说不如深度双向模型强大，因为深度双向模型可以选择使用左语境或右语境。</p>
+</div>
+<div id="effect-of-model-size" class="section level4" number="1.9.8.2">
+<h4><span class="header-section-number">1.9.8.2</span> Effect of Model Size</h4>
+<p>模型尺寸的影响</p>
+<p>这部分设置的对照组的实验，模型的参数不同，总的来说模型的参数量级越大，模型效果越强。真的不是一般人能够玩得起的。</p>
+<p><img src="figs/bert_6.png" /></p>
+</div>
+<div id="基本的特征对模型效果的影响" class="section level4" number="1.9.8.3">
+<h4><span class="header-section-number">1.9.8.3</span> 基本的特征对模型效果的影响</h4>
+<p>对比的是在命名实体识别中的任务</p>
+<p><img src="figs/bert_7.png" /></p>
+</div>
 </div>
 </div>
 <div id="xlnet" class="section level2" number="1.10">
