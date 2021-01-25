@@ -1278,10 +1278,14 @@ emlo的本质是单向，单项训练完concat两个方向到一起，算是函�
 
 
 
-
-
-
 ## XLNET
+
+
+
+```{r child='analysis/XLNET.Rmd'}
+
+```
+
 
 
 
