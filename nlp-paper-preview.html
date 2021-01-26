@@ -1622,8 +1622,24 @@ bert中的双向和elmo中的双向有什么不同？</li>
 <blockquote>
 <p>In comparison, AE based pretraining does not perform explicit density estimation but instead aims to reconstruct the original data from corrupted input. A notable example is BERT [10] , which has been the state-of-the-art pretraining approach. Given the input token sequence, a certain portion of tokens are replaced by a special symbol [MASK] , and the model is trained to recover the original tokens from the corrupted version. Since density estimation is not part of the objective, BERT is allowed to utilize bidirectional contexts for reconstruction. As an immediate benefit, this closes the aforementioned bidirectional information gap in AR language modeling, leading to improved performance. However, the artificial symbols like [MASK] used by BERT during pretraining are absent from real data at finetuning time, resulting in a pretrain-finetune discrepancy. Moreover, since the predicted tokens are masked in the input, BERT is not able to model the joint probability using the product rule as in AR language modeling. In other words, BERT assumes the predicted tokens are independent of each other given the unmasked tokens, which is oversimplified as high-order, long-range dependency is prevalent in natural language [9] .</p>
 </blockquote>
-<p>相比之下，基于AE的预训练不会执行显式的密度估计，而是旨在从损坏的输入中重建原始数据。 一个著名的例子是BERT [10]，它是最先进的预训练方法。 给定输入token序列，将令牌的某些部分替换为特殊符号[MASK]，并且训练模型以从损坏的版本中恢复原始令牌。 由于密度估算不是目标的一部分，因此允许BERT利用双向上下文进行重建。 作为直接好处，这消除了AR语言建模中的上述双向信息鸿沟，从而提高了性能。 但是，在预训练期间，真实数据中缺少BERT在预训练期间使用的人工符号，例如[MASK]，从而导致了预训练与微调之间的差异。 此外，由于预测的令牌在输入中被屏蔽，因此BERT无法像AR语言建模那样使用乘积规则对联合概率进行建模。 换句话说，BERT假设给定了未屏蔽的token牌，预测的token彼此独立，这被简化为自然语言中普遍存在的高阶，长距离依赖性。</p>
+<p>相比之下，基于AE的预训练不会执行显式的密度估计(这个应该是指最大似然估计)，而是旨在从损坏的输入中重建原始数据。 一个著名的例子是BERT [10]，它是最先进的预训练方法。 给定输入token序列，将token的某些部分替换为特殊符号[MASK]，并且训练模型以从损坏的版本中恢复原始令牌。 由于密度估算不是目标的一部分，因此允许BERT利用双向上下文进行重建。 作为直接好处，这消除了AR语言建模中的上述双向信息障碍，从而提高了性能。 但是，在预训练期间，真实数据中缺少BERT在预训练期间使用的人工符号，例如[MASK]，从而导致了预训练与微调之间的差异。 此外，由于预测的令牌在输入中被屏蔽，因此BERT无法像AR语言建模那样使用乘积规则对联合概率进行建模。 换句话说，BERT假设给定了未屏蔽的token牌，预测的token彼此独立，这被简化为自然语言中普遍存在的高阶，长距离依赖性。</p>
 <p>Faced with the pros and cons of existing language pretraining objectives, in this work, we propose XLNet, a generalized autoregressive method that leverages the best of both AR language modeling and <span class="math inline">\(\mathrm{AE}\)</span> while avoiding their limitations.</p>
+<p>本文中提出了XLNET模型，同时结合了AR和AE模型的优势，避免了AE模型的的限制。
+&gt;
+- Firstly, instead of using a fixed forward or backward factorization order as in conventional AR models, XLNet maximizes the expected log likelihood of a sequence w.r.t. all possible permutations of the factorization order. Thanks to the permutation operation, the context for each position can consist of tokens from both left and right. In expectation, each position learns to utilize contextual information from all positions, i.e., capturing bidirectional context.</p>
+<p>首先替换掉了AR模型中原有的前向后向语言模型的最大似然估计，XLNET使用序列最大似然估计。 分解阶数的所有可能因子排列。 因为进行了排序，每个位置的上下文都可以由左右两个标记组成。 每个位置学会从所有位置利用上下文信息，即捕获双向上下文。</p>
+<blockquote>
+<ul>
+<li>Secondly, as a generalized AR language model, XLNet does not rely on data corruption. Hence, XLNet does not suffer from the pretrain-finetune discrepancy that BERT is subject to. Meanwhile, the autoregressive objective also provides a natural way to use the product rule for factorizing the joint probability of the predicted tokens, eliminating the independence assumption made in BERT.</li>
+</ul>
+</blockquote>
+<p>第二点,作为一个AR语言模型，XLNet不存在数据干扰问题。因此，XLNet不会存在BERT所受的预训练-fine-tune差异的困扰。同时，自回归目标还提供了一种自然的方式，可以使用乘积规则将预测代币的联合概率分解为因数，从而消除了BERT中的独立性假设。</p>
+<blockquote>
+<p>In addition to a novel pretraining objective, XLNet improves architectural designs for pretraining.</p>
+</blockquote>
+<p>提出了一种的新的预训练的目标函数</p>
+<p>Inspired by the latest advancements in AR language modeling, XLNet integrates the segment recurrence mechanism and relative encoding scheme of Transformer-XL [9] into pretraining, which empirically improves the performance especially for tasks involving a longer text sequence. Naively applying a Transformer(-XL) architecture to permutation-based language modeling does not work because the factorization order is arbitrary and the target is ambiguous. As a solution, we propose to reparameterize the Transformer <span class="math inline">\((-X L)\)</span> network to remove the ambiguity.</p>
+<p>Empirically, XLNet achieves state-of-the-art results on 18 tasks, i.e., 7 GLUE language understanding tasks, 3 reading comprehension tasks including <span class="math inline">\(S Q u A D\)</span> and <span class="math inline">\(R A C E, 7\)</span> text classification tasks including Yelp and IMDB, and the ClueWeb09-B document ranking task. Under a set of fair comparison experiments, XLNet consistently outperforms BERT [10] on multiple benchmarks.</p>
 </div>
 </div>
 <div id="参考文献" class="section level2 unnumbered" number="">
