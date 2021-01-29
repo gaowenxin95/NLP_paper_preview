@@ -49,12 +49,39 @@ Faced with the pros and cons of existing language pretraining objectives, in thi
 
 >In addition to a novel pretraining objective, XLNet improves architectural designs for pretraining.
 
-提出了一种的新的预训练的目标函数
+提出了一种的新的预训练的目标函数。
 
+>
 Inspired by the latest advancements in AR language modeling, XLNet integrates the segment recurrence mechanism and relative encoding scheme of Transformer-XL [9] into pretraining, which empirically improves the performance especially for tasks involving a longer text sequence. Naively applying a Transformer(-XL) architecture to permutation-based language modeling does not work because the factorization order is arbitrary and the target is ambiguous. As a solution, we propose to reparameterize the Transformer $(-X L)$ network to remove the ambiguity.
 
+受AR模型的启发，XLNet将分段递归机制和Transformer-XL中的相对编码方案[9]集成到预训练中，从而从经验上提高了性能，尤其是对于涉及较长文本序列的任务。将Transformer（-XL）体系结构应用于基于置换的语言建模是行不通的，因为分解顺序是任意的并且目标是模棱两可的。 作为解决方案，建议对Transformer(-XL)网络重新参数化以消除歧义。
+
+
+
+>
 Empirically, XLNet achieves state-of-the-art results on 18 tasks, i.e., 7 GLUE language understanding tasks, 3 reading comprehension tasks including $S Q u A D$ and $R A C E, 7$ text classification tasks including Yelp and IMDB, and the ClueWeb09-B document ranking task. Under a set of fair comparison experiments, XLNet consistently outperforms BERT [10] on multiple benchmarks.
 
+XLNET在18项任务中取得了sota。。。也屠榜了，bert也成序章了。
 
 
 
+In this section, we first review and compare the conventional AR language modeling and BERT for language pretraining. Given a text sequence $\mathbf{x}=\left[x_{1}, \cdots, x_{T}\right]$, AR language modeling performs pretraining by maximizing the likelihood under the forward autoregressive factorization:
+
+AR模型的最大似然估计如下：
+
+
+$$
+\max _{\theta} \log p_{\theta}(\mathbf{x})=\sum_{t=1}^{T} \log p_{\theta}\left(x_{t} \mid \mathbf{x}_{<t}\right)=\sum_{t=1}^{T} \log \frac{\exp \left(h_{\theta}\left(\mathbf{x}_{1: t-1}\right)^{\top} e\left(x_{t}\right)\right)}{\sum_{x^{\prime}} \exp \left(h_{\theta}\left(\mathbf{x}_{1: t-1}\right)^{\top} e\left(x^{\prime}\right)\right)}
+$$
+
+
+where $h_{\theta}\left(\mathbf{x}_{1: t-1}\right)$ is a context representation produced by neural models, such as RNNs or Transformers, and $e(x)$ denotes the embedding of $x$. In comparison, BERT is based on denoising auto-encoding. Specifically, for a text sequence $x$, BERT first constructs a corrupted version $\hat{x}$ by randomly setting a portion (e.g. $15 \%$ ) of tokens in $x$ to a special symbol [MASK]. Let the masked tokens be $\bar{x}$. The training objective is to reconstruct $\overline{\mathbf{x}}$ from $\hat{\mathbf{x}}$ :
+
+$$
+\max _{\theta} \log p_{\theta}(\overline{\mathbf{x}} \mid \hat{\mathbf{x}}) \approx \sum_{t=1}^{T} m_{t} \log p_{\theta}\left(x_{t} \mid \hat{\mathbf{x}}\right)=\sum_{t=1}^{T} m_{t} \log \frac{\exp \left(H_{\theta}(\hat{\mathbf{x}})_{t}^{\top} e\left(x_{t}\right)\right)}{\sum_{x^{\prime}} \exp \left(H_{\theta}(\hat{\mathbf{x}})_{t}^{\top} e\left(x^{\prime}\right)\right)}
+$$
+
+where $m_{t}=1$ indicates $x_{t}$ is masked, and $H_{\theta}$ is a Transformer that maps a length- $T$ text sequence $\mathbf{x}$ into a sequence of hidden vectors $H_{\theta}(\mathbf{x})=\left[H_{\theta}(\mathbf{x})_{1}, H_{\theta}(\mathbf{x})_{2}, \cdots, H_{\theta}(\mathbf{x})_{T}\right] .$ The pros and cons of
+the two pretraining objectives are compared in the following aspects:
+- Independence Assumption: As emphasized by the $\approx$ sign in Eq. (2), BERT factorizes the joint conditional probability $p(\overline{\mathbf{x}} \mid \hat{\mathbf{x}})$ based on an independence assumption that all masked tokens $\overline{\mathbf{x}}$ are separately reconstructed. In comparison, the AR language modeling objective (1) factorizes $p_{\theta}(\mathbf{x})$ using the product rule that holds universally without such an independence assumption.
+- Input noise: The input to BERT contains artificial symbols like [MASK] that never occur in downstream tasks, which creates a pretrain-finetune discrepancy. Replacing [MASK] with original tokens as in [10] does not solve the problem because original tokens can be only used with a small probability - otherwise Eq. (2) will be trivial to optimize. In comparison, AR language modeling does not rely on any input corruption and does not suffer from this issue. Context dependency: The AR representation $h_{\theta}\left(\mathbf{x}_{1: t-1}\right)$ is only conditioned on the tokens up to position $t$ (i.e. tokens to the left), while the BERT representation $H_{\theta}(\mathbf{x})_{t}$ has access to the contextual information on both sides. As a result, the BERT objective allows the model to be pretrained to better capture bidirectional context.

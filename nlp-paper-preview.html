@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2021-01-26" />
+<meta name="date" content="2021-01-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -168,10 +168,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.5.4" data-path=""><a href="#evaluation"><i class="fa fa-check"></i><b>1.5.4</b> Evaluation</a></li>
 <li class="chapter" data-level="1.5.5" data-path=""><a href="#analysis"><i class="fa fa-check"></i><b>1.5.5</b> analysis</a></li>
 </ul></li>
-<li class="chapter" data-level="1.6" data-path=""><a href="#attention-is-all-you-need"><i class="fa fa-check"></i><b>1.6</b> Attention is all you need</a></li>
+<li class="chapter" data-level="1.6" data-path=""><a href="#attention-is-all-you-need"><i class="fa fa-check"></i><b>1.6</b> Attention is all you need</a>
+<ul>
+<li class="chapter" data-level="1.6.1" data-path=""><a href="#introduction-3"><i class="fa fa-check"></i><b>1.6.1</b> introduction</a></li>
+<li class="chapter" data-level="1.6.2" data-path=""><a href="#input"><i class="fa fa-check"></i><b>1.6.2</b> input</a></li>
+<li class="chapter" data-level="1.6.3" data-path=""><a href="#encoder-1"><i class="fa fa-check"></i><b>1.6.3</b> encoder</a></li>
+<li class="chapter" data-level="1.6.4" data-path=""><a href="#self-attention"><i class="fa fa-check"></i><b>1.6.4</b> self-attention</a></li>
+<li class="chapter" data-level="1.6.5" data-path=""><a href="#multi-head-attention"><i class="fa fa-check"></i><b>1.6.5</b> Multi-head attention</a></li>
+<li class="chapter" data-level="1.6.6" data-path=""><a href="#残差网络的结构"><i class="fa fa-check"></i><b>1.6.6</b> 残差网络的结构</a></li>
+<li class="chapter" data-level="1.6.7" data-path=""><a href="#decoder-1"><i class="fa fa-check"></i><b>1.6.7</b> decoder</a></li>
+</ul></li>
 <li class="chapter" data-level="1.7" data-path=""><a href="#gpt"><i class="fa fa-check"></i><b>1.7</b> GPT</a>
 <ul>
-<li class="chapter" data-level="1.7.1" data-path=""><a href="#introduction-3"><i class="fa fa-check"></i><b>1.7.1</b> introduction</a></li>
+<li class="chapter" data-level="1.7.1" data-path=""><a href="#introduction-4"><i class="fa fa-check"></i><b>1.7.1</b> introduction</a></li>
 <li class="chapter" data-level="1.7.2" data-path=""><a href="#framework"><i class="fa fa-check"></i><b>1.7.2</b> Framework</a></li>
 <li class="chapter" data-level="1.7.3" data-path=""><a href="#unsupervised-pre-training"><i class="fa fa-check"></i><b>1.7.3</b> Unsupervised pre-training</a></li>
 <li class="chapter" data-level="1.7.4" data-path=""><a href="#supervised-ﬁne-tuning"><i class="fa fa-check"></i><b>1.7.4</b> Supervised ﬁne-tuning</a></li>
@@ -181,7 +190,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.8" data-path=""><a href="#ulmfit"><i class="fa fa-check"></i><b>1.8</b> ULMFit</a></li>
 <li class="chapter" data-level="1.9" data-path=""><a href="#bert"><i class="fa fa-check"></i><b>1.9</b> BERT</a>
 <ul>
-<li class="chapter" data-level="1.9.1" data-path=""><a href="#introduction-4"><i class="fa fa-check"></i><b>1.9.1</b> introduction</a></li>
+<li class="chapter" data-level="1.9.1" data-path=""><a href="#introduction-5"><i class="fa fa-check"></i><b>1.9.1</b> introduction</a></li>
 <li class="chapter" data-level="1.9.2" data-path=""><a href="#bert结构"><i class="fa fa-check"></i><b>1.9.2</b> bert结构</a></li>
 <li class="chapter" data-level="1.9.3" data-path=""><a href="#input-output"><i class="fa fa-check"></i><b>1.9.3</b> input output</a></li>
 <li class="chapter" data-level="1.9.4" data-path=""><a href="#mlm"><i class="fa fa-check"></i><b>1.9.4</b> MLM</a></li>
@@ -193,7 +202,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.10" data-path=""><a href="#xlnet"><i class="fa fa-check"></i><b>1.10</b> XLNET</a>
 <ul>
 <li class="chapter" data-level="1.10.1" data-path=""><a href="#abstract"><i class="fa fa-check"></i><b>1.10.1</b> ABSTRACT</a></li>
-<li class="chapter" data-level="1.10.2" data-path=""><a href="#introduction-5"><i class="fa fa-check"></i><b>1.10.2</b> introduction</a></li>
+<li class="chapter" data-level="1.10.2" data-path=""><a href="#introduction-6"><i class="fa fa-check"></i><b>1.10.2</b> introduction</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path=""><a href="#参考文献"><i class="fa fa-check"></i>参考文献</a></li>
 </ul></li>
@@ -217,14 +226,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">NLP相关paper阅读</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2021-01-26</em></p>
+<p class="date"><em>2021-01-30</em></p>
 </div>
 <div id="nlp-paper-preview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> NLP paper preview</h1>
 <div id="word2vec" class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> word2vec</h2>
-<p>这个工具包毕竟是梯子级别的~
-主要包括两个方法CBOW和SKIP-gram</p>
+<p>这个工具包毕竟是梯子级别的~ 主要包括两个方法CBOW和SKIP-gram</p>
 <div id="cbow" class="section level3" number="1.1.1">
 <h3><span class="header-section-number">1.1.1</span> CBOW</h3>
 <p>Continuous Bag-of-Words 连续词袋模型</p>
@@ -236,8 +244,7 @@ P\left(w_{t} \mid c_{t}\right)=\frac{\exp \left(e^{\prime}\left(w_{t}\right)^{T}
 \end{array}
 \]</span></p>
 <blockquote>
-<p>CBOW没有隐藏层，本质上只有两层结构，输入层将目标词语境c中的每一个词向量简单求和（当然，也可以求平均）后得到语境向量，然后直接与目标词的输出向量求点积，目标函数也就是要让这个与目标词向量的点积取得最大值，对应的与非目标词的点积尽量取得最小值。从这可以看出，CBOW的第一个特点是取消了NNLM中的隐藏层，直接将输入层和输出层相连；第二个特点便是在求语境context向量时候，语境内的词序已经丢弃（这个是名字中Continuous的来源）；第三，因为最终的目标函数仍然是语言模型的目标函数，所以需要顺序遍历语料中的每一个词（这个是名字中Bag-of-Words的来源）。因此有了这些特点（尤其是第二点和第三点），Mikolov才把这个简单的模型取名叫做CBOW，简单却有效的典范。
-需要注意的是这里每个词对应到两个词向量, 在上面的公式中都有体现, 其中 <span class="math inline">\(e\left(w_{t}\right)\)</span> 是词的输入 向量, 而 <span class="math inline">\(e^{\prime}\left(w_{t}\right)\)</span> 则是词的输出向量, 或者更准确的来讲, 前者是CBOW输入层中跟词 <span class="math inline">\(w_{t}\)</span> 所在 位置相连的所有边的权值 (其实这就是词向量) 组合成的向量, 而是输出层中与词 <span class="math inline">\(w_{t}\)</span> 所在位置 相连的所有边的权值组合成的向量, 所以把这一向量叫做输出向量。</p>
+<p>CBOW没有隐藏层，本质上只有两层结构，输入层将目标词语境c中的每一个词向量简单求和（当然，也可以求平均）后得到语境向量，然后直接与目标词的输出向量求点积，目标函数也就是要让这个与目标词向量的点积取得最大值，对应的与非目标词的点积尽量取得最小值。从这可以看出，CBOW的第一个特点是取消了NNLM中的隐藏层，直接将输入层和输出层相连；第二个特点便是在求语境context向量时候，语境内的词序已经丢弃（这个是名字中Continuous的来源）；第三，因为最终的目标函数仍然是语言模型的目标函数，所以需要顺序遍历语料中的每一个词（这个是名字中Bag-of-Words的来源）。因此有了这些特点（尤其是第二点和第三点），Mikolov才把这个简单的模型取名叫做CBOW，简单却有效的典范。 需要注意的是这里每个词对应到两个词向量, 在上面的公式中都有体现, 其中 <span class="math inline">\(e\left(w_{t}\right)\)</span> 是词的输入 向量, 而 <span class="math inline">\(e^{\prime}\left(w_{t}\right)\)</span> 则是词的输出向量, 或者更准确的来讲, 前者是CBOW输入层中跟词 <span class="math inline">\(w_{t}\)</span> 所在 位置相连的所有边的权值 (其实这就是词向量) 组合成的向量, 而是输出层中与词 <span class="math inline">\(w_{t}\)</span> 所在位置 相连的所有边的权值组合成的向量, 所以把这一向量叫做输出向量。</p>
 </blockquote>
 </div>
 <div id="skip-gram" class="section level3" number="1.1.2">
@@ -255,8 +262,7 @@ P\left(w_{j} \mid w_{t}\right)=\frac{\exp \left(e^{\prime}\left(w_{j}\right)^{T}
 <p>负采样思想也是受了C&amp;W模型中构造负样本方法启发, 同时参考了Noise Contrastive Estimation (NCE)的思想, 用CBOW的框架简单来讲就是, 负采样 每遍历到一个目标词, 为了使得目标词的概率 <span class="math inline">\(P\left(w_{t} \mid c_{t}\right)\)</span> 最大，根据softmax函数的概率公式, 也 就是让分子中的 <span class="math inline">\(e^{\prime}\left(w_{t}\right)^{T} x\)</span> 最大, 而分母中其他非目标词的 <span class="math inline">\(e^{\prime}\left(w_{i}\right)^{T} x\)</span> 最小, 普通softmax的 计算量太大就是因为它把词典中所有其他非目标词都当做负例了，而负采样的思想特别简单，就是 每次按照一定概率随机采样一些词当做负例，从而就只需要计算这些负采样出来的负例了，那么概 率公式便相应变为</p>
 <p><span class="math display">\[
 P\left(w_{t} \mid c_{t}\right)=\frac{\exp \left(e^{\prime}\left(w_{t}\right)^{T} x\right)}{\sum_{i=1}^{K} \exp \left(e^{\prime}\left(w_{i}\right)^{T} x\right)}, x=\sum_{i \in c} e\left(w_{i}\right)
-\]</span>
-仔细和普通softmax进行比较便会发现，将原来的|V|分类问题变成了K分类问题, 这便把词典大小 对时间复杂度的影响变成了一个常数项, 而改动又非常的微小，不可谓不巧妙。</p>
+\]</span> 仔细和普通softmax进行比较便会发现，将原来的|V|分类问题变成了K分类问题, 这便把词典大小 对时间复杂度的影响变成了一个常数项, 而改动又非常的微小，不可谓不巧妙。</p>
 <p>非常的巧妙~</p>
 <p>跳词模型也有非常多的变形~后面的skip-thoughts就源于此</p>
 </div>
@@ -268,52 +274,16 @@ P\left(w_{t} \mid c_{t}\right)=\frac{\exp \left(e^{\prime}\left(w_{t}\right)^{T}
 <h3><span class="header-section-number">1.2.1</span> Hierarchical softmax</h3>
 <p>这个没什么好说的，和word2vec里面的是一样的。具体解释忘记之前从哪里找来得了但私以为解释的8错</p>
 <blockquote>
-<p>When the number of classes is large, computing the linear classifier
-is computationally expensive. More precisely, the computational
-complexity is <span class="math inline">\(O(k h)\)</span> where <span class="math inline">\(k\)</span> is the number of classes and <span class="math inline">\(h\)</span> the
-dimension of the text representation. In order to improve our running
-time, we use a hierarchical softmax (Goodman, 2001) based on the
-Huffman coding tree (Mikolov et al., 2013 ). During training, the
-computational complexity drops to <span class="math inline">\(O\left(h \log _{2}(k)\right)\)</span>. The
-hierarchical softmax is also advantageous at test time when searching
-for the most likely class. Each node is associated with a probability
-that is the probability of the path from the root to that node. If the
-node is at depth <span class="math inline">\(l+1\)</span> with parents <span class="math inline">\(n_{1}, \ldots, n_{l},\)</span> its
-probability is <span class="math display">\[
+<p>When the number of classes is large, computing the linear classifier is computationally expensive. More precisely, the computational complexity is <span class="math inline">\(O(k h)\)</span> where <span class="math inline">\(k\)</span> is the number of classes and <span class="math inline">\(h\)</span> the dimension of the text representation. In order to improve our running time, we use a hierarchical softmax (Goodman, 2001) based on the Huffman coding tree (Mikolov et al., 2013 ). During training, the computational complexity drops to <span class="math inline">\(O\left(h \log _{2}(k)\right)\)</span>. The hierarchical softmax is also advantageous at test time when searching for the most likely class. Each node is associated with a probability that is the probability of the path from the root to that node. If the node is at depth <span class="math inline">\(l+1\)</span> with parents <span class="math inline">\(n_{1}, \ldots, n_{l},\)</span> its probability is <span class="math display">\[
 P\left(n_{l+1}\right)=\prod_{i=1}^{l} P\left(n_{i}\right)
 \]</span></p>
 </blockquote>
 <blockquote>
-<p>This means that the probability of a node is always lower than the one
-of its parent. Exploring the tree with a depth first search and
-tracking the maximum probability among the leaves allows us to discard
-any branch associated with a small probability. In practice, we
-observe a reduction of the complexity to
-<span class="math inline">\(O\left(h \log _{2}(k)\right)\)</span> at test time. This approach is further
-extended to compute the <span class="math inline">\(T\)</span> -top targets at the cost of <span class="math inline">\(O(\log (T)),\)</span>
-using a binary heap.</p>
+<p>This means that the probability of a node is always lower than the one of its parent. Exploring the tree with a depth first search and tracking the maximum probability among the leaves allows us to discard any branch associated with a small probability. In practice, we observe a reduction of the complexity to <span class="math inline">\(O\left(h \log _{2}(k)\right)\)</span> at test time. This approach is further extended to compute the <span class="math inline">\(T\)</span> -top targets at the cost of <span class="math inline">\(O(\log (T)),\)</span> using a binary heap.</p>
 </blockquote>
 <p>主要就是利用霍夫曼树加快计算的速度</p>
 <blockquote>
-<p>Hierachical
-Softmax的基本思想就是首先将词典中的每个词按照词频大小构建出一棵Huffman树,
-保证词频较大的词处于相对比较浅的层,
-词频较低的词相应的处于Huffman树较深层的叶子节点,
-每一个词都处于这棵Huffman树上的某个叶子节点;
-第二，将原本的一个|V|分类问题变成了<span class="math inline">\(\log|V|\)</span> 次的二分类问题,
-做法简单说来就是, 原先要计算 <span class="math inline">\(P\left(w_{t} \mid c_{t}\right)\)</span>的时候,
-因为使用的 是普通的softmax,
-势必要求词典中的每一个词的概率大小，为了减少这一步的计算量, 在
-Hierachical Softmax中，同样是计算当前词 <span class="math inline">\(w_{t}\)</span>
-在其上下文中的概率大小，只需要把它变成在
-Huffman树中的路径预测问题就可以了，因为当前词 <span class="math inline">\(w_{t}\)</span>
-在Huffman树中对应到一条路径, 这条 路径由这棵二叉树中从根节点开始,
-经过一系列中间的父节点, 最终到达当前这个词的叶子节点而 组成,
-那么在每一个父节点上，都对应的是一个二分类问题（本质上就是一个LR分类器），而
-Huffman树的构造过程保证了树的深度为 <span class="math inline">\(\log |V|,\)</span>
-所以也就只需要做<span class="math inline">\(\log |V|\)</span>次二分类便可以 求得
-<span class="math inline">\(P\left(w_{t} \mid c_{t}\right)\)</span> 的大小, 这相比原来|V|次的计算量,
-已经大大减小了。</p>
+<p>Hierachical Softmax的基本思想就是首先将词典中的每个词按照词频大小构建出一棵Huffman树, 保证词频较大的词处于相对比较浅的层, 词频较低的词相应的处于Huffman树较深层的叶子节点, 每一个词都处于这棵Huffman树上的某个叶子节点; 第二，将原本的一个|V|分类问题变成了<span class="math inline">\(\log|V|\)</span> 次的二分类问题, 做法简单说来就是, 原先要计算 <span class="math inline">\(P\left(w_{t} \mid c_{t}\right)\)</span>的时候, 因为使用的 是普通的softmax, 势必要求词典中的每一个词的概率大小，为了减少这一步的计算量, 在 Hierachical Softmax中，同样是计算当前词 <span class="math inline">\(w_{t}\)</span> 在其上下文中的概率大小，只需要把它变成在 Huffman树中的路径预测问题就可以了，因为当前词 <span class="math inline">\(w_{t}\)</span> 在Huffman树中对应到一条路径, 这条 路径由这棵二叉树中从根节点开始, 经过一系列中间的父节点, 最终到达当前这个词的叶子节点而 组成, 那么在每一个父节点上，都对应的是一个二分类问题（本质上就是一个LR分类器），而 Huffman树的构造过程保证了树的深度为 <span class="math inline">\(\log |V|,\)</span> 所以也就只需要做<span class="math inline">\(\log |V|\)</span>次二分类便可以 求得 <span class="math inline">\(P\left(w_{t} \mid c_{t}\right)\)</span> 的大小, 这相比原来|V|次的计算量, 已经大大减小了。</p>
 </blockquote>
 </div>
 <div id="n_gram-features" class="section level3" number="1.2.2">
@@ -321,16 +291,7 @@ Huffman树的构造过程保证了树的深度为 <span class="math inline">\(\l
 <p><strong>这个是主要区别于word2vec的输入的部分了，为了更好的学习到上下文的语序特征</strong></p>
 <p>从bag of word 变成了bag of features</p>
 <blockquote>
-<p>Bag of words is invariant to word order but taking explicitly this
-order into account is often computationally very expensive. Instead,
-we use a bag of n-grams as additional features to capture some partial
-information about the local word order. This is very efficient in
-practice while achieving comparable results to methods that explicitly
-use the order (Wang and Manning, 2012 ). We maintain a fast and memory
-efficient mapping of the n-grams by using the hashing trick
-(Weinberger et al., 2009 ) with the same hashing function as in
-Mikolov et al. (2011) and <span class="math inline">\(10 \mathrm{M}\)</span> bins if we only used
-bigrams, and <span class="math inline">\(100 \mathrm{M}\)</span> otherwise.</p>
+<p>Bag of words is invariant to word order but taking explicitly this order into account is often computationally very expensive. Instead, we use a bag of n-grams as additional features to capture some partial information about the local word order. This is very efficient in practice while achieving comparable results to methods that explicitly use the order (Wang and Manning, 2012 ). We maintain a fast and memory efficient mapping of the n-grams by using the hashing trick (Weinberger et al., 2009 ) with the same hashing function as in Mikolov et al. (2011) and <span class="math inline">\(10 \mathrm{M}\)</span> bins if we only used bigrams, and <span class="math inline">\(100 \mathrm{M}\)</span> otherwise.</p>
 </blockquote>
 <ul class="task-list">
 <li><input type="checkbox" disabled="" />
@@ -344,15 +305,12 @@ fasttext 文本分类的结构？</li>
 <p>word2vec和GloVe都不需要人工标记的监督数据，只需要语言内部存在的监督信号即可以完成训练。而与此相对应的，fastText则是利用带有监督标记的文本分类数据完成训练，本质上没有什么特殊的，模型框架就是CBOW。</p>
 </blockquote>
 <p>因为是训练词向量的嘛，因此只需要文本就可以了，不需要标签。</p>
-<p>fasttext和word2vec本质无区别都是单层的神经网络，CBOW的结构，通过上下文预测当前词。
-word2vec是为了得到embedding的矩阵，word2vec本质是一个词袋模型:bag of
-word。</p>
+<p>fasttext和word2vec本质无区别都是单层的神经网络，CBOW的结构，通过上下文预测当前词。 word2vec是为了得到embedding的矩阵，word2vec本质是一个词袋模型:bag of word。</p>
 </div>
 <div id="fasttext与cbow有两点不同" class="section level3" number="1.2.4">
 <h3><span class="header-section-number">1.2.4</span> fasttext与CBOW有两点不同</h3>
 <blockquote>
-<p>分别是输入数据和预测目标的不同 -
-在输入数据上，CBOW输入的是一段区间中除去目标词之外的所有其他词的向量加和或平均，而fastText为了利用更多的语序信息，将bag-of-words变成了bag-of-features，也就是下图中的输入x不再仅仅是一个词，还可以加上bigram或者是trigram的信息等等；</p>
+<p>分别是输入数据和预测目标的不同 - 在输入数据上，CBOW输入的是一段区间中除去目标词之外的所有其他词的向量加和或平均，而fastText为了利用更多的语序信息，将bag-of-words变成了bag-of-features，也就是下图中的输入x不再仅仅是一个词，还可以加上bigram或者是trigram的信息等等；</p>
 </blockquote>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>from gensim.models import FastText</span>
 <span id="cb1-2"><a href="#cb1-2"></a>sentences =<span class="st"> </span>[[<span class="st">&quot;你&quot;</span>, <span class="st">&quot;是&quot;</span>, <span class="st">&quot;谁&quot;</span>], [<span class="st">&quot;我&quot;</span>, <span class="st">&quot;是&quot;</span>, <span class="st">&quot;中国人&quot;</span>]]</span>
@@ -360,16 +318,12 @@ word。</p>
 <span id="cb1-4"><a href="#cb1-4"></a>model =<span class="st"> </span><span class="kw">FastText</span>(sentences,  <span class="dt">size=</span><span class="dv">4</span>, <span class="dt">window=</span><span class="dv">3</span>, <span class="dt">min_count=</span><span class="dv">1</span>, <span class="dt">iter=</span><span class="dv">10</span>,<span class="dt">min_n =</span> <span class="dv">3</span> , <span class="dt">max_n =</span> <span class="dv">6</span>,<span class="dt">word_ngrams =</span> <span class="dv">0</span>)</span>
 <span id="cb1-5"><a href="#cb1-5"></a>model[<span class="st">&#39;你&#39;</span>]  <span class="co"># 词向量获得的方式</span></span>
 <span id="cb1-6"><a href="#cb1-6"></a>model.wv[<span class="st">&#39;你&#39;</span>] <span class="co"># 词向量获得的方式</span></span></code></pre></div>
-<p>所以在训练fasttext的词向量时候，参数word_ngrams =
-0时候，是等价于word2vec的。</p>
+<p>所以在训练fasttext的词向量时候，参数word_ngrams = 0时候，是等价于word2vec的。</p>
 <blockquote>
-<p>第二个不同在于，CBOW预测目标是语境中的一个词，而fastText预测目标是当前这段输入文本的类别，正因为需要这个文本类别，因此才说fastText是一个监督模型。而相同点在于，fastText的网络结构和CBOW基本一致，同时在输出层的分类上也使用了Hierachical
-Softmax技巧来加速训练。</p>
+<p>第二个不同在于，CBOW预测目标是语境中的一个词，而fastText预测目标是当前这段输入文本的类别，正因为需要这个文本类别，因此才说fastText是一个监督模型。而相同点在于，fastText的网络结构和CBOW基本一致，同时在输出层的分类上也使用了Hierachical Softmax技巧来加速训练。</p>
 </blockquote>
 <p>两者本质的不同，体现在 h-softmax的使用：</p>
-<p>Wordvec的目的是得到词向量，该词向量 最终是在输入层得到，输出层对应的
-h-softmax 也会生成一系列的向量，但最终都被抛弃，不会使用。
-fasttext则充分利用了h-softmax的分类功能，遍历分类树的所有叶节点，找到概率最大的label（一个或者N个）</p>
+<p>Wordvec的目的是得到词向量，该词向量 最终是在输入层得到，输出层对应的 h-softmax 也会生成一系列的向量，但最终都被抛弃，不会使用。 fasttext则充分利用了h-softmax的分类功能，遍历分类树的所有叶节点，找到概率最大的label（一个或者N个）</p>
 <ul>
 <li>fasttext为什么快？</li>
 </ul>
@@ -388,8 +342,7 @@ fasttext则充分利用了h-softmax的分类功能，遍历分类树的所有叶
 <div id="实验和结果分析" class="section level3" number="1.2.5">
 <h3><span class="header-section-number">1.2.5</span> 实验和结果分析</h3>
 <p><em>情感分析实验</em></p>
-<p>在8个数据集上面acc对比，对比了6个模型，可以看出在绝大部分的数据集上面fasttext的acc是最好的。
-加入bgram的效果要优于不加的</p>
+<p>在8个数据集上面acc对比，对比了6个模型，可以看出在绝大部分的数据集上面fasttext的acc是最好的。 加入bgram的效果要优于不加的</p>
 <p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-87AA0A90.png" /></p>
 <p>运行时间对比fasttext的速度绝了</p>
 <p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-099A1FC8.png" /></p>
@@ -404,16 +357,7 @@ fasttext则充分利用了h-softmax的分类功能，遍历分类树的所有叶
 <div id="introduction" class="section level3" number="1.3.1">
 <h3><span class="header-section-number">1.3.1</span> introduction</h3>
 <blockquote>
-<p>However, the bag-of-words (BOW) has many disadvantages. The word order
-is lost, and thus different sentences can have exactly the same
-representation, as long as the same words are used. Even though
-bag-of-n-grams considers the word order in short context, it suffers
-from data sparsity and high dimensionality. Bag-of-words and
-bagof-n-grams have very little sense about the semantics of the words
-or more formally the distances between the words. This means that
-words “powerful,” “strong” and “Paris” are equally distant despite the
-fact that semantically, “powerful” should be closer to “strong” than
-“Paris.”</p>
+<p>However, the bag-of-words (BOW) has many disadvantages. The word order is lost, and thus different sentences can have exactly the same representation, as long as the same words are used. Even though bag-of-n-grams considers the word order in short context, it suffers from data sparsity and high dimensionality. Bag-of-words and bagof-n-grams have very little sense about the semantics of the words or more formally the distances between the words. This means that words “powerful,” “strong” and “Paris” are equally distant despite the fact that semantically, “powerful” should be closer to “strong” than “Paris.”</p>
 </blockquote>
 <ul>
 <li>词袋模型的缺点是没有考虑词序，学习不到语义；</li>
@@ -421,49 +365,21 @@ fact that semantically, “powerful” should be closer to “strong” than
 <li>二者都无法学习到语义</li>
 </ul>
 <blockquote>
-<p>In this paper, we propose Paragraph Vector, an unsupervised framework
-that learns continuous distributed vector representations for pieces
-of texts. The texts can be of variable-length, ranging from sentences
-to documents. The name Paragraph Vector is to emphasize the fact that
-the method can be applied to variable-length pieces of texts, anything
-from a phrase or sentence to a large document.</p>
+<p>In this paper, we propose Paragraph Vector, an unsupervised framework that learns continuous distributed vector representations for pieces of texts. The texts can be of variable-length, ranging from sentences to documents. The name Paragraph Vector is to emphasize the fact that the method can be applied to variable-length pieces of texts, anything from a phrase or sentence to a large document.</p>
 </blockquote>
 <p>DOC2vec中提出了一种句向量的思想。文本是由不同长度的句子组成的，句向量可以学习到不同长度的短语和句子的embedding</p>
 <blockquote>
-<p>In our model, the vector representation is trained to be useful for
-predicting words in a paragraph. More precisely, we concatenate the
-paragraph vector with several word vectors from a paragraph and
-predict the following word in the given context. Both word vectors and
-paragraph vectors are trained by the stochastic gradient descent and
-backpropagation (Rumelhart et al., 1986 ). While paragraph vectors are
-unique among paragraphs, the word vectors are shared. At prediction
-time, the paragraph vectors are inferred by fixing the word vectors
-and training the new paragraph vector until convergence.</p>
+<p>In our model, the vector representation is trained to be useful for predicting words in a paragraph. More precisely, we concatenate the paragraph vector with several word vectors from a paragraph and predict the following word in the given context. Both word vectors and paragraph vectors are trained by the stochastic gradient descent and backpropagation (Rumelhart et al., 1986 ). While paragraph vectors are unique among paragraphs, the word vectors are shared. At prediction time, the paragraph vectors are inferred by fixing the word vectors and training the new paragraph vector until convergence.</p>
 </blockquote>
 <p>说简单点就是在原有词向量的基础上concat上了句向量，同时学习词向量和句向量的语义。</p>
 <p>个人感觉句向量的作用其实是增加了一个上下文的position，句向量的大小可以自定义。</p>
 <p>Doc2vec同样具有2种结构</p>
 <blockquote>
-<p>The above method considers the concatenation of the paragraph vector
-with the word vectors to predict the next word in a text window.
-Another way is to ignore the context words in the input, but force the
-model to predict words randomly sampled from the paragraph in the
-output. In reality, what this means is that at each iteration of
-stochastic gradient descent, we sample a text window, then sample a
-random word from the text window and form a classification task given
-the Paragraph Vector. This technique is shown in Figure <span class="math inline">\(3 .\)</span> We name
-this version the Distributed Bag of Words version of Paragraph Vector
-(PV-DBOW), as opposed to Distributed Memory version of Paragraph
-Vector (PV-DM) in previous section.</p>
+<p>The above method considers the concatenation of the paragraph vector with the word vectors to predict the next word in a text window. Another way is to ignore the context words in the input, but force the model to predict words randomly sampled from the paragraph in the output. In reality, what this means is that at each iteration of stochastic gradient descent, we sample a text window, then sample a random word from the text window and form a classification task given the Paragraph Vector. This technique is shown in Figure <span class="math inline">\(3 .\)</span> We name this version the Distributed Bag of Words version of Paragraph Vector (PV-DBOW), as opposed to Distributed Memory version of Paragraph Vector (PV-DM) in previous section.</p>
 </blockquote>
-<p>PV-DBOW是Distributed Bag of Words version of Paragraph
-Vector，和Skip-gram类似，通过文档来预测文档内的词，训练的时候，随机采样一些文本片段，然后再从这个片段中采样一个词，让PV-DBOW模型来预测这个词，以此分类任务作为训练方法，说白了本质上和Skip-gram是一样的。这个方法有个致命的弱点，就是为了获取新文档的向量，还得继续走一遍训练流程，并且由于模型主要是针对文档向量预测词向量的过程进行建模，其实很难去表征词语之间的更丰富的语义结构。</p>
+<p>PV-DBOW是Distributed Bag of Words version of Paragraph Vector，和Skip-gram类似，通过文档来预测文档内的词，训练的时候，随机采样一些文本片段，然后再从这个片段中采样一个词，让PV-DBOW模型来预测这个词，以此分类任务作为训练方法，说白了本质上和Skip-gram是一样的。这个方法有个致命的弱点，就是为了获取新文档的向量，还得继续走一遍训练流程，并且由于模型主要是针对文档向量预测词向量的过程进行建模，其实很难去表征词语之间的更丰富的语义结构。</p>
 <p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-CEE075C9.png" /></p>
-<p>PV-DM的全称是Distributed Memory Model of Paragraph
-Vectors，和CBOW类似，也是通过上下文预测下一个词，不过在输入层的时候，同时也维护了一个文档ID映射到一个向量的look-up
-table，模型的目的便是将当前文档的向量以及上下文向量联合输入模型，并让模型预测下一个词，训练结束后，对于现有的文档，便可以直接通过查表的方式快速得到该文档的向量，而对于新的一篇文档，那么则需要将已有的look-up
-table添加相应的列，然后重新走一遍训练流程，只不过此时固定好其他的参数，只调整look-up
-table，收敛后便可以得到新文档对应的向量了。</p>
+<p>PV-DM的全称是Distributed Memory Model of Paragraph Vectors，和CBOW类似，也是通过上下文预测下一个词，不过在输入层的时候，同时也维护了一个文档ID映射到一个向量的look-up table，模型的目的便是将当前文档的向量以及上下文向量联合输入模型，并让模型预测下一个词，训练结束后，对于现有的文档，便可以直接通过查表的方式快速得到该文档的向量，而对于新的一篇文档，那么则需要将已有的look-up table添加相应的列，然后重新走一遍训练流程，只不过此时固定好其他的参数，只调整look-up table，收敛后便可以得到新文档对应的向量了。</p>
 <p><img src="C:/Users/gaowenxin95/AppData/Local/RStudio/tmp/paste-64854E74.png" /></p>
 </div>
 <div id="实验对比" class="section level3" number="1.3.2">
@@ -485,80 +401,34 @@ Doc2VEC是否可以直接使用word2vec的结果？</li>
 <div id="skip-thoughts" class="section level2" number="1.4">
 <h2><span class="header-section-number">1.4</span> skip-thoughts</h2>
 <blockquote>
-<p>Using the continuity of text from books, we train an encoderdecoder
-model that tries to reconstruct the surrounding sentences of an
-encoded passage. Sentences that share semantic and syntactic
-properties are thus mapped to similar vector representations. We next
-introduce a simple vocabulary expansion method to encode words that
-were not seen as part of training, allowing us to expand our
-vocabulary to a million words.</p>
+<p>Using the continuity of text from books, we train an encoderdecoder model that tries to reconstruct the surrounding sentences of an encoded passage. Sentences that share semantic and syntactic properties are thus mapped to similar vector representations. We next introduce a simple vocabulary expansion method to encode words that were not seen as part of training, allowing us to expand our vocabulary to a million words.</p>
 </blockquote>
 <p>skip-thoughts也是一种encoder-decoder结构，直接根据当前句预测上下文。</p>
 <p>skip-gram是根据当前词预测上下文的词。目标不同。</p>
 <div id="introduction-1" class="section level3" number="1.4.1">
 <h3><span class="header-section-number">1.4.1</span> introduction</h3>
 <blockquote>
-<p>In this paper we abstract away from the composition methods themselves
-and consider an alternative loss function that can be applied with any
-composition operator. We consider the following question: is there a
-task and a corresponding loss that will allow us to learn highly
-generic sentence representations? We give evidence for this by
-proposing a model for learning high-quality sentence vectors without a
-particular supervised task in mind. Using word vector learning as
-inspiration, we propose an objective function that abstracts the
-skip-gram model of [8] to the sentence level. That is, instead of
-using a word to predict its surrounding context, we instead encode a
-sentence to predict the sentences around it. Thus, any composition
-operator can be substituted as a sentence encoder and only the
-objective function becomes modified. Figure 1 illustrates the model.
-We call our model skip-thoughts and vectors induced by our model are
-called skip-thought vectors.</p>
+<p>In this paper we abstract away from the composition methods themselves and consider an alternative loss function that can be applied with any composition operator. We consider the following question: is there a task and a corresponding loss that will allow us to learn highly generic sentence representations? We give evidence for this by proposing a model for learning high-quality sentence vectors without a particular supervised task in mind. Using word vector learning as inspiration, we propose an objective function that abstracts the skip-gram model of [8] to the sentence level. That is, instead of using a word to predict its surrounding context, we instead encode a sentence to predict the sentences around it. Thus, any composition operator can be substituted as a sentence encoder and only the objective function becomes modified. Figure 1 illustrates the model. We call our model skip-thoughts and vectors induced by our model are called skip-thought vectors.</p>
 </blockquote>
-<p>也是在强调直接学习句向量，根据当前的句子预测上下文的句子向量。
-<eos>是每个句子的结尾</p>
+<p>也是在强调直接学习句向量，根据当前的句子预测上下文的句子向量。 <eos>是每个句子的结尾</p>
 <p><img src="figs/skip-thoughts.png" /></p>
 <p>当前句<span class="math inline">\(s_{i}\)</span>预测上下句<span class="math inline">\(s_{i-1}\)</span>和<span class="math inline">\(s_{i+1}\)</span></p>
 </div>
 <div id="结构" class="section level3" number="1.4.2">
 <h3><span class="header-section-number">1.4.2</span> 结构</h3>
 <blockquote>
-<p>We treat skip-thoughts in the framework of encoder-decoder models
-<span class="math inline">\(1 .\)</span> That is, an encoder maps words to a sentence vector and a
-decoder is used to generate the surrounding sentences. Encoderdecoder
-models have gained a lot of traction for neural machine translation.
-In this setting, an encoder is used to map e.g. an English sentence
-into a vector. The decoder then conditions on this vector to generate
-a translation for the source English sentence. Several choices of
-encoder-decoder pairs have been explored, including ConvNet-RNN [10],
-RNN-RNN [11] and LSTM-LSTM [12]. The source sentence representation
-can also dynamically change through the use of an attention mechanism
-[13] to take into account only the relevant words for translation at
-any given time. In our model, we use an RNN encoder with GRU [14]
-activations and an RNN decoder with a conditional GRU. This model
-combination is nearly identical to the RNN encoder-decoder of [11]
-used in neural machine translation. GRU has been shown to perform as
-well as LSTM [2] on sequence modelling tasks [14] while being
-conceptually simpler. GRU units have only 2 gates and do not require
-the use of a cell. While we use RNNs for our model, any encoder and
-decoder can be used so long as we can backpropagate through it.</p>
+<p>We treat skip-thoughts in the framework of encoder-decoder models <span class="math inline">\(1 .\)</span> That is, an encoder maps words to a sentence vector and a decoder is used to generate the surrounding sentences. Encoderdecoder models have gained a lot of traction for neural machine translation. In this setting, an encoder is used to map e.g. an English sentence into a vector. The decoder then conditions on this vector to generate a translation for the source English sentence. Several choices of encoder-decoder pairs have been explored, including ConvNet-RNN [10], RNN-RNN [11] and LSTM-LSTM [12]. The source sentence representation can also dynamically change through the use of an attention mechanism [13] to take into account only the relevant words for translation at any given time. In our model, we use an RNN encoder with GRU [14] activations and an RNN decoder with a conditional GRU. This model combination is nearly identical to the RNN encoder-decoder of [11] used in neural machine translation. GRU has been shown to perform as well as LSTM [2] on sequence modelling tasks [14] while being conceptually simpler. GRU units have only 2 gates and do not require the use of a cell. While we use RNNs for our model, any encoder and decoder can be used so long as we can backpropagate through it.</p>
 </blockquote>
 <p>常见的编码器和解码器的结构有ConvNet-RNN , RNN-RNN and LSTM-LSTM</p>
 <p>Skip-Though模型希望通过编码中间的句子来预测其前一个句子和后一个句子，前一个句子和后一个句子分别用不同的解码器进行解码，也就是根据中间句子的句向量表示进行自回归的Decoder把句子解码出来，这借鉴了机器翻译中的思想。</p>
 <p>使用两个独立的Decoder分别建模前一句和后一句是为了用独立的语义去编码前一句和后一句。</p>
-<p>skip-thought模型的神经网络结构是在机器翻译中最常用的 Encoder-Decoder 结构，而在 Encoder-Decoder 架构中所使用的模型是GRU模型。因此在训练句子向量时同样要使用到词向量，编码器输出的结果为句子中最后一个词所输出的向量。
-GRU对比LSTM从速度上面来说是应该是更快的，效果上来看，实际数据中差不多~</p>
+<p>skip-thought模型的神经网络结构是在机器翻译中最常用的 Encoder-Decoder 结构，而在 Encoder-Decoder 架构中所使用的模型是GRU模型。因此在训练句子向量时同样要使用到词向量，编码器输出的结果为句子中最后一个词所输出的向量。 GRU对比LSTM从速度上面来说是应该是更快的，效果上来看，实际数据中差不多~</p>
 </div>
 <div id="encoder" class="section level3" number="1.4.3">
 <h3><span class="header-section-number">1.4.3</span> encoder</h3>
 <p>Skip-Thought模型的编码器部分使用GRU进行Encoder, GRU中有更新门和重置门，更新门对应 <span class="math inline">\(z^{t},\)</span> 重置门对应 <span class="math inline">\(r^{t}\)</span> 。更新门用于控制前一 个时刻的信息被带入当前时刻的程度, 更新门的值越大, 说明前一时刻的信息带入当前时刻越多。重置门控制的是前一时刻有多少信息被 写入到当前时刻的候选集。</p>
 <blockquote>
-<p>Encoder. Let <span class="math inline">\(w_{i}^{1}, \ldots, w_{i}^{N}\)</span> be the words in sentence
-<span class="math inline">\(s_{i}\)</span> where <span class="math inline">\(N\)</span> is the number of words in the sentence. At each time
-step, the encoder produces a hidden state <span class="math inline">\(\mathbf{h}_{i}^{t}\)</span> which
-can be interpreted as the representation of the sequence
-<span class="math inline">\(w_{i}^{1}, \ldots, w_{i}^{t} .\)</span> The hidden state <span class="math inline">\(\mathbf{h}_{i}^{N}\)</span>
-thus represents the full sentence. To encode a sentence, we iterate
-the following sequence of equations (dropping the subscript <span class="math inline">\(i\)</span> ):</p>
+<p>Encoder. Let <span class="math inline">\(w_{i}^{1}, \ldots, w_{i}^{N}\)</span> be the words in sentence <span class="math inline">\(s_{i}\)</span> where <span class="math inline">\(N\)</span> is the number of words in the sentence. At each time step, the encoder produces a hidden state <span class="math inline">\(\mathbf{h}_{i}^{t}\)</span> which can be interpreted as the representation of the sequence <span class="math inline">\(w_{i}^{1}, \ldots, w_{i}^{t} .\)</span> The hidden state <span class="math inline">\(\mathbf{h}_{i}^{N}\)</span> thus represents the full sentence. To encode a sentence, we iterate the following sequence of equations (dropping the subscript <span class="math inline">\(i\)</span> ):</p>
 </blockquote>
 <p><span class="math display">\[
 \begin{aligned}
@@ -567,36 +437,16 @@ the following sequence of equations (dropping the subscript <span class="math in
 \overline{\mathbf{h}}^{t} &amp;=\tanh \left(\mathbf{W} \mathbf{x}^{t}+\mathbf{U}\left(\mathbf{r}^{t} \odot \mathbf{h}^{t-1}\right)\right) \\
 \mathbf{h}^{t} &amp;=\left(1-\mathbf{z}^{t}\right) \odot \mathbf{h}^{t-1}+\mathbf{z}^{t} \odot \overline{\mathbf{h}}^{t}
 \end{aligned}
-\]</span> where <span class="math inline">\(\overline{\mathbf{h}}^{t}\)</span> is the proposed state update at
-time <span class="math inline">\(t, \mathbf{z}^{t}\)</span> is the update gate, <span class="math inline">\(\mathbf{r}_{t}\)</span> is the
-reset gate <span class="math inline">\((\odot)\)</span> denotes a component-wise product. Both update gates
-takes values between zero and one.</p>
+\]</span> where <span class="math inline">\(\overline{\mathbf{h}}^{t}\)</span> is the proposed state update at time <span class="math inline">\(t, \mathbf{z}^{t}\)</span> is the update gate, <span class="math inline">\(\mathbf{r}_{t}\)</span> is the reset gate <span class="math inline">\((\odot)\)</span> denotes a component-wise product. Both update gates takes values between zero and one.</p>
 <p>encoder部分就是一个GRU的结构进行特征选择</p>
-<p>编码器的作用：编码器的作⽤是把⼀个不定⻓的输⼊序列变换成⼀个定⻓的背景变量
-c，并在该背景变量中编码输⼊序列信息。</p>
+<p>编码器的作用：编码器的作⽤是把⼀个不定⻓的输⼊序列变换成⼀个定⻓的背景变量 c，并在该背景变量中编码输⼊序列信息。</p>
 </div>
 <div id="decoder" class="section level3" number="1.4.4">
 <h3><span class="header-section-number">1.4.4</span> decoder</h3>
 <blockquote>
-<p>Decoder. The decoder is a neural language model which conditions on
-the encoder output <span class="math inline">\(\mathbf{h}_{i} .\)</span> The computation is similar to
-that of the encoder except we introduce matrices
-<span class="math inline">\(\mathbf{C}_{z}, \mathbf{C}_{r}\)</span> and <span class="math inline">\(\mathbf{C}\)</span> that are used to
-bias the update gate, reset gate and hidden state computation by the
-sentence vector. One decoder is used for the next sentence <span class="math inline">\(s_{i+1}\)</span>
-while a second decoder is used for the previous sentence <span class="math inline">\(s_{i-1}\)</span>.
-Separate parameters are used for each decoder with the exception of
-the vocabulary matrix <span class="math inline">\(\mathbf{V}\)</span> which is the weight matrix
-connecting the decoder’s hidden state for computing a distribution
-over words. In what follows we describe the decoder for the next
-sentence <span class="math inline">\(s_{i+1}\)</span> although an analogous computation is used for the
-previous sentence <span class="math inline">\(s_{i-1}\)</span>. Let <span class="math inline">\(\mathbf{h}_{i+1}^{t}\)</span> denote the
-hidden state of the decoder at time <span class="math inline">\(t .\)</span> Decoding involves iterating
-through the following sequence of equations (dropping the subscript
-<span class="math inline">\(i+1\)</span> ):</p>
+<p>Decoder. The decoder is a neural language model which conditions on the encoder output <span class="math inline">\(\mathbf{h}_{i} .\)</span> The computation is similar to that of the encoder except we introduce matrices <span class="math inline">\(\mathbf{C}_{z}, \mathbf{C}_{r}\)</span> and <span class="math inline">\(\mathbf{C}\)</span> that are used to bias the update gate, reset gate and hidden state computation by the sentence vector. One decoder is used for the next sentence <span class="math inline">\(s_{i+1}\)</span> while a second decoder is used for the previous sentence <span class="math inline">\(s_{i-1}\)</span>. Separate parameters are used for each decoder with the exception of the vocabulary matrix <span class="math inline">\(\mathbf{V}\)</span> which is the weight matrix connecting the decoder’s hidden state for computing a distribution over words. In what follows we describe the decoder for the next sentence <span class="math inline">\(s_{i+1}\)</span> although an analogous computation is used for the previous sentence <span class="math inline">\(s_{i-1}\)</span>. Let <span class="math inline">\(\mathbf{h}_{i+1}^{t}\)</span> denote the hidden state of the decoder at time <span class="math inline">\(t .\)</span> Decoding involves iterating through the following sequence of equations (dropping the subscript <span class="math inline">\(i+1\)</span> ):</p>
 </blockquote>
-<p>decoder的输入是encoder的输出，两个解码器分别对当前句的上下句进行解码。
-下面给出了预测 <span class="math inline">\(s_{i+1}\)</span>的，预测 <span class="math inline">\(s_{i-1}\)</span>同上</p>
+<p>decoder的输入是encoder的输出，两个解码器分别对当前句的上下句进行解码。 下面给出了预测 <span class="math inline">\(s_{i+1}\)</span>的，预测 <span class="math inline">\(s_{i-1}\)</span>同上</p>
 <p>Decoder部分使用的同样是GRU，Decoder部分的GRU是带有条件信息的，也就是编码器得到的中间句子的编码信息<span class="math inline">\(h_{i}\)</span>，从而使得Encoder部分的GRU每次都能携带中间句子的信息做出决策。</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -606,21 +456,15 @@ through the following sequence of equations (dropping the subscript
 \mathbf{h}_{i+1}^{t} &amp;=\left(1-\mathbf{z}^{t}\right) \odot \mathbf{h}^{t-1}+\mathbf{z}^{t} \odot \overline{\mathbf{h}}^{t}
 \end{aligned}
 \]</span></p>
-<p>Given <span class="math inline">\(\mathbf{h}_{i+1}^{t},\)</span> the probability of word <span class="math inline">\(w_{i+1}^{t}\)</span>
-given the previous <span class="math inline">\(t-1\)</span> words and the encoder vector is <span class="math display">\[
+<p>Given <span class="math inline">\(\mathbf{h}_{i+1}^{t},\)</span> the probability of word <span class="math inline">\(w_{i+1}^{t}\)</span> given the previous <span class="math inline">\(t-1\)</span> words and the encoder vector is <span class="math display">\[
 P\left(w_{i+1}^{t} \mid w_{i+1}^{&lt;t}, \mathbf{h}_{i}\right) \propto \exp \left(\mathbf{v}_{w_{i+1}^{t}} \mathbf{h}_{i+1}^{t}\right)
-\]</span> where <span class="math inline">\(\mathbf{v}_{w_{i+1}^{t}}\)</span> denotes the row of <span class="math inline">\(\mathbf{V}\)</span>
-corresponding to the word of <span class="math inline">\(w_{i+1}^{t} .\)</span> An analogous computation is
-performed for the previous sentence <span class="math inline">\(s_{i-1}\)</span>.</p>
+\]</span> where <span class="math inline">\(\mathbf{v}_{w_{i+1}^{t}}\)</span> denotes the row of <span class="math inline">\(\mathbf{V}\)</span> corresponding to the word of <span class="math inline">\(w_{i+1}^{t} .\)</span> An analogous computation is performed for the previous sentence <span class="math inline">\(s_{i-1}\)</span>.</p>
 <p>解码器部分使用的网络结构也是GRU</p>
 </div>
 <div id="目标函数" class="section level3" number="1.4.5">
 <h3><span class="header-section-number">1.4.5</span> 目标函数</h3>
 <blockquote>
-<p>Objective. Given a tuple <span class="math inline">\(\left(s_{i-1}, s_{i}, s_{i+1}\right),\)</span> the
-objective optimized is the sum of the log-probabilities for the
-forward and backward sentences conditioned on the encoder
-representation: <span class="math display">\[
+<p>Objective. Given a tuple <span class="math inline">\(\left(s_{i-1}, s_{i}, s_{i+1}\right),\)</span> the objective optimized is the sum of the log-probabilities for the forward and backward sentences conditioned on the encoder representation: <span class="math display">\[
 \sum_{t} \log P\left(w_{i+1}^{t} \mid w_{i+1}^{&lt;t}, \mathbf{h}_{i}\right)+\sum_{t} \log P\left(w_{i-1}^{t} \mid w_{i-1}^{&lt;t}, \mathbf{h}_{i}\right)
 \]</span></p>
 </blockquote>
@@ -645,8 +489,7 @@ representation: <span class="math display">\[
 <blockquote>
 <p>We note that there are alternate strategies for solving the vocabulary problem. One alternative is to initialize the RNN embedding space to that of pre-trained word vectors. This would require a more sophisticated softmax for decoding, or clipping the vocabulary of the decoder as it would be too computationally expensive to naively decode with vocabularies of hundreds of thousands of words. An alternative strategy is to avoid words altogether and train at the character level.</p>
 </blockquote>
-<p>以词作为预训练的词向量，需要非常复杂的softmax做解码，这样计算的代码比较大，确实。。每次算词频都需要遍历整个词库，计算量很大。。很慢。
-因此有了以字符为基本单位的可代替方案</p>
+<p>以词作为预训练的词向量，需要非常复杂的softmax做解码，这样计算的代码比较大，确实。。每次算词频都需要遍历整个词库，计算量很大。。很慢。 因此有了以字符为基本单位的可代替方案</p>
 <p>这一段的意义何在？skip-thoughts中还是以词为基本做的预训练，没有用到字符啊</p>
 </div>
 <div id="实验部分" class="section level3" number="1.4.7">
@@ -679,8 +522,7 @@ representation: <span class="math display">\[
 <div id="实验部分-1" class="section level3" number="1.4.8">
 <h3><span class="header-section-number">1.4.8</span> 实验部分</h3>
 <p><img src="figs/skip-th-vec-exp1.png" /></p>
-<p>左边的部门是计算相似性的实验，评价指标是皮尔森相关系数和斯皮尔曼相关系数，无监督的实验。
-从结果上看skip-vec这个的结果不是最优的，属于中等偏上了。</p>
+<p>左边的部门是计算相似性的实验，评价指标是皮尔森相关系数和斯皮尔曼相关系数，无监督的实验。 从结果上看skip-vec这个的结果不是最优的，属于中等偏上了。</p>
 <p>右边的是一个二分类的实验，评价指标是ACC和F1.</p>
 <p>还有计算句子相似语义的实验和情感分析等的实验，可以参考原文，略。</p>
 </div>
@@ -725,8 +567,7 @@ p\left(t_{1}, t_{2}, \ldots, t_{N}\right)=\prod_{k=1}^{N} p\left(t_{k} \mid t_{1
 P\left(w_{t} \mid c_{t}\right)=\frac{\exp \left(e^{\prime}\left(w_{t}\right)^{T} x\right)}{\sum_{i=1}^{|V|} \exp \left(e^{\prime}\left(w_{i}\right)^{T} x\right)}, x=\sum_{i \in c} e\left(w_{i}\right)
 \]</span></p>
 <blockquote>
-<p>说白了，也就是先通过向量点乘的形式计算得到 logits，然后再通过 softmax 变成概率意义，这本质上和普通分类没什么区别，只不过是一个较大的 |V| 分类问题。
-现在假定 char-based CNN 模型是现成已有的，对于任意一个目标词都可以得到一个向量表示 CNN(tk) ，当前时刻的 LSTM 的输出向量为 h，那么便可以通过同样的方法得到目标词的概率大小：<a href="https://blog.csdn.net/qq_27231343/article/details/108078679">NLP巨人肩膀下</a></p>
+<p>说白了，也就是先通过向量点乘的形式计算得到 logits，然后再通过 softmax 变成概率意义，这本质上和普通分类没什么区别，只不过是一个较大的 |V| 分类问题。 现在假定 char-based CNN 模型是现成已有的，对于任意一个目标词都可以得到一个向量表示 CNN(tk) ，当前时刻的 LSTM 的输出向量为 h，那么便可以通过同样的方法得到目标词的概率大小：<a href="https://blog.csdn.net/qq_27231343/article/details/108078679">NLP巨人肩膀下</a></p>
 </blockquote>
 <p><span class="math display">\[
 p\left(t_{k} \mid t_{1}, \ldots, t_{k-1}\right)=\frac{\exp \left(C N N\left(t_{k}\right)^{T} h\right)}{\sum_{i=1}^{|V|} \exp \left(C N N\left(t_{i}\right)^{T} h\right)}, h=\operatorname{LSTM}\left(t_{k} \mid t_{1}, \ldots, t_{k-1}\right)
@@ -759,10 +600,8 @@ p\left(t_{1}, t_{2}, \ldots, t_{N}\right)=\prod_{k=1}^{N} p\left(t_{k} \mid t_{k
 \sum_{k=1}^{N}\left(\log p\left(t_{k} \mid t_{1}, \ldots, t_{k-1} ; \Theta_{x}, \vec{\Theta}_{L S T M}, \Theta_{s}\right)\right. \\
 \left.\quad+\log p\left(t_{k} \mid t_{k+1}, \ldots, t_{N} ; \Theta_{x}, \overleftarrow{\Theta}_{L S T M}, \Theta_{s}\right)\right)
 \end{array}
-\]</span>
-We tie the parameters for both the token representation <span class="math inline">\(\left(\Theta_{x}\right)\)</span> and Softmax layer <span class="math inline">\(\left(\Theta_{s}\right)\)</span> in the forward and backward direction while maintaining separate parameters for the LSTMs in each direction. Overall, this formulation is similar to the approach of Peters et al. ( 2017 ), with the exception that we share some weights between directions instead of using completely independent parameters. In the next section, we depart from previous work by introducing a new approach for learning word representations that are a linear combination of the biLM layers.</p>
-<p>两个lstm层的参数不共享，单独训练
-但是在两个lstm之间会有一些共享权重参数</p>
+\]</span> We tie the parameters for both the token representation <span class="math inline">\(\left(\Theta_{x}\right)\)</span> and Softmax layer <span class="math inline">\(\left(\Theta_{s}\right)\)</span> in the forward and backward direction while maintaining separate parameters for the LSTMs in each direction. Overall, this formulation is similar to the approach of Peters et al. ( 2017 ), with the exception that we share some weights between directions instead of using completely independent parameters. In the next section, we depart from previous work by introducing a new approach for learning word representations that are a linear combination of the biLM layers.</p>
+<p>两个lstm层的参数不共享，单独训练 但是在两个lstm之间会有一些共享权重参数</p>
 </div>
 <div id="elmo结构" class="section level3" number="1.5.3">
 <h3><span class="header-section-number">1.5.3</span> elmo结构</h3>
@@ -782,8 +621,7 @@ R_{k} &amp;=\left\{\mathbf{x}_{k}^{L M}, \overrightarrow{\mathbf{h}}_{k, j}^{L M
 <p>在下游的任务中, ELMo把所有层的R压缩在一起形成一个向量。(在最简单的情况下, 可以只保留最后一层的 <span class="math inline">\(h_{k, L}^{L M}\)</span> )</p>
 <p><span class="math display">\[
 \mathbf{E L M o}_{k}^{\text {task}}=E\left(R_{k} ; \Theta^{\text {task}}\right)=\gamma^{\text {task}} \sum_{j=0}^{L} s_{j}^{\text {task}} \mathbf{h}_{k, j}^{L M}
-\]</span>
-In (1), s <span class="math inline">\(^{\text {task }}\)</span> are softmax-normalized weights and the scalar parameter <span class="math inline">\(\gamma^{\text {task}}\)</span> allows the task model to scale the entire ELMo vector. <span class="math inline">\(\gamma\)</span> is of practical importance to aid the optimization process (see supplemental material for details). Considering that the activations of each biLM layer have a different distribution, in some cases it also helped to apply layer normalization (Ba et al., 2016 ) to each biLM layer before weighting.</p>
+\]</span> In (1), s <span class="math inline">\(^{\text {task }}\)</span> are softmax-normalized weights and the scalar parameter <span class="math inline">\(\gamma^{\text {task}}\)</span> allows the task model to scale the entire ELMo vector. <span class="math inline">\(\gamma\)</span> is of practical importance to aid the optimization process (see supplemental material for details). Considering that the activations of each biLM layer have a different distribution, in some cases it also helped to apply layer normalization (Ba et al., 2016 ) to each biLM layer before weighting.</p>
 <p>e</p>
 <p>其中 } <span class="math inline">\(s_{j}^{task }\)</span>是softmax标准化权重,<span class="math inline">\(\gamma^{\text {task}}\)</span>是缩放系数，允许任务模型去缩放整个ELMO向量。</p>
 <div id="using-bilms-for-supervised-nlp-tasks" class="section level4" number="1.5.3.1">
@@ -794,16 +632,14 @@ In (1), s <span class="math inline">\(^{\text {task }}\)</span> are softmax-norm
 </blockquote>
 <p>给定一个预先训练好的biLM和一个目标NLP任务的监督架构，使用biLM来改进任务模型是一个简单的过程。只需运行biLM并记录每个单词的所有层表示。然后让最终任务模型学习这些表示的线性组合。</p>
 <blockquote>
-<p>First consider the lowest layers of the supervised model without the biLM. Most supervised NLP models share a common architecture at the
-lowest layers, allowing us to add ELMo in a consistent, unified manner. Given a sequence of tokens <span class="math inline">\(\left(t_{1}, \ldots, t_{N}\right),\)</span> it is standard to form a context-independent token representation <span class="math inline">\(\mathbf{x}_{k}\)</span> for each token position using pre-trained word embeddings and optionally character-based representations. Then, the model forms a context-sensitive representation <span class="math inline">\(\mathbf{h}_{k},\)</span> typically using either bidirectional RNNs, CNNs, or feed forward networks.</p>
+<p>First consider the lowest layers of the supervised model without the biLM. Most supervised NLP models share a common architecture at the lowest layers, allowing us to add ELMo in a consistent, unified manner. Given a sequence of tokens <span class="math inline">\(\left(t_{1}, \ldots, t_{N}\right),\)</span> it is standard to form a context-independent token representation <span class="math inline">\(\mathbf{x}_{k}\)</span> for each token position using pre-trained word embeddings and optionally character-based representations. Then, the model forms a context-sensitive representation <span class="math inline">\(\mathbf{h}_{k},\)</span> typically using either bidirectional RNNs, CNNs, or feed forward networks.</p>
 </blockquote>
 <blockquote>
 <p>To add ELMo to the supervised model, we first freeze the weights of the biLM and then concatenate the ELMo vector ELMo <span class="math inline">\(_{k}^{\text {task}}\)</span> with <span class="math inline">\(\mathrm{x}_{k}\)</span> and pass the ELMo enhanced representation <span class="math inline">\(\left[\mathrm{x}_{k} ;\right.\)</span> ELMo <span class="math inline">\(\left._{k}^{\text {task }}\right]\)</span> into the task RNN. For some tasks (e.g., SNLI, SQuAD), we observe further improvements by also including ELMo at the output of the task RNN by introducing another set of output specific linear weights and replacing <span class="math inline">\(\mathbf{h}_{k}\)</span> with <span class="math inline">\(\left[\mathbf{h}_{k} ; \mathbf{E L M o}_{k}^{\text {task}}\right] .\)</span> As the remainder of the supervised model remains unchanged, these additions can happen within the context of more complex neural models. For example, see the SNLI experiments in Sec. 4 where a bi-attention layer follows the biLSTMs, or the coreference resolution experiments where a clustering model is layered on top of the biLSTMs.</p>
 </blockquote>
 <p>使用预训练的ELMO embedding</p>
 <blockquote>
-<p>Finally, we found it beneficial to add a moderate amount of dropout to ELMo (Srivastava et al.,
-2014) and in some cases to regularize the ELMo weights by adding <span class="math inline">\(\lambda\|\mathbf{w}\|_{2}^{2}\)</span> to the loss. This imposes an inductive bias on the ELMo weights to stay close to an average of all biLM layers.</p>
+<p>Finally, we found it beneficial to add a moderate amount of dropout to ELMo (Srivastava et al., 2014) and in some cases to regularize the ELMo weights by adding <span class="math inline">\(\lambda\|\mathbf{w}\|_{2}^{2}\)</span> to the loss. This imposes an inductive bias on the ELMo weights to stay close to an average of all biLM layers.</p>
 </blockquote>
 <p>在bilm后增加dropout正则化方式</p>
 <p>这对ELMo权重施加了一种诱导偏差，以保持接近所有biLM层的平均值。</p>
@@ -824,23 +660,19 @@ lowest layers, allowing us to add ELMo in a consistent, unified manner. Given a 
 <div id="evaluation" class="section level3" number="1.5.4">
 <h3><span class="header-section-number">1.5.4</span> Evaluation</h3>
 <p><img src="figs/ELMO_ACC.png" /></p>
-<p>对比在几个数据集上之前stoa的acc和f1,从结果来看，效果都有刷新之前的sota
-SQuAD是斯坦福的一个问答的数据集</p>
+<p>对比在几个数据集上之前stoa的acc和f1,从结果来看，效果都有刷新之前的sota SQuAD是斯坦福的一个问答的数据集</p>
 <p><img src="figs/ELMO-RE.png" /></p>
 <p>表2是增加了正则化参数之后</p>
 </div>
 <div id="analysis" class="section level3" number="1.5.5">
 <h3><span class="header-section-number">1.5.5</span> analysis</h3>
 <blockquote>
-<p>since adding ELMo improves task performance over word vectors alone, the biLM’s contextual representations must encode information generally useful for NLP tasks that is not captured in word vectors. Intuitively, the biLM must be disambiguating the meaning of words using their context. Consider “play”, a highly polysemous word. The top of Table 4 lists nearest neighbors to “play” using GloVe vectors. They are spread across several parts of speech (e.g., “played”, “playing” as verbs, and “player”, “game” as nouns) but concentrated in the sportsrelated senses of “play”. In contrast, the bottom two rows show nearest neighbor sentences from the SemCor dataset (see below) using the biLM’s context representation of “play” in the source sentence. In these cases, the biLM is able to disambiguate both the part of speech and word sense in the source sentence.
-intrinsic evaluation of the contextual representations similar to Belinkov et al. (2017). To isolate the information encoded by the biLM, the representations are used to directly make predictions for a fine grained word sense disambiguation (WSD) task and a POS tagging task. Using this approach, it is also possible to compare to CoVe, and across each of the individual layers.
-Word sense disambiguation Given a sentence, we can use the biLM representations to predict the sense of a target word using a simple 1 nearest neighbor approach, similar to Melamud et al. (2016). To do so, we first use the biLM to compute representations for all words in SemCor 3.0 , our training corpus (Miller et al., 1994 ), and then take the average representation for each sense. At test time, we again use the biLM to compute representations for a given target word and take the nearest neighbor sense from the training set, falling back to the first sense from WordNet for lemmas not observed during training.</p>
+<p>since adding ELMo improves task performance over word vectors alone, the biLM’s contextual representations must encode information generally useful for NLP tasks that is not captured in word vectors. Intuitively, the biLM must be disambiguating the meaning of words using their context. Consider “play”, a highly polysemous word. The top of Table 4 lists nearest neighbors to “play” using GloVe vectors. They are spread across several parts of speech (e.g., “played”, “playing” as verbs, and “player”, “game” as nouns) but concentrated in the sportsrelated senses of “play”. In contrast, the bottom two rows show nearest neighbor sentences from the SemCor dataset (see below) using the biLM’s context representation of “play” in the source sentence. In these cases, the biLM is able to disambiguate both the part of speech and word sense in the source sentence. intrinsic evaluation of the contextual representations similar to Belinkov et al. (2017). To isolate the information encoded by the biLM, the representations are used to directly make predictions for a fine grained word sense disambiguation (WSD) task and a POS tagging task. Using this approach, it is also possible to compare to CoVe, and across each of the individual layers. Word sense disambiguation Given a sentence, we can use the biLM representations to predict the sense of a target word using a simple 1 nearest neighbor approach, similar to Melamud et al. (2016). To do so, we first use the biLM to compute representations for all words in SemCor 3.0 , our training corpus (Miller et al., 1994 ), and then take the average representation for each sense. At test time, we again use the biLM to compute representations for a given target word and take the nearest neighbor sense from the training set, falling back to the first sense from WordNet for lemmas not observed during training.</p>
 </blockquote>
 <p>由于添加ELMo比单独使用词向量提高了任务性能，因此biLM的上下文表示必须编码在词向量中没有捕捉到的通常对NLP任务有用的信息。直观地说，biLM必须使用上下文来消除词语的歧义。以“play”为例，这是一个高度多义词。表4的顶部列出了使用手套矢量“玩”的最近邻居。它们分布在几个词性中(例如，“玩”、“玩”作为动词，“玩家”、“游戏”作为名词)，但集中在与体育运动相关的“玩”含义中。相比之下，底部两行显示SemCor数据集(见下)中使用源句子中“play”的biLM上下文表示的最近的句子。在这些情况下，biLM能够消除源句子中的词性和词义的歧义。与Belinkov等人类似，上下文表征的内在评估。为了隔离由biLM编码的信息，表示用于直接预测细粒度词义消歧(WSD)任务和词性标记任务。使用这种方法，还可以跨每个单独的层与CoVe进行比较。单词词义消歧对于一个句子，可以使用biLM表示来预测目标单词的意义，使用简单的1最近邻方法，类似于Melamud等人。为此，首先使用biLM来计算训练语料库SemCor 3.0中所有单词的表示，然后取每种SENSE的平均表示。在测试时，再次使用biLM来计算给定目标词的表示，并从训练集中获取最近邻的意义，对于训练期间未观察到的引理，则返回到WordNet的第一个意义。</p>
 <p>因为ELMO能学习到上下文的语义信息，使用上下文的语义进行消岐</p>
 <blockquote>
-<p>Table 5 compares WSD results using the evaluation framework from Raganato et al. (2017b) across the same suite of four test sets in Raganato et
-al. (2017a). Overall, the biLM top layer representations have <span class="math inline">\(\mathrm{F}_{1}\)</span> of 69.0 and are better at WSD then the first layer. This is competitive with a state-of-the-art WSD-specific supervised model using hand crafted features (Iacobacci et al., 2016 ) and a task specific biLSTM that is also trained with auxiliary coarse-grained semantic labels and POS tags (Raganato et al., 2017a). The CoVe biLSTM layers follow a similar pattern to those from the biLM (higher overall performance at the second layer compared to the first); however, our biLM outperforms the CoVe biLSTM, which trails the WordNet first sense baseline.</p>
+<p>Table 5 compares WSD results using the evaluation framework from Raganato et al. (2017b) across the same suite of four test sets in Raganato et al. (2017a). Overall, the biLM top layer representations have <span class="math inline">\(\mathrm{F}_{1}\)</span> of 69.0 and are better at WSD then the first layer. This is competitive with a state-of-the-art WSD-specific supervised model using hand crafted features (Iacobacci et al., 2016 ) and a task specific biLSTM that is also trained with auxiliary coarse-grained semantic labels and POS tags (Raganato et al., 2017a). The CoVe biLSTM layers follow a similar pattern to those from the biLM (higher overall performance at the second layer compared to the first); however, our biLM outperforms the CoVe biLSTM, which trails the WordNet first sense baseline.</p>
 </blockquote>
 <p><img src="figs/ELMO-DS.png" /></p>
 <p>表5比较了Raganato et al. 使用Raganato et al. 的评估框架在Raganato et al. 的同一套四组测试集上的WSD结果。总的来说，biLM顶层表示的<span class="math inline">\(\mathrm{F}_{1}\)</span>为69.0，在WSD方面优于第一层。这与使用手工制作特性的最先进的特定于wsd的监督模型(Iacobacci等人)和使用辅助粗粒度语义标签和POS标签训练的特定于任务的biLSTM 竞争。</p>
@@ -848,6 +680,8 @@ al. (2017a). Overall, the biLM top layer representations have <span class="math
 </div>
 <div id="attention-is-all-you-need" class="section level2" number="1.6">
 <h2><span class="header-section-number">1.6</span> Attention is all you need</h2>
+<div id="introduction-3" class="section level3" number="1.6.1">
+<h3><span class="header-section-number">1.6.1</span> introduction</h3>
 <blockquote>
 <p>the Transformer,based solely on attention mechanisms, dispensing with
 recurrence and convolutions entirely.</p>
@@ -900,8 +734,7 @@ positions, an effect we counteract with Multi-Head Attention</p>
 </blockquote>
 <p>前人的研究有使用卷积神经进行序列建模建立block结构（卷积核？）并行计算所有输入和输出位置的隐藏表示，在这些模型中，关联来自两个任意输入或输出位置的信号所需的操作数随位置之间的距离而增加，对于ConvS2S的参数呈线性增长，而对于ByteNet参数则对数增长。
 这使得学习远位置之间的依赖关系变得更加困难。</p>
-<p>在Transformer中，讲参数减少到一个固定的维度，尽管这是由于平均注意力加权位置而导致有效分辨率降低的结果，可以使用多头注意力抵消这种影响~</p>
-<p><strong>所以多头注意力机制是为了限制参数增长的？解决这个问题之前先知道cnn是怎样让参数爆炸的？</strong></p>
+<p>在Transformer中，将参数减少到一个固定的维度，尽管这是由于平均注意力加权位置而导致有效分辨率降低的结果，可以使用多头注意力抵消这种影响</p>
 <blockquote>
 <p>Self-attention, sometimes called intra-attention is an attention
 mechanism relating different positions of a single sequence in order
@@ -921,11 +754,50 @@ self-attention and point-wise, fully connected layers for both the
 encoder and decoder, shown in the left and right halves of Figure
 1,respectively.</p>
 </blockquote>
-<p>下面介绍的transfomer都是基于自注意力elf-attention和
-point-wise（计算注意力时候用的是点积的形式:可以理解为逐点扫描就像kernel
-size为1的卷积操作,对输出的每一个位置做同样的变化?)</p>
-<p><img src="https://img2020.cnblogs.com/blog/1365906/202008/1365906-20200815115042282-1192701119.png" /></p>
-<p>transformer的结构也是由encoder和decoder组成</p>
+<p>下面这个图是TRM模型的完整的结构，N个encoder和N个decoderz组成</p>
+<p><img src="../figs/TRM_1.png" /></p>
+<p>本篇文章重点应用在机器翻译的领域，因此一个形象的例子是</p>
+<p><img src="../figs/TRM_2.png" /></p>
+<p>鉴于这个文章写的内容板块比较乱，就不按照文章的顺序了</p>
+</div>
+<div id="input" class="section level3" number="1.6.2">
+<h3><span class="header-section-number">1.6.2</span> input</h3>
+<p><img src="../figs/TRM_3.png" /></p>
+<p>第一部分是输入层，从图来看是两部分组成的，包括一个token embedding和一个positional encoding两部分做求和作为input。</p>
+<p>token embedding就是w2VEC训练出来的词向量，每个词向量的维度是512，这个很常规。TRM并没有使用RNN这种序列网络，而是使用的self-attention这种结构。</p>
+<blockquote>
+<p>Since our model contains no recurrence and no convolution, in order for the model to make use of the order of the sequence, we must inject some information about the relative or absolute position of the tokens in the sequence. To this end, we add “positional encodings” to the input embeddings at the bottoms of the encoder and decoder stacks. The positional encodings have the same dimension <span class="math inline">\(d_{\text {model }}\)</span> as the embeddings, so that the two can be summed. There are many choices of positional encodings, learned and fixed [9].
+In this work, we use sine and cosine functions of different frequencies:</p>
+</blockquote>
+<p>RNN处理的是序列的特征，是有先后顺序的，例如“我爱你”这个序列，RNN的处理方式是先处理我，然后再根据“我”的信息处理“爱”等等，RNN中的每个time step是共享U,W,V的。</p>
+<p><img src="../figs/TRM_4.png" /></p>
+<p>但是transformer不一样，transformer是对每个字/词做并行训练的，可以同时处理，这样的好处是加快了速度，因此transformer就缺少告诉一个序列谁前谁后的一个方法，此时有了位置编码</p>
+<p>两种Positional Encoding方法：</p>
+<p><span class="math display">\[
+\begin{aligned}
+P E_{(p o s, 2 i)} &amp;=\sin \left(p o s / 10000^{2 i / d_{\text {model }}}\right) \\
+P E_{(p o s, 2 i+1)} &amp;=\cos \left(p o s / 10000^{2 i / d_{\text {model }}}\right)
+\end{aligned}
+\]</span></p>
+<p>在512维度中，<span class="math inline">\(2i\)</span>表示偶数位置使用的是<span class="math inline">\(sin\)</span>,<span class="math inline">\(2i+1\)</span>表示奇数位置使用cos,也就是下图</p>
+<p><img src="../figs/TRM_5.png" /></p>
+<p>得到位置编码后，将词向量的512维度的tokenembedding和位置向量的512维度的embedding相加，得到最终的512维度作为整个transformer的input。</p>
+<p><img src="../figs/TRM_6.png" /></p>
+<p>sin,cos体现的绝对的位置编码，这里我其实没太懂这个，绝对位置编码中有相对位置编码的表示。</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" />
+为什么位置编码有用？</li>
+</ul>
+<p><img src="../figs/TRM_7.png" /></p>
+<blockquote>
+<p>任意位置的 <span class="math inline">\(PE_{pos+k}\)</span>都可以被<span class="math inline">\(PE_{pos}\)</span>的线性函数表示。考虑到在NLP任务中，除了单词的绝对位置，单词的相对位置也非常重要。根据公式
+<span class="math inline">\(sin(\alpha+\beta) = sin \alpha cos \beta + cos \alpha sin\beta 以及cos(\alpha + \beta) = cos \alpha cos \beta - sin \alpha sin\beta，\)</span>这表明位置
+<span class="math inline">\(k+p\)</span>的位置向量可以表示为位置 k
+的特征向量的线性变化，这为模型捕捉单词之间的相对位置关系提供了非常大的便利。</p>
+</blockquote>
+</div>
+<div id="encoder-1" class="section level3" number="1.6.3">
+<h3><span class="header-section-number">1.6.3</span> encoder</h3>
 <blockquote>
 <p><strong>encoder</strong>: The encoder is composed of a stack of <span class="math inline">\(N=6\)</span> identical
 layers. Each layer has two sub-layers. The first is a multi-head
@@ -938,31 +810,15 @@ implemented by the sub-layer itself. To facilitate these residual
 connections, all sub-layers in the model, as well as the embedding
 layers, produce outputs of dimension <span class="math inline">\(d_{\text {model }}=512\)</span>.</p>
 </blockquote>
-<p>encoder部分是由6个相同的堆网络层组成的，每一层有2个子网络：第一个子网络是多头注意力和自注意力机制，第二个子网络是一个位置全连接前馈神经网络（这个咋理解？）</p>
-<p>在两个子网络周围用残差网络连接（也就是没两个子网络之间用到了残差网络）LayerNorm（这个需要查下：LN中同层神经元输入拥有相同的均值和方差，不同的输入样本有不同的均值和方差；BN中则针对不同神经元输入计算均值和方差，同一个batch中的输入拥有相同的均值和方差。所以，LN不依赖于batch的大小和输入sequence的深度，因此可以用于batchsize为1和RNN中对边长的输入sequence的normalize操作。）然后进行图1画的还是很直观的。</p>
-<p>因此每个子层的输出就是正则化后的<span class="math inline">\((x+\)</span> Sublayer
-<span class="math inline">\((x)),\)</span>sub-layers和embedding
-layers的输出维度设置为512，这样是为了更好的进行残差连接（补下残差连接)</p>
+<p>encoder部分是由6个相同的堆网络层组成的，每一层有2个子网络：第一个子网络是多头注意力和自注意力机制，第二个子网络是一个位置全连接前馈神经网络</p>
+<p>6个encoder是一模一样的结构，但是参数并不共享，训练的时候6个encoder是同时巡训练的，参数是独立的，不共享</p>
+<p>后面albert做改进的时候参数是共享的，因此来减少参数的量级。6个decoder的结构是完全相同的，但是encoder和decoder是完全不同的</p>
+</div>
+<div id="self-attention" class="section level3" number="1.6.4">
+<h3><span class="header-section-number">1.6.4</span> self-attention</h3>
 <blockquote>
-<p><strong>Decoder:</strong> The decoder is also composed of a stack of <span class="math inline">\(N=6\)</span>
-identical layers. In addition to the two sub-layers in each encoder
-layer, the decoder inserts a third sub-layer, which performs
-multi-head attention over the output of the encoder stack. Similar to
-the encoder, we employ residual connections around each of the
-sub-layers, followed by layer normalization.
-decoder部分也是由6个相同的块结构组成，除了每个编码器层中的两个子层之外，解码器还插入一个第三子层，该子层对编码器堆栈的输出执行多头关注，在每个sub-layers之间同样使用了残差神经网络。</p>
+<p>Instead of performing a single attention function with <span class="math inline">\(d_{\text {model }}\)</span> -dimensional keys, values and queries, we found it beneficial to linearly project the queries, keys and values <span class="math inline">\(h\)</span> times with different, learned linear projections to <span class="math inline">\(d_{k}, d_{k}\)</span> and <span class="math inline">\(d_{v}\)</span> dimensions, respectively. On each of these projected versions of queries, keys and values we then perform the attention function in parallel, yielding <span class="math inline">\(d_{v}\)</span> -dimensional output values. These are concatenated and once again projected, resulting in the final values, as depicted in Figure 2.</p>
 </blockquote>
-<blockquote>
-<p>We also modify the self-attention sub-layer in the decoder stack to
-prevent positions from attending to subsequent positions. This
-masking, combined with fact that the output embeddings are offset by
-one position, ensures that the predictions for position <span class="math inline">\(i\)</span> can depend
-only on the known outputs at positions less than <span class="math inline">\(i\)</span>.</p>
-</blockquote>
-<p>修改了解码器堆栈中的自我注意子层，以防止位置关注后续位置。
-这种掩盖，加上输出嵌入被一个位置偏移的事实，确保了对位置$ i
-<span class="math inline">\(的预测只能依赖于位置小于\)</span> i
-$的已知输出。(这里感觉用到了HMM的齐次一阶马尔可夫？）</p>
 <blockquote>
 <p>An attention function can be described as mapping a query and a set of
 key-value pairs to an output,where the query, keys, values, and output
@@ -973,41 +829,16 @@ compatibility function of the query with the corresponding key</p>
 <p>attention可以描述为将查询和一组键值对映射到输出，其中查询，键，值和输出都是向量。
 <strong>将输出计算为值的加权总和，其中分配给每个值的权重是通过查询与相应键的兼容性函数来计算</strong></p>
 <blockquote>
-<p>We call our particular attention “Scaled Dot-Product Attention”
-(Figure 2). The input consists of queries and keys of dimension
-<span class="math inline">\(d_{k},\)</span> and values of dimension <span class="math inline">\(d_{v} .\)</span> We compute the dot products
-of the query with all keys, divide each by <span class="math inline">\(\sqrt{d_{k}}\)</span>, and apply a
-softmax function to obtain the weights on the values.</p>
-</blockquote>
-<p>Scaled Dot-Product
-Attention:输入是<span class="math inline">\(d_{k},\)</span>维的键值和<span class="math inline">\(d_{v} .\)</span>维的值，用所有的k计算查询的点积，将每个QK的除以$
- sqrt {d_ {k}} $，然后应用softmax函数来获得值的权重。</p>
-<p><img src="https://img2020.cnblogs.com/blog/1365906/202008/1365906-20200814154338891-1651205929.png" /></p>
-<blockquote>
 <p>In practice, we compute the attention function on a set of queries
 simultaneously, packed together into a matrix <span class="math inline">\(Q .\)</span> The keys and
 values are also packed together into matrices <span class="math inline">\(K\)</span> and <span class="math inline">\(V\)</span>. We compute
 the matrix of outputs as:</p>
 </blockquote>
-<p>查询,键值分别对应Q,K,V三个矩阵，因此attention的矩阵运算如下</p>
+<p>普通的注意力的得分怎么算？可以借鉴一个图</p>
 <p><span class="math display">\[
 \operatorname{Attention}(Q, K, V)=\operatorname{softmax}\left(\frac{Q K^{T}}{\sqrt{d_{k}}}\right) V
 \]</span></p>
-<blockquote>
-<p>Transformer会在三个地方使用multi-head attention： 1. encoder-decoder
-attention：输入为encoder的输出和decoder的self-attention输出，其中encoder的self-attention作为
-key and value，decoder的self-attention作为query。 2. encoder
-self-attention：输入的Q、K、V都是encoder的input embedding and
-positional embedding。 3. decoder
-self-attention：在decoder的self-attention层中，deocder
-都能够访问当前位置前面的位置，输入的Q、K、V都是decoder的input
-embedding and positional embedding。 <strong>Note:</strong>
-在一般的attention模型中，Q就是decoder的隐层，K就是encoder的隐层，V也是encoder的隐层。所谓的self-attention就是取Q，K，V相同，均为encoder或者decoder的input
-embedding and positional
-embedding，更具体为“网络输入是三个相同的向量q, k和v，是word
-embedding和position
-embedding相加得到的结果”。<a href="https://blog.csdn.net/Sakura55/article/details/86679826">csdn</a></p>
-</blockquote>
+<p><img src="../figs/TRM_8.png" /></p>
 <blockquote>
 <p>The two most commonly used attention functions are additive attention
 [2], and dot-product (multiplicative) attention. Dot-product attention
@@ -1019,8 +850,8 @@ dot-product attention is much faster and more space-efficient in
 practice, since it can be implemented using highly optimized matrix
 multiplication code.</p>
 </blockquote>
-<p>计算attention的方式有2种，一种是点积的形式，另一种是求和的形式这里可以看下参考文献2，transformer中用的是点积的形式，此外还多了一个标准化的<span class="math inline">\(\frac{1}{\sqrt{d_{k}}} .\)</span>
-求和形式的注意力使用具有单个隐藏层的前馈网络来计算兼容性函数.实际中点积形式的会更快更省内存</p>
+<p>计算attention的方式有2种，一种是点积的形式，另一种是求和的形式这里可以看下参考文献2，transformer中用的是点积的形式，此外还多了一个标准化的<span class="math inline">\(\frac{1}{\sqrt{d_{k}}}\)</span>
+求和形式的注意力使用具有单个隐藏层的前馈网络来计算兼容性函数.实际中点积形式的会更快更省内存。</p>
 <blockquote>
 <p>While for small values of <span class="math inline">\(d_{k}\)</span> the two mechanisms perform
 similarly, additive attention outperforms dot product attention
@@ -1030,147 +861,69 @@ pushing the softmax function into regions where it has extremely small
 gradients <span class="math inline">\({ }^{4} .\)</span> To counteract this effect, we scale the dot
 products by <span class="math inline">\(\frac{1}{\sqrt{d_{k}}}\)</span></p>
 </blockquote>
-<p>虽然对于$ d_ {k} <span class="math inline">\(较小的，这两种机制的执行方式相似，但是对于\)</span> d_ {k}
-较大的，加法注意的性能优于点积注意，而无需缩放。<span class="math inline">\(我们怀疑对于\)</span> d_
-{k的较大值， }，<span class="math inline">\(点积的幅度增大，将softmax函数推入梯度极小的区域\)</span> {} ^
-{4}。<span class="math inline">\(为了抵消这种影响，我们用\)</span>  frac {1} {  sqrt {d_ {k}}} $</p>
-<p>这里不知所云？</p>
-<blockquote>
-<p><strong>Multi-Head Attention</strong>:Instead of performing a single attention
-function with <span class="math inline">\(d_{\text {model }}\)</span> -dimensional keys, values and
-queries, we found it beneficial to linearly project the queries, keys
-and values <span class="math inline">\(h\)</span> times with different, learned linear projections to
-<span class="math inline">\(d_{k}, d_{k}\)</span> and <span class="math inline">\(d_{v}\)</span> dimensions, respectively. On each of these
-projected versions of queries, keys and values we then perform the
-attention function in parallel, yielding <span class="math inline">\(d_{v}\)</span> -dimensional output
-values. These are concatenated and once again projected, resulting in
-the final values, as depicted in Figure 2 .</p>
-</blockquote>
-<p>与使用<span class="math inline">\(d _ {\ text {model}}\)</span>维的键，值和查询执行单个注意功能相比，multi-head
-attention则是通过h个不同的线性变换对Q，K，V进行投影，最后将不同的attention结果拼接起来再次训练，有点像cnn有咩有。。</p>
-<blockquote>
-<p>Multi-head attention allows the model to jointly attend to information
-from different representation subspaces at different positions. With a
-single attention head, averaging inhibits this.</p>
-</blockquote>
-<p>多头注意力使模型共同关注来自不同位置的不同表示子空间的信息。
-对于一个注意力集中的头部，平均抑制了这一点。</p>
+<p>虽然对于$ d_ {k} <span class="math inline">\(较小的，这两种机制的执行方式相似，但是对于\)</span> d_ {k}$
+较大的，加法注意的性能优于点积注意，而无需缩放。我们怀疑对于<span class="math inline">\(d_{k}\)</span>的较大，点积的幅度增大，将softmax函数推入梯度极小的区域。为了抵消这种影响，用<span class="math inline">\(\frac{1}{\sqrt{d_{k}}}\)</span></p>
+</div>
+<div id="multi-head-attention" class="section level3" number="1.6.5">
+<h3><span class="header-section-number">1.6.5</span> Multi-head attention</h3>
+<p>查询,键值分别对应Q,K,V三个矩阵，因此attention的矩阵运算如下</p>
+<p>Multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions. With a single attention head, averaging inhibits this.</p>
 <p><span class="math display">\[
 \begin{aligned}
-\operatorname{MultiHead}(Q, K, V) &amp;=\operatorname{Concat}\left(\operatorname{head}_{1}, \ldots, \operatorname{head}_{\mathrm{h}}\right) W^{O} \\
-\text { where head }_{\mathrm{i}} &amp;=\text { Attention }\left(Q W_{i}^{Q}, K W_{i}^{K}, V W_{i}^{V}\right)
+\text { MultiHead }(Q, K, V) &amp;=\text { Concat }\left(\text { head }_{1}, \ldots, \text { head }_{\mathrm{h}}\right) W^{O} \\
+\text { where head }_{\mathrm{i}} &amp;=\operatorname{Attention}\left(Q W_{i}^{Q}, K W_{i}^{K}, V W_{i}^{V}\right)
 \end{aligned}
 \]</span></p>
+<p>这个公式中并没有解释Q,K,V是怎样得到的，<a href="https://jalammar.github.io/illustrated-transformer/">jay alammar</a>的这篇解析中解释的很详细其实就是给三个矩阵<span class="math inline">\(W^{Q}\)</span>,$ W^{K}$, <span class="math inline">\(W^{V}\)</span>，然后用每个字向量去乘矩阵得到的。
+截个图来</p>
+<p><img src="../figs/TRM_9.png" /></p>
+<p>Where the projections are parameter matrices <span class="math inline">\(W_{i}^{Q} \in \mathbb{R}^{d_{\text {model }} \times d_{k}}, W_{i}^{K} \in \mathbb{R}^{d_{\text {model }} \times d_{k}}, W_{i}^{V} \in \mathbb{R}^{d_{\text {model }} \times d_{v}}\)</span> and <span class="math inline">\(W^{O} \in \mathbb{R}^{h d_{v} \times d_{\text {model }}}\)</span>
+In this work we employ <span class="math inline">\(h=8\)</span> parallel attention layers, or heads. For each of these we use <span class="math inline">\(d_{k}=d_{v}=d_{\text {model }} / h=64 .\)</span> Due to the reduced dimension of each head, the total computational cost is similar to that of single-head attention with full dimensionality.</p>
+<p>Q,K,V每个矩阵的维度是一样的是512*64,面试中问到了。注意力头数是8.</p>
+</div>
+<div id="残差网络的结构" class="section level3" number="1.6.6">
+<h3><span class="header-section-number">1.6.6</span> 残差网络的结构</h3>
+<p>为了使网络层变变深，并且缓解梯度消失。</p>
+<p><img src="../figs/TRM_10.png" /></p>
+<p>这里推到下resnet为什么能缓解梯度消失?</p>
+<p><img src="../figs/TRM_11.png" /></p>
+<p><img src="../figs/TRM_12.png" />
+### LN</p>
+<p>因为BN效果差，有一个说法，BN在NLP任务中用到的少，一般都是LN,具体原因可以查一下feature scaling</p>
+</div>
+<div id="decoder-1" class="section level3" number="1.6.7">
+<h3><span class="header-section-number">1.6.7</span> decoder</h3>
 <blockquote>
-<p>Where the projections are parameter matrices
-<span class="math inline">\(W_{i}^{Q} \in \mathbb{R}^{d_{\text {model }} \times d_{k}}, W_{i}^{K} \in \mathbb{R}^{d_{\text {model }} \times d_{k}}, W_{i}^{V} \in \mathbb{R}^{d_{\text {model }} \times d_{v}}\)</span>
-and <span class="math inline">\(W^{O} \in \mathbb{R}^{h d_{v} \times d_{\text {model }}}\)</span></p>
+<p><strong>Decoder:</strong> The decoder is also composed of a stack of <span class="math inline">\(N=6\)</span>
+identical layers. In addition to the two sub-layers in each encoder
+layer, the decoder inserts a third sub-layer, which performs
+multi-head attention over the output of the encoder stack. Similar to
+the encoder, we employ residual connections around each of the
+sub-layers, followed by layer normalization.</p>
 </blockquote>
+<p>decoder部分也是由6个相同的块结构组成，除了每个编码器层中的两个子层之外，解码器还插入一个第三子层，该子层对编码器堆栈的输出执行多头关注，在每个sub-layers之间同样使用了残差神经网络。DECODER部分是产生Q的</p>
 <blockquote>
-<p>In this work we employ <span class="math inline">\(h=8\)</span> parallel attention layers, or heads. For
-each of these we use <span class="math inline">\(d_{k}=d_{v}=d_{\text {model }} / h=64 .\)</span> Due to
-the reduced dimension of each head, the total computational cost is
-similar to that of single-head attention with full dimensionality.</p>
+<p>We also modify the self-attention sub-layer in the decoder stack to
+prevent positions from attending to subsequent positions. This
+masking, combined with fact that the output embeddings are offset by
+one position, ensures that the predictions for position <span class="math inline">\(i\)</span> can depend
+only on the known outputs at positions less than <span class="math inline">\(i\)</span>.</p>
 </blockquote>
-<p>这里multi-head的头部个数8</p>
-<blockquote>
-<p><strong>Position-wise Feed-Forward Networks</strong>：In addition to attention
-sub-layers, each of the layers in our encoder and decoder contains a
-fully connected feed-forward network, which is applied to each
-position separately and identically. This consists of two linear
-transformations with a ReLU activation in between.</p>
-</blockquote>
-<p>Position-wise Feed-Forward Networks：位置全连接前馈神经网络</p>
-<p><span class="math display">\[
-\operatorname{FFN}(x)=\max \left(0, x W_{1}+b_{1}\right) W_{2}+b_{2}
-\]</span> &gt;While the linear transformations are the same across different
-positions, they use different parameters from layer to layer. Another
-way of describing this is as two convolutions with kernel size 1 The
-dimensionality of input and output is <span class="math inline">\(d_{\text {model }}=512,\)</span> and the
-inner-layer has dimensionality <span class="math inline">\(d_{f f}=2048\)</span></p>
-<blockquote>
-<p>位置全链接前馈网络一一MLP变形。之所以是position-wise (i/o维度一样)
-是因为处理的attention输出是某一个
-位置i的attention输出。hidden_size变化为：768-&gt;3072-&gt;768（或者512-&gt;2048-&gt;512）。</p>
-</blockquote>
-<blockquote>
-<p>Position-wise feed forward network<strong>其实就是一个MLP
-网络</strong>(多层感知机）, i的输出中, 每个<span class="math inline">\(d_model\)</span>维向量 x 在此先由
-<span class="math inline">\(\mathrm{xW}_{-} 1+\mathrm{b}_{-} 1\)</span> 变为 <span class="math inline">\(\mathrm{d}_{1}\)</span> 维的
-<span class="math inline">\(\mathrm{x}^{\prime},\)</span> 再经过max
-<span class="math inline">\(\left(0, \mathrm{x}^{\prime}\right) \mathrm{W}_{2} +\mathrm{b}_{-2} 2\)</span>
-回归 <span class="math inline">\(\mathrm{d}_{model}\)</span> 维。 Feed Forward Neural
-Network全连接有两层dense,
-第一层的激活函数是ReLU(或者其更平滑的版本Gaussian Error Linear
-Unit-gelu), 第二层是一个线性激活函数, 如果multi-head输出表示为Z,
-则FFN可以表示为： <span class="math display">\[
-\mathrm{FFN}(Z)=\max \left(0, Z W_{1}+b_{1}\right) W_{2}+b_{2}
-\]</span> 之后就是对hidden层进行dropout,
-最后加一个resnet并normalization（tensor的最后一维, 即feature维进行）。
-Transformer通过对输入的文本不断进行这样的注意力机制层和普通的非线性层交叠来得到最终的文本表达。<a href="https://blog.csdn.net/Sakura55/article/details/86679826">csdn</a></p>
-</blockquote>
-<p>那这样我就明白了，也就是input是经过attention层和普通的全连接层（使用的激活函数是relu）</p>
-<blockquote>
-<p><strong>Embeddings and Softmax:</strong>Similarly to other sequence transduction
-models, we use learned embeddings to convert the input tokens and
-output tokens to vectors of dimension <span class="math inline">\(d_{\text {model. }}\)</span>. We also
-use the usual learned linear transformation and softmax function to
-convert the decoder output to predicted next-token probabilities. In
-our model, we share the same weight matrix between the two embedding
-layers and the pre-softmax linear transformation, similar to [30]. In
-the embedding layers, we multiply those weights by
-<span class="math inline">\(\sqrt{d_{\text {model }}}\)</span>.</p>
-</blockquote>
-<p>有embedding层，decoder到output时用到了线性转移和softmax，在模型里面embedding层是共享参数的</p>
-<blockquote>
-<p>Positional Encoding:Since our model contains no recurrence and no
-convolution, in order for the model to make use of the order of the
-sequence, we must inject some information about the relative or
-absolute position of the tokens in the sequence. To this end, we add
-“positional encodings” to the input embeddings at the bottoms of the
-encoder and decoder stacks. The positional encodings have the same
-dimension dmodel as the embeddings, so that the two can be summed.
-There are many choices of positional encodings, learned and fixed.</p>
-</blockquote>
-<p>Transformer抛弃了RNN，而RNN最大的优点就是在时间序列上对数据的抽象，所以文章中作者提出两种Positional
-Encoding的方法，将Positional
-Encoding后的数据与输入embedding数据求和，加入了相对位置信息。</p>
-<p>两种Positional Encoding方法：</p>
-<ul>
-<li>用不同频率的sine和cosine函数直接计算</li>
-<li>学习出一份positional embedding。学习时注意，每个batch的pos
-emb都一样，即在batch维度进行broadcast。
-经过实验发现两者的结果一样，所以最后选择了第一种方法，公式如下：</li>
-</ul>
-<p><span class="math display">\[\begin{aligned}
-P E_{(p o s, 2 i)} &amp;=\sin \left(p o s / 10000^{2 i / d_{\text {model }}}\right) \\
-P E_{(p o s, 2 i+1)} &amp;=\cos \left(p o s / 10000^{2 i / d_{\text {model }}}\right)
-\end{aligned}\]</span></p>
-<blockquote>
-<p>任意位置的 $PE_{pos+k} $都可以被 $PE_{pos}
-$的线性函数表示。考虑到在NLP任务中，除了单词的绝对位置，单词的相对位置也非常重要。根据公式
-<span class="math inline">\(sin(\alpha+\beta) = sin \alpha cos \beta + cos \alpha sin\beta 以及cos(\alpha + \beta) = cos \alpha cos \beta - sin \alpha sin\beta，\)</span>这表明位置
-$k+p $的位置向量可以表示为位置 k
-的特征向量的线性变化，这为模型捕捉单词之间的相对位置关系提供了非常大的便利。</p>
-</blockquote>
-<ol start="2" style="list-style-type: decimal">
-<li>如果是学习到的positional
-embedding，可能会像词向量一样受限于词典大小。也就是只能学习到“位置2对应的向量是(1,1,1,2)”这样的表示。所以用三角公式明显不受序列长度的限制，也就是可以对
-比所遇到序列的更长的序列 进行表示。</li>
-</ol>
+<p>修改了解码器堆栈中的自我注意子层，以防止位置关注后续位置。
+这种掩盖，加上输出嵌入被一个位置偏移的事实，确保了对位置$ i<span class="math inline">\(的预测只能依赖于位置小于\)</span> i$的已知输出。(这里感觉用到了HMM的齐次一阶马尔可夫？）</p>
 <blockquote>
 <p>Transformer注意力机制有效的解释：Transformer所使用的注意力机制的核心思想是去计算一句话中的每个词对于这句话中所有词的相互关系，然后认为这些词与词之间的相互关系在一定程度上反应了这句话中不同词之间的关联性以及重要程度。因此再利用这些相互关系来调整每个词的重要性（权重）就可以获得每个词新的表达。这个新的表征不但蕴含了该词本身，还蕴含了其他词与这个词的关系，<strong>因此和单纯的词向量相比是一个更加全局的表达</strong>。使用了Attention机制，将序列中的任意两个位置之间的距离缩小为一个常量。
 Attention之后还有一个线性的dense层，即multi-head
 attention_output经过一个hidden_size为768的dense层，然后对hidden层进行dropout，最后加上resnet并进行normalization（tensor的最后一维，即feature维进行）。</p>
 </blockquote>
-<p>总结的很到位</p>
-<p>Transformer里最为核心的机制是Self-attention，正是因为Self-attention的存在，才使得Transformer在做类似翻译问题的时候，可以让其Encoder不用做序列输入，而是将整个序列一次全输入，并且超长序列的输入也变得可能</p>
 <p>OOV就是out-of-vocabulary，不在词库里的意思。</p>
 <ul>
 <li>新词产生，这个问题的解决方式？</li>
 </ul>
-<p>tranformer这里最近看了一篇还不错的分享，等空了把重点内容，之前理解没到位的记录下
-这里先放一个链接</p>
+<p>RNN的梯度消失和普通梯度消失有什么不一样？</p>
+<p>RNN的梯度是
+一个总的梯度和，它的梯度消失并不是变为零，总梯度被近距离的梯度主导，远距离梯度忽略不计</p>
+<p>tranformer这里最近看了一篇还不错的分享，等空了把重点内容，之前理解没到位的记录下 这里先放一个链接</p>
 <p><a href="https://mp.weixin.qq.com/s?__biz=MzI4MDYzNzg4Mw==&amp;mid=2247521353&amp;idx=6&amp;sn=5c1d369457feb0e85d2dc0ce15013551&amp;chksm=ebb7ac9ddcc0258b844f4c3e96e0a4e6092908eae6101582998d9023472fda4f853195d0483d&amp;mpshare=1&amp;scene=23&amp;srcid=0103cJP102hkdnRNQfXSAOuQ&amp;sharer_sharetime=1609723757487&amp;sharer_shareid=df15c342306c746b0423e3fd6ee52a86#rd">万能的transformer</a></p>
 <p>上面这个文章中回答了一些在看attention is all you need 论文中的没有讲清楚的几个问题</p>
 <ul class="task-list">
@@ -1182,10 +935,7 @@ transformer中Q,K,V的作用是什么？</li>
 <span id="cb2-2"><a href="#cb2-2"></a>K  =<span class="st"> </span>x <span class="op">*</span><span class="st"> </span>Wk</span>
 <span id="cb2-3"><a href="#cb2-3"></a>V  =<span class="st"> </span>x <span class="op">*</span><span class="st"> </span>Wv</span></code></pre></div>
 <p>此处应该有个图</p>
-<p>x对应信息V的注意力权重 与 Q*K.tranpose 成正比
-等于说：x的注意力权重，由x自己来决定，所以叫自注意力。
-Wq,Wk,Wv会根据任务目标更新变化，保证了自注意力机制的效果。
-<a href="https://www.zhihu.com/question/427629601/answer/1545963545">赵明明</a></p>
+<p>x对应信息V的注意力权重 与 Q*K.tranpose 成正比 等于说：x的注意力权重，由x自己来决定，所以叫自注意力。 Wq,Wk,Wv会根据任务目标更新变化，保证了自注意力机制的效果。 <a href="https://www.zhihu.com/question/427629601/answer/1545963545">赵明明</a></p>
 <p>换一个通俗易懂的解释</p>
 <blockquote>
 <p>你有一个问题Q，然后去搜索引擎里面搜，搜索引擎里面有好多文章，每个文章V有一个能代表其正文内容的标题K，然后搜索引擎用你的问题Q和那些文章V的标题K进行一个匹配，看看相关度（QK —&gt;attention值），然后你想用这些检索到的不同相关度的文章V来表示你的问题，就用这些相关度将检索的文章V做一个加权和，那么你就得到了一个新的Q’，这个Q’融合了相关性强的文章V更多信息，而融合了相关性弱的文章V较少的信息。这就是注意力机制，注意力度不同，重点关注（权值大）与你想要的东西相关性强的部分，稍微关注（权值小）相关性弱的部分。<a href="https://www.zhihu.com/question/427629601/answer/1558216827">Leetuter</a></p>
@@ -1209,10 +959,11 @@ Wq,Wk,Wv会根据任务目标更新变化，保证了自注意力机制的效果
 补充bibtex 养成好的习惯蛤！！</li>
 </ul>
 </div>
+</div>
 <div id="gpt" class="section level2" number="1.7">
 <h2><span class="header-section-number">1.7</span> GPT</h2>
 <p>单项语言模型,准确的来说是单项的transformer，只用到了transformer中的decodder</p>
-<div id="introduction-3" class="section level3" number="1.7.1">
+<div id="introduction-4" class="section level3" number="1.7.1">
 <h3><span class="header-section-number">1.7.1</span> introduction</h3>
 <blockquote>
 <p>We employ a two-stage training procedure. First, we use a language modeling objective onthe unlabeled data to learn the initial parameters of a neural network model. Subsequently, we adapt these parameters to a target task using the corresponding supervised objective.<span class="citation">(Radford et al. 2018)</span></p>
@@ -1271,8 +1022,7 @@ L_{2}(\mathcal{C})=\sum_{(x, y)} \log P\left(y \mid x^{1}, \ldots, x^{m}\right)
 <p>为了更好的fine-tuning分类器，更快的收敛，修改目标函数为task classifier和text prediction相结合：</p>
 <p><span class="math display">\[
 L_{3}(\mathcal{C})=L_{2}(\mathcal{C})+\lambda * L_{1}(\mathcal{C})
-\]</span>
-Overall, the only extra parameters we require during fine-tuning are <span class="math inline">\(W_{y}\)</span>, and embeddings for delimiter tokens (described below in Section 3.3</p>
+\]</span> Overall, the only extra parameters we require during fine-tuning are <span class="math inline">\(W_{y}\)</span>, and embeddings for delimiter tokens (described below in Section 3.3</p>
 <p><img src="figs/gpt_1.png" /></p>
 <blockquote>
 <p>For some tasks, like text classification, we can directly fine-tune our model as described above. Certain other tasks, like question answering or textual entailment, have structured inputs such as ordered sentence pairs, or triplets of document, question, and answers. Since our pre-trained model was trained on contiguous sequences of text, we require some modifications to apply it to these tasks. Previous work proposed learning task specific architectures on top of transferred representations [44] . Such an approach re-introduces a significant amount of task-specific customization and does not use transfer learning for these additional architectural components. Instead, we use a traversal-style approach <span class="math inline">\([52],\)</span> where we convert structured inputs into an ordered sequence that our pre-trained model can process. These input transformations allow us to avoid making extensive changes to the architecture across tasks. We provide a brief description of these input transformations below and Figure <span class="math inline">\(\square\)</span> provides a visual illustration. All transformations include adding randomly initialized start and end tokens <span class="math inline">\((\langle s\rangle,\langle e\rangle)\)</span>.</p>
@@ -1338,8 +1088,7 @@ token级别的困惑度是什么?</li>
 warmup ?</p></li>
 </ul>
 <p>在四个任务上慢分别做测试，在部分或者所选全部数据集上均能达到sota,自然语言推理，问答系统，文本相似度分析，文本分类任务等。</p>
-<p><img src="figs/gpt_2.png" />
-<img src="figs/gpt_3.png" /></p>
+<p><img src="figs/gpt_2.png" /> <img src="figs/gpt_3.png" /></p>
 </div>
 <div id="实验分析" class="section level3" number="1.7.6">
 <h3><span class="header-section-number">1.7.6</span> 实验分析</h3>
@@ -1350,8 +1099,7 @@ warmup ?</p></li>
 <p><img src="figs/gpt_4.png" /></p>
 <ul>
 <li><p>左图：利用Transformer的decoder作为语言模型，transformer的层数越多表现越好。</p></li>
-<li><p>右图：预训练的迭代次数越多，模型学到的内容越多，学的到表示越好。从而表现
-到微调后的目标任务上的表现就更好.</p></li>
+<li><p>右图：预训练的迭代次数越多，模型学到的内容越多，学的到表示越好。从而表现 到微调后的目标任务上的表现就更好.</p></li>
 <li><p><input type="checkbox" disabled="" />
 zero-shot? 零次学习</p></li>
 </ul>
@@ -1377,13 +1125,12 @@ zero-shot? 零次学习</p></li>
 <p>We propose a new method, Universal Language Model Fine-tuning (ULMFiT) that addresses these issues and enables robust inductive transfer learning for any NLP task, akin to fine-tuning ImageNet models: The same 3-layer LSTM architecturewith the same hyperparameters and no additions other than tuned dropout hyperparameters outperforms highly engineered models and transfer learning approaches on six widely studied text classification tasks. On IMDb, with 100 labeled examples, ULMFiT matches the performance of training from scratch with <span class="math inline">\(10 \times\)</span> and- given <span class="math inline">\(50 \mathrm{k}\)</span> unlabeled examples-with <span class="math inline">\(100 \times\)</span> more data.</p>
 </blockquote>
 <blockquote>
-<p>Contributions <span class="math inline">\(\quad\)</span> Our contributions are the following:
-1) We propose Universal Language Model Fine-tuning (ULMFiT), a method that can be used to achieve CV-like transfer learning for any task for NLP. 2) We propose discriminative fine-tuning, slanted triangular learning rates, and gradual unfreezing, novel techniques to retain previous knowledge and avoid catastrophic forgetting during fine-tuning. 3 ) We significantly outperform the state-of-the-art on six representative text classification datasets, with an error reduction of <span class="math inline">\(18-24 \%\)</span> on the majority of datasets. 4) We show that our method enables extremely sample-efficient transfer learning and perform an extensive ablation analysis. 5) We make the pretrained models and our code available to enable wider adoption.</p>
+<p>Contributions <span class="math inline">\(\quad\)</span> Our contributions are the following: 1) We propose Universal Language Model Fine-tuning (ULMFiT), a method that can be used to achieve CV-like transfer learning for any task for NLP. 2) We propose discriminative fine-tuning, slanted triangular learning rates, and gradual unfreezing, novel techniques to retain previous knowledge and avoid catastrophic forgetting during fine-tuning. 3 ) We significantly outperform the state-of-the-art on six representative text classification datasets, with an error reduction of <span class="math inline">\(18-24 \%\)</span> on the majority of datasets. 4) We show that our method enables extremely sample-efficient transfer learning and perform an extensive ablation analysis. 5) We make the pretrained models and our code available to enable wider adoption.</p>
 </blockquote>
 </div>
 <div id="bert" class="section level2" number="1.9">
 <h2><span class="header-section-number">1.9</span> BERT</h2>
-<div id="introduction-4" class="section level3" number="1.9.1">
+<div id="introduction-5" class="section level3" number="1.9.1">
 <h3><span class="header-section-number">1.9.1</span> introduction</h3>
 <blockquote>
 <p>In this paper, we improve the fine-tuning based approaches by proposing BERT: Bidirectional <span class="math inline">\(\begin{array}{ll}\text { Encoder } &amp; \text { Representations } &amp; \text { from } &amp; \text { Transformers. }\end{array}\)</span> BERT alleviates the previously mentioned unidirectionality constraint by using a “masked language model” (MLM) pre-training objective, inspired by the Cloze task (Taylor, 1953). The masked language model randomly masks some of the tokens from the input, and the objective is to predict the original vocabulary id of the masked word based only on its context. Unlike left-toright language model pre-training, the MLM objective enables the representation to fuse the left and the right context, which allows us to pretrain a deep bidirectional Transformer. In addition to the masked language model, we also use a “next sentence prediction” task that jointly pretrains text-pair representations. The contributions of our paper are as follows:</p>
@@ -1416,15 +1163,10 @@ zero-shot? 零次学习</p></li>
 <p>A distinctive feature of BERT is its unified architecture across different tasks. There is minimal difference between the pre-trained architecture and the final downstream architecture.</p>
 </blockquote>
 <p>针对不同的下游任务会有不同的预训练的模型</p>
-<p>Model Architecture BERT’s model architecture is a multi-layer bidirectional Transformer encoder based on the original implementation described in Vaswani et al. (2017) and released in the tensor2tensor library. <span class="math inline">\({ }^{1}\)</span> Because the use of Transformers has become common and our implementation is almost identical to the original, we will omit an exhaustive background description of the model architecture and refer readers to
-Vaswani et al. (2017) as well as excellent guides such as “The Annotated Transformer.”</p>
+<p>Model Architecture BERT’s model architecture is a multi-layer bidirectional Transformer encoder based on the original implementation described in Vaswani et al. (2017) and released in the tensor2tensor library. <span class="math inline">\({ }^{1}\)</span> Because the use of Transformers has become common and our implementation is almost identical to the original, we will omit an exhaustive background description of the model architecture and refer readers to Vaswani et al. (2017) as well as excellent guides such as “The Annotated Transformer.”</p>
 <p>BERT是多层双向Transformer编码器，基于Vaswani等人（2017）中描述的原始实现，并在tensor2tensor库中发布。</p>
 <blockquote>
-<p>In this work, we denote the number of layers (i.c., Transformcr blocks) as <span class="math inline">\(L,\)</span> the hiddcn sizc as <span class="math inline">\(H,\)</span> and the number of self-attention heads as <span class="math inline">\(A .^{3}\)</span>
-We primarily report results on two model sizes:
-<span class="math inline">\(\mathbf{B E R T}_{\mathbf{B A S E}}(\mathrm{L}=12, \mathrm{H}=768, \mathrm{~A}=12,\)</span> Total Param-
-eters <span class="math inline">\(=110 \mathrm{M}\)</span> ) and <span class="math inline">\(\mathbf{B E R T}_{\text {LARGE }}(\mathrm{L}=24, \mathrm{H}=1024\)</span>
-<span class="math inline">\(\mathrm{A}=16,\)</span> Total Parameters <span class="math inline">\(=340 \mathrm{M}\)</span> ). BERT <span class="math inline">\(_{\text {BASE }}\)</span> was chosen to have the same model size as OpenAI GPT for comparison purposes. Critically, however, the BERT Transformer uses bidirectional self-attention, while the GPT Transformer uses constrained self-attention where every token can only attend to context to its left.</p>
+<p>In this work, we denote the number of layers (i.c., Transformcr blocks) as <span class="math inline">\(L,\)</span> the hiddcn sizc as <span class="math inline">\(H,\)</span> and the number of self-attention heads as <span class="math inline">\(A .^{3}\)</span> We primarily report results on two model sizes: <span class="math inline">\(\mathbf{B E R T}_{\mathbf{B A S E}}(\mathrm{L}=12, \mathrm{H}=768, \mathrm{~A}=12,\)</span> Total Param- eters <span class="math inline">\(=110 \mathrm{M}\)</span> ) and <span class="math inline">\(\mathbf{B E R T}_{\text {LARGE }}(\mathrm{L}=24, \mathrm{H}=1024\)</span> <span class="math inline">\(\mathrm{A}=16,\)</span> Total Parameters <span class="math inline">\(=340 \mathrm{M}\)</span> ). BERT <span class="math inline">\(_{\text {BASE }}\)</span> was chosen to have the same model size as OpenAI GPT for comparison purposes. Critically, however, the BERT Transformer uses bidirectional self-attention, while the GPT Transformer uses constrained self-attention where every token can only attend to context to its left.</p>
 </blockquote>
 <ul>
 <li>L是transformer中的block块的层数</li>
@@ -1432,18 +1174,14 @@ eters <span class="math inline">\(=110 \mathrm{M}\)</span> ) and <span class="ma
 <li>A是注意力的头数</li>
 </ul>
 <p>base bert和large bert参数规模的设置如下：</p>
-<p><span class="math inline">\(\mathbf{B E R T}_{\mathbf{B A S E}}(\mathrm{L}=12, \mathrm{H}=768, \mathrm{~A}=12,\)</span> Total Param-
-eters <span class="math inline">\(=110 \mathrm{M}\)</span> ) and <span class="math inline">\(\mathbf{B E R T}_{\text {LARGE }}(\mathrm{L}=24, \mathrm{H}=1024\)</span>
-<span class="math inline">\(\mathrm{A}=16,\)</span> Total Parameters <span class="math inline">\(=340 \mathrm{M}\)</span> ).</p>
+<p><span class="math inline">\(\mathbf{B E R T}_{\mathbf{B A S E}}(\mathrm{L}=12, \mathrm{H}=768, \mathrm{~A}=12,\)</span> Total Param- eters <span class="math inline">\(=110 \mathrm{M}\)</span> ) and <span class="math inline">\(\mathbf{B E R T}_{\text {LARGE }}(\mathrm{L}=24, \mathrm{H}=1024\)</span> <span class="math inline">\(\mathrm{A}=16,\)</span> Total Parameters <span class="math inline">\(=340 \mathrm{M}\)</span> ).</p>
 <p>base bert的参数量级和openai的gpt的参数量是一样的。</p>
 <p>对比两个模型，bert是使用了双向的self-attention，GPT是是单项的self-attention,只能学到从左侧的上下文语义。</p>
 </div>
 <div id="input-output" class="section level3" number="1.9.3">
 <h3><span class="header-section-number">1.9.3</span> input output</h3>
 <blockquote>
-<p>Input/Output Representations To make BERT handle a variety of down-stream tasks, our input representation is able to unambiguously represent both a single sentence and a pair of sentences (e.g., <span class="math inline">\(\langle\)</span> Question, Answer <span class="math inline">\(\rangle\)</span> ) in one token sequence. Throughout this work, a “sentence” can be an arbitrary span of contiguous text, rather than an actual linguistic sentence. A “sequence” refers to the input token sequence to BERT, which may be a single sentence or two sentences packed together. We use WordPiece embeddings (Wu et al.,
-2016) with a 30,000 token vocabulary. The first token of every sequence is always a special classification token ( <span class="math inline">\([\mathrm{CLS}]\)</span> ). The final hidden state corresponding to this token is used as the aggregate sequence representation for classification tasks. Sentence pairs are packed together into a single sequence. We differentiate the sentences in two ways. First, we separate them with a special token ( <span class="math inline">\([\mathrm{SEP}])\)</span>. Second, we add a learned embedding to every token indicating whether it belongs to sentence <span class="math inline">\(A\)</span> or sentence <span class="math inline">\(B\)</span>. As shown in Figure 1 . we denote input embedding as <span class="math inline">\(E,\)</span> the final hidden vector of the special [CLS] token as <span class="math inline">\(C \in \mathbb{R}^{H}\)</span>, and the final hidden vector for the <span class="math inline">\(i^{\text {th }}\)</span> input token as <span class="math inline">\(T_{i} \in \mathbb{R}^{H}\)</span>
-For a given token, its input representation is constructed by summing the corresponding token, segment, and position embeddings. A visualization of this construction can be seen in Figure 2</p>
+<p>Input/Output Representations To make BERT handle a variety of down-stream tasks, our input representation is able to unambiguously represent both a single sentence and a pair of sentences (e.g., <span class="math inline">\(\langle\)</span> Question, Answer <span class="math inline">\(\rangle\)</span> ) in one token sequence. Throughout this work, a “sentence” can be an arbitrary span of contiguous text, rather than an actual linguistic sentence. A “sequence” refers to the input token sequence to BERT, which may be a single sentence or two sentences packed together. We use WordPiece embeddings (Wu et al., 2016) with a 30,000 token vocabulary. The first token of every sequence is always a special classification token ( <span class="math inline">\([\mathrm{CLS}]\)</span> ). The final hidden state corresponding to this token is used as the aggregate sequence representation for classification tasks. Sentence pairs are packed together into a single sequence. We differentiate the sentences in two ways. First, we separate them with a special token ( <span class="math inline">\([\mathrm{SEP}])\)</span>. Second, we add a learned embedding to every token indicating whether it belongs to sentence <span class="math inline">\(A\)</span> or sentence <span class="math inline">\(B\)</span>. As shown in Figure 1 . we denote input embedding as <span class="math inline">\(E,\)</span> the final hidden vector of the special [CLS] token as <span class="math inline">\(C \in \mathbb{R}^{H}\)</span>, and the final hidden vector for the <span class="math inline">\(i^{\text {th }}\)</span> input token as <span class="math inline">\(T_{i} \in \mathbb{R}^{H}\)</span> For a given token, its input representation is constructed by summing the corresponding token, segment, and position embeddings. A visualization of this construction can be seen in Figure 2</p>
 </blockquote>
 <p>输入表示能够在一个token序列中明确地表示单个文本句子或一对文本句子（例如，[问题，答案]）。对于给定的标记，其输入表示通过token embedding ,segment embedding ,position embedding三个部分求和来表示。输入表示的可视化表示在图2中给出。具体是：</p>
 <p><img src="figs/bert-2.png" /></p>
@@ -1461,9 +1199,7 @@ For a given token, its input representation is constructed by summing the corres
 <h3><span class="header-section-number">1.9.4</span> MLM</h3>
 <p>掩盖语言模型：</p>
 <blockquote>
-<p>Task #1: Masked LM <span class="math inline">\(\quad\)</span> Intuitively, it is reasonable to believe that a deep bidirectional model is strictly more powerful than either a left-to-righ model or the shallow concatenation of a left-toright and a right-to-left model. Unfortunately standard conditional language models can only be trained left-to-right or right-to-left, since bidirec tional conditioning would allow each word to in directly “see itself”, and the model could trivially predict the target word in a multi-layered context.
-In order to train a deep bidirectional representation, we simply mask some percentage of the input tokens at random, and then predict those masked tokens. We refer to this procedure as a “masked LM” (MLM), although it is often referred to as a Cloze task in the literature (Taylor, 1953<span class="math inline">\()\)</span>. In this case, the final hidden vectors corresponding to the mask tokens are fed into an output softmax over the vocabulary, as in a standard LM. In all of our experiments, we mask <span class="math inline">\(15 \%\)</span> of all WordPiece tokens in each sequence at random. In contrast to denoising auto-encoders (Vincent et al., 2008 ), we only predict the masked words rather than reconstructing the entire input.
-Although this allows us to obtain a bidirectional pre-trained model, a downside is that we are creating a mismatch between pre-training and fine-tuning, since the [MASK] token does not appear during fine-tuning. To mitigate this, we do not always replace “masked” words with the actual [MASK] token. The training data generator chooses <span class="math inline">\(15 \%\)</span> of the token positions at random for prediction. If the <span class="math inline">\(i\)</span> -th token is chosen, we replace the <span class="math inline">\(i\)</span> -th token with (1) the [MASK] token <span class="math inline">\(80 \%\)</span> of the time (2) a random token <span class="math inline">\(10 \%\)</span> of the time (3) the unchanged <span class="math inline">\(i\)</span> -th token <span class="math inline">\(10 \%\)</span> of the time. Then, <span class="math inline">\(T_{i}\)</span> will be used to predict the original token with cross entropy loss. We compare variations of this procedure in Appendix <span class="math inline">\(\mathrm{C.} .2 .\)</span></p>
+<p>Task #1: Masked LM <span class="math inline">\(\quad\)</span> Intuitively, it is reasonable to believe that a deep bidirectional model is strictly more powerful than either a left-to-righ model or the shallow concatenation of a left-toright and a right-to-left model. Unfortunately standard conditional language models can only be trained left-to-right or right-to-left, since bidirec tional conditioning would allow each word to in directly “see itself”, and the model could trivially predict the target word in a multi-layered context. In order to train a deep bidirectional representation, we simply mask some percentage of the input tokens at random, and then predict those masked tokens. We refer to this procedure as a “masked LM” (MLM), although it is often referred to as a Cloze task in the literature (Taylor, 1953<span class="math inline">\()\)</span>. In this case, the final hidden vectors corresponding to the mask tokens are fed into an output softmax over the vocabulary, as in a standard LM. In all of our experiments, we mask <span class="math inline">\(15 \%\)</span> of all WordPiece tokens in each sequence at random. In contrast to denoising auto-encoders (Vincent et al., 2008 ), we only predict the masked words rather than reconstructing the entire input. Although this allows us to obtain a bidirectional pre-trained model, a downside is that we are creating a mismatch between pre-training and fine-tuning, since the [MASK] token does not appear during fine-tuning. To mitigate this, we do not always replace “masked” words with the actual [MASK] token. The training data generator chooses <span class="math inline">\(15 \%\)</span> of the token positions at random for prediction. If the <span class="math inline">\(i\)</span> -th token is chosen, we replace the <span class="math inline">\(i\)</span> -th token with (1) the [MASK] token <span class="math inline">\(80 \%\)</span> of the time (2) a random token <span class="math inline">\(10 \%\)</span> of the time (3) the unchanged <span class="math inline">\(i\)</span> -th token <span class="math inline">\(10 \%\)</span> of the time. Then, <span class="math inline">\(T_{i}\)</span> will be used to predict the original token with cross entropy loss. We compare variations of this procedure in Appendix <span class="math inline">\(\mathrm{C.} .2 .\)</span></p>
 </blockquote>
 <p>任务1：Masked LM直观的说，双向模型的效果比单项的好,因为双向调节会允许每个单词间接地“看到自己”，并且模型可以在多层次的语境中对目标词进行简单的预测。</p>
 <p>前者通常被称为“transformer encoder”，然而仅仅用于上下文的版本被称为“transformer decoder”，因此它可以被用于文本生成。</p>
@@ -1492,9 +1228,7 @@ mask有一个非常大的缺点是mask的操作只存在于pre-train中，fine-t
 <div id="next-sentence-prediction" class="section level3" number="1.9.5">
 <h3><span class="header-section-number">1.9.5</span> Next Sentence Prediction</h3>
 <blockquote>
-<p>Many important downstream tasks such as Question Answering (QA) and Natural Language Inference (NLI) are based on understanding the relationship between two sentences, which is not directly captured by language modeling. In order to train a model that understands sentence relationships, we pre-train for a binarized next sentence prediction task that can be trivially generated from any monolingual corpus. Specifically, when choosing the sentences <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> for each pretraining example, <span class="math inline">\(50 \%\)</span> of the time <span class="math inline">\(B\)</span> is the actual next sentence that follows A (labeled as IsNext), and <span class="math inline">\(50 \%\)</span> of the time it is a random sentence from the corpus (labeled as NotNext). As we show in Figure <span class="math inline">\(1, C\)</span> is used for next sentence prediction (NSP). <span class="math inline">\(^{5}\)</span> Despite its simplicity, we demonstrate in Section 5.1 that pre-training towards this task is very beneficial to both QA and NLI.
-The NSP task is closely related to representationlearning objectives used in Jernite et al. (2017) and Logeswaran and Lee (2018). However, in prior work, only sentence embeddings are transferred to down-stream tasks, where BERT transfers all parameters to initialize end-task model parameters.
-Pre-training data The pre-training procedure largely follows the existing literature on language model pre-training. For the pre-training corpus we use the BooksCorpus (800M words) (Zhu et al., 2015 ) and English Wikipedia <span class="math inline">\((2,500 \mathrm{M}\)</span> words <span class="math inline">\()\)</span>. For Wikipedia we extract only the text passages and ignore lists, tables, and headers. It is critical to use a document-level corpus rather than a shuffled sentence-level corpus such as the Billion Word Benchmark (Chelba et al., 2013 ) in order to extract long contiguous sequences.</p>
+<p>Many important downstream tasks such as Question Answering (QA) and Natural Language Inference (NLI) are based on understanding the relationship between two sentences, which is not directly captured by language modeling. In order to train a model that understands sentence relationships, we pre-train for a binarized next sentence prediction task that can be trivially generated from any monolingual corpus. Specifically, when choosing the sentences <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> for each pretraining example, <span class="math inline">\(50 \%\)</span> of the time <span class="math inline">\(B\)</span> is the actual next sentence that follows A (labeled as IsNext), and <span class="math inline">\(50 \%\)</span> of the time it is a random sentence from the corpus (labeled as NotNext). As we show in Figure <span class="math inline">\(1, C\)</span> is used for next sentence prediction (NSP). <span class="math inline">\(^{5}\)</span> Despite its simplicity, we demonstrate in Section 5.1 that pre-training towards this task is very beneficial to both QA and NLI. The NSP task is closely related to representationlearning objectives used in Jernite et al. (2017) and Logeswaran and Lee (2018). However, in prior work, only sentence embeddings are transferred to down-stream tasks, where BERT transfers all parameters to initialize end-task model parameters. Pre-training data The pre-training procedure largely follows the existing literature on language model pre-training. For the pre-training corpus we use the BooksCorpus (800M words) (Zhu et al., 2015 ) and English Wikipedia <span class="math inline">\((2,500 \mathrm{M}\)</span> words <span class="math inline">\()\)</span>. For Wikipedia we extract only the text passages and ignore lists, tables, and headers. It is critical to use a document-level corpus rather than a shuffled sentence-level corpus such as the Billion Word Benchmark (Chelba et al., 2013 ) in order to extract long contiguous sequences.</p>
 </blockquote>
 <p>BERT这里是借鉴了Skip-thoughts方法中的句子预测，具体做法则是将两个句子组合成一个序列，当然组合方式会按照下面将要介绍的方式，然后让模型预测这两个句子是否是先后近邻的两个句子，也就是会把“Next Sentence Prediction”问题建模成为一个二分类问题。训练的时候，数据中有50%的情况这两个句子是先后关系，而另外50%的情况下，这两个句子是随机从语料中凑到一起的，也就是不具备先后关系，以此来构造训练数据。句子级别的预测思路和之前介绍的Skip-thoughts基本一致，当然更本质的思想来源还是来自于word2vec中的skip-gram模型。</p>
 </div>
@@ -1502,9 +1236,7 @@ Pre-training data The pre-training procedure largely follows the existing litera
 <h3><span class="header-section-number">1.9.6</span> Fine-tuning BERT</h3>
 <p>bert的微调过程</p>
 <blockquote>
-<p>Fine-tuning is straightforward since the self-attention mechanism in the Transformer al-
-lows BERT to model many downstream tasks whether they involve single text or text pairs-by swapping out the appropriate inputs and outputs. For applications involving text pairs, a common pattern is to independently encode text pairs before applying bidirectional cross attention, such as Parikh et al. (2016); Seo et al. (2017). BERT instead uses the self-attention mechanism to unify these two stages, as encoding a concatenated text pair with self-attention effectively includes bidirectional cross attention between two sentences.
-For each task, we simply plug in the task specific inputs and outputs into BERT and finetune all the parameters end-to-end. At the input, sentence <span class="math inline">\(A\)</span> and sentence <span class="math inline">\(B\)</span> from pre-training are analogous to (1) sentence pairs in paraphrasing, (2) hypothesis-premise pairs in entailment, (3) question-passage pairs in question answering, and (4) a degenerate text- <span class="math inline">\(\varnothing\)</span> pair in text classification or sequence tagging. At the output, the token representations are fed into an output layer for tokenlevel tasks, such as sequence tagging or question answering, and the [CLS] representation is fed into an output layer for classification, such as entailment or sentiment analysis.</p>
+<p>Fine-tuning is straightforward since the self-attention mechanism in the Transformer al- lows BERT to model many downstream tasks whether they involve single text or text pairs-by swapping out the appropriate inputs and outputs. For applications involving text pairs, a common pattern is to independently encode text pairs before applying bidirectional cross attention, such as Parikh et al. (2016); Seo et al. (2017). BERT instead uses the self-attention mechanism to unify these two stages, as encoding a concatenated text pair with self-attention effectively includes bidirectional cross attention between two sentences. For each task, we simply plug in the task specific inputs and outputs into BERT and finetune all the parameters end-to-end. At the input, sentence <span class="math inline">\(A\)</span> and sentence <span class="math inline">\(B\)</span> from pre-training are analogous to (1) sentence pairs in paraphrasing, (2) hypothesis-premise pairs in entailment, (3) question-passage pairs in question answering, and (4) a degenerate text- <span class="math inline">\(\varnothing\)</span> pair in text classification or sequence tagging. At the output, the token representations are fed into an output layer for tokenlevel tasks, such as sequence tagging or question answering, and the [CLS] representation is fed into an output layer for classification, such as entailment or sentiment analysis.</p>
 </blockquote>
 <p>Compared to pre-training, fine-tuning is relatively inexpensive. All of the results in the paper can be replicated in at most 1 hour on a single Cloud TPU, or a few hours on a GPU, starting from the exact same pre-trained model. <span class="math inline">\(^{7}\)</span> We describe the task-specific details in the corresponding subsections of Section <span class="math inline">\(4 .\)</span> More details can be found in Appendix A.5.</p>
 <p>对比预训练的过程，微调的过程就没那么的耗费资源了。这篇文中所有的实验的结果使用单个tpu至少1个h，或者几个小时gpu。附录中有介绍。</p>
@@ -1517,15 +1249,9 @@ For each task, we simply plug in the task specific inputs and outputs into BERT 
 <p>使用的是自然语言理解类的数据集GLUE</p>
 <p>To fine-tune on GLUE, we represent the input sequence (for single sentence or sentence pairs) as described in Section <span class="math inline">\(3,\)</span> and use the final hidden vector <span class="math inline">\(C \in \mathbb{R}^{H}\)</span> corresponding to the first input token ( [ CLS ] ) as the aggregate representation. The only new parameters introduced during fine-tuning are classification layer weights <span class="math inline">\(W \in\)</span> <span class="math inline">\(\mathbb{R}^{K \times H}\)</span>, where <span class="math inline">\(K\)</span> is the number of labels. We compute a standard classification loss with <span class="math inline">\(C\)</span> and <span class="math inline">\(W\)</span>, i.e., <span class="math inline">\(\log \left(\operatorname{softmax}\left(C W^{T}\right)\right)\)</span>.</p>
 <blockquote>
-<p>We use a batch size of 32 and fine-tune for 3
-epochs over the data for all GLUE tasks. For each task, we selected the best fine-tuning learning rate (among <span class="math inline">\(5 \mathrm{e}-5,4 \mathrm{e}-5,3 \mathrm{e}-5,\)</span> and <span class="math inline">\(2 \mathrm{e}-5)\)</span> on the Dev set. Additionally, for BERT <span class="math inline">\(_{\text {LARGE }}\)</span> we found that finetuning was sometimes unstable on small datasets, so we ran several random restarts and selected the
-best model on the Dev set. With random restarts, we use the same pre-trained checkpoint but perform different fine-tuning data shuffling and classifier layer initialization. <span class="math inline">\(^{9}\)</span> Results are presented in Table
-1. Both
-BERT <span class="math inline">\(_{\text {BASE }}\)</span> and BERT <span class="math inline">\(_{\text {LARGE }}\)</span> outperform all systems on all tasks by a substantial margin, obtaining <span class="math inline">\(4.5 \%\)</span> and <span class="math inline">\(7.0 \%\)</span> respective average accuracy improvement over the prior state of the art. Note that BERT <span class="math inline">\(_{\text {BASE }}\)</span> and OpenAI GPT are nearly identical in terms of model architecture apart from the attention masking. For the largest and most widely reported GLUE task, MNLI, BERT obtains a <span class="math inline">\(4.6 \%\)</span> absolute accuracy improvement. On the official GLUE leaderboard <span class="math inline">\(^{10}\)</span>, BERT <span class="math inline">\(_{\text {LARGE Obtains a score }}\)</span> of <span class="math inline">\(80.5,\)</span> compared to OpenAI GPT, which obtains 72.8 as of the date of writing.
-We find that BERT <span class="math inline">\(_{\text {LARGE }}\)</span> significantly outperforms BERT <span class="math inline">\(_{\text {BASE }}\)</span> across all tasks, especially those with very little training data. The effect of model size is explored more thoroughly in Section 5.2.</p>
+<p>We use a batch size of 32 and fine-tune for 3 epochs over the data for all GLUE tasks. For each task, we selected the best fine-tuning learning rate (among <span class="math inline">\(5 \mathrm{e}-5,4 \mathrm{e}-5,3 \mathrm{e}-5,\)</span> and <span class="math inline">\(2 \mathrm{e}-5)\)</span> on the Dev set. Additionally, for BERT <span class="math inline">\(_{\text {LARGE }}\)</span> we found that finetuning was sometimes unstable on small datasets, so we ran several random restarts and selected the best model on the Dev set. With random restarts, we use the same pre-trained checkpoint but perform different fine-tuning data shuffling and classifier layer initialization. <span class="math inline">\(^{9}\)</span> Results are presented in Table 1. Both BERT <span class="math inline">\(_{\text {BASE }}\)</span> and BERT <span class="math inline">\(_{\text {LARGE }}\)</span> outperform all systems on all tasks by a substantial margin, obtaining <span class="math inline">\(4.5 \%\)</span> and <span class="math inline">\(7.0 \%\)</span> respective average accuracy improvement over the prior state of the art. Note that BERT <span class="math inline">\(_{\text {BASE }}\)</span> and OpenAI GPT are nearly identical in terms of model architecture apart from the attention masking. For the largest and most widely reported GLUE task, MNLI, BERT obtains a <span class="math inline">\(4.6 \%\)</span> absolute accuracy improvement. On the official GLUE leaderboard <span class="math inline">\(^{10}\)</span>, BERT <span class="math inline">\(_{\text {LARGE Obtains a score }}\)</span> of <span class="math inline">\(80.5,\)</span> compared to OpenAI GPT, which obtains 72.8 as of the date of writing. We find that BERT <span class="math inline">\(_{\text {LARGE }}\)</span> significantly outperforms BERT <span class="math inline">\(_{\text {BASE }}\)</span> across all tasks, especially those with very little training data. The effect of model size is explored more thoroughly in Section 5.2.</p>
 </blockquote>
-<p>实验参数设置：
-- batchsize：32</p>
+<p>实验参数设置： - batchsize：32</p>
 <ul>
 <li>学习率：<span class="math inline">\(5 \mathrm{e}-5,4 \mathrm{e}-5,3 \mathrm{e}-5,\)</span> and <span class="math inline">\(2 \mathrm{e}-5)\)</span></li>
 </ul>
@@ -1534,9 +1260,7 @@ We find that BERT <span class="math inline">\(_{\text {LARGE }}\)</span> signifi
 <p>从table的实验结果来看large-bert的效果在所有任务上都是最好的。</p>
 <p>在问答数据集SQuADv1.1上的效果</p>
 <blockquote>
-<p>The Stanford Question Answering Dataset (SQuAD v1.1) is a collection of <span class="math inline">\(100 \mathrm{k}\)</span> crowdsourced question/answer pairs (Rajpurkar et al.,2016). Given a question and a passage from Wikipedia containing the answer, the task is to predict the answer text span in the passage.
-As shown in Figure <span class="math inline">\(1,\)</span> in the question answering task, we represent the input question and passage as a single packed sequence, with the question using the <span class="math inline">\(A\)</span> embedding and the passage using the <span class="math inline">\(B\)</span> embedding. We only introduce a start vector <span class="math inline">\(S \in \mathbb{R}^{H}\)</span> and an end vector <span class="math inline">\(E \in \mathbb{R}^{H}\)</span> during fine-tuning. The probability of word <span class="math inline">\(i\)</span> being the start of the answer span is computed as a dot product between <span class="math inline">\(T_{i}\)</span> and <span class="math inline">\(S\)</span> followed by a softmax over all of the words in the paragraph: <span class="math inline">\(P_{i}=\frac{e^{S \cdot T_{i}}}{\sum_{j} e^{S \cdot T_{j}}}\)</span>
-The analogous formula is used for the end of the answer span. The score of a candidate span from position <span class="math inline">\(i\)</span> to position <span class="math inline">\(j\)</span> is defined as <span class="math inline">\(S \cdot T_{i}+E \cdot T_{j}\)</span> and the maximum scoring span where <span class="math inline">\(j \geq i\)</span> is used as a prediction. The training objective is the sum of the log-likelihoods of the correct start and end positions. We fine-tune for 3 epochs with a learning rate of <span class="math inline">\(5 \mathrm{e}-5\)</span> and a batch size of 32 .</p>
+<p>The Stanford Question Answering Dataset (SQuAD v1.1) is a collection of <span class="math inline">\(100 \mathrm{k}\)</span> crowdsourced question/answer pairs (Rajpurkar et al.,2016). Given a question and a passage from Wikipedia containing the answer, the task is to predict the answer text span in the passage. As shown in Figure <span class="math inline">\(1,\)</span> in the question answering task, we represent the input question and passage as a single packed sequence, with the question using the <span class="math inline">\(A\)</span> embedding and the passage using the <span class="math inline">\(B\)</span> embedding. We only introduce a start vector <span class="math inline">\(S \in \mathbb{R}^{H}\)</span> and an end vector <span class="math inline">\(E \in \mathbb{R}^{H}\)</span> during fine-tuning. The probability of word <span class="math inline">\(i\)</span> being the start of the answer span is computed as a dot product between <span class="math inline">\(T_{i}\)</span> and <span class="math inline">\(S\)</span> followed by a softmax over all of the words in the paragraph: <span class="math inline">\(P_{i}=\frac{e^{S \cdot T_{i}}}{\sum_{j} e^{S \cdot T_{j}}}\)</span> The analogous formula is used for the end of the answer span. The score of a candidate span from position <span class="math inline">\(i\)</span> to position <span class="math inline">\(j\)</span> is defined as <span class="math inline">\(S \cdot T_{i}+E \cdot T_{j}\)</span> and the maximum scoring span where <span class="math inline">\(j \geq i\)</span> is used as a prediction. The training objective is the sum of the log-likelihoods of the correct start and end positions. We fine-tune for 3 epochs with a learning rate of <span class="math inline">\(5 \mathrm{e}-5\)</span> and a batch size of 32 .</p>
 </blockquote>
 <p>这个实验中的参数设置：3个epoch,学习率：<span class="math inline">\(5 \mathrm{e}-5\)</span>，batchsize:32</p>
 <blockquote>
@@ -1566,9 +1290,7 @@ The analogous formula is used for the end of the answer span. The score of a can
 <li><p>this it is strictly less powerful than a deep bidirectional model, since it can use both left and right context at every layer.</p></li>
 </ol>
 <p>可以训练单独的LTR和RTL模型，并像ELMo一样，将每个词表示为两个模型的拼接。然而:</p>
-<p>( a )训练成本是一个双向模型的两倍；
-( b )对于像QA这样的任务来说，这是不直观的，因为RTL模型无法对这个问题的答案进行限定；
-( c )这严格来说不如深度双向模型强大，因为深度双向模型可以选择使用左语境或右语境。</p>
+<p>( a )训练成本是一个双向模型的两倍； ( b )对于像QA这样的任务来说，这是不直观的，因为RTL模型无法对这个问题的答案进行限定； ( c )这严格来说不如深度双向模型强大，因为深度双向模型可以选择使用左语境或右语境。</p>
 </div>
 <div id="effect-of-model-size" class="section level4" number="1.9.8.2">
 <h4><span class="header-section-number">1.9.8.2</span> Effect of Model Size</h4>
@@ -1609,7 +1331,7 @@ bert中的双向和elmo中的双向有什么不同？</li>
 <li><p>（2）克服了BERT的局限性，因为它具有自回归功能公式。此外，XLNet将来自最先进的自回归模型Transformer-XL的思想整合到预训练中。从经验上讲，XLNet在20个任务上通常比BERT表现要好得多，并且在18个任务（包括问题回答，自然语言推论，情感分析和文档排名）上达到了最新的结果。</p></li>
 </ul>
 </div>
-<div id="introduction-5" class="section level3" number="1.10.2">
+<div id="introduction-6" class="section level3" number="1.10.2">
 <h3><span class="header-section-number">1.10.2</span> introduction</h3>
 <blockquote>
 <p>Unsupervised representation learning has been highly successful in the domain of natural language processing <span class="math inline">\([7], 19,[24,25,10] .\)</span> Typically, these methods first pretrain neural networks on large-scale unlabeled text corpora, and then finetune the models or representations on downstream tasks. Under this shared high-level idea, different unsupervised pretraining objectives have been explored in literature. Among them, autoregressive (AR) language modeling and autoencoding (AE) have been the two most successful pretraining objectives.</p>
@@ -1637,9 +1359,28 @@ bert中的双向和elmo中的双向有什么不同？</li>
 <blockquote>
 <p>In addition to a novel pretraining objective, XLNet improves architectural designs for pretraining.</p>
 </blockquote>
-<p>提出了一种的新的预训练的目标函数</p>
+<p>提出了一种的新的预训练的目标函数。</p>
+<blockquote>
 <p>Inspired by the latest advancements in AR language modeling, XLNet integrates the segment recurrence mechanism and relative encoding scheme of Transformer-XL [9] into pretraining, which empirically improves the performance especially for tasks involving a longer text sequence. Naively applying a Transformer(-XL) architecture to permutation-based language modeling does not work because the factorization order is arbitrary and the target is ambiguous. As a solution, we propose to reparameterize the Transformer <span class="math inline">\((-X L)\)</span> network to remove the ambiguity.</p>
+</blockquote>
+<p>受AR模型的启发，XLNet将分段递归机制和Transformer-XL中的相对编码方案[9]集成到预训练中，从而从经验上提高了性能，尤其是对于涉及较长文本序列的任务。将Transformer（-XL）体系结构应用于基于置换的语言建模是行不通的，因为分解顺序是任意的并且目标是模棱两可的。 作为解决方案，建议对Transformer(-XL)网络重新参数化以消除歧义。</p>
+<blockquote>
 <p>Empirically, XLNet achieves state-of-the-art results on 18 tasks, i.e., 7 GLUE language understanding tasks, 3 reading comprehension tasks including <span class="math inline">\(S Q u A D\)</span> and <span class="math inline">\(R A C E, 7\)</span> text classification tasks including Yelp and IMDB, and the ClueWeb09-B document ranking task. Under a set of fair comparison experiments, XLNet consistently outperforms BERT [10] on multiple benchmarks.</p>
+</blockquote>
+<p>XLNET在18项任务中取得了sota。。。也屠榜了，bert也成序章了。</p>
+<p>In this section, we first review and compare the conventional AR language modeling and BERT for language pretraining. Given a text sequence <span class="math inline">\(\mathbf{x}=\left[x_{1}, \cdots, x_{T}\right]\)</span>, AR language modeling performs pretraining by maximizing the likelihood under the forward autoregressive factorization:</p>
+<p>AR模型的最大似然估计如下：</p>
+<p><span class="math display">\[
+\max _{\theta} \log p_{\theta}(\mathbf{x})=\sum_{t=1}^{T} \log p_{\theta}\left(x_{t} \mid \mathbf{x}_{&lt;t}\right)=\sum_{t=1}^{T} \log \frac{\exp \left(h_{\theta}\left(\mathbf{x}_{1: t-1}\right)^{\top} e\left(x_{t}\right)\right)}{\sum_{x^{\prime}} \exp \left(h_{\theta}\left(\mathbf{x}_{1: t-1}\right)^{\top} e\left(x^{\prime}\right)\right)}
+\]</span></p>
+<p>where <span class="math inline">\(h_{\theta}\left(\mathbf{x}_{1: t-1}\right)\)</span> is a context representation produced by neural models, such as RNNs or Transformers, and <span class="math inline">\(e(x)\)</span> denotes the embedding of <span class="math inline">\(x\)</span>. In comparison, BERT is based on denoising auto-encoding. Specifically, for a text sequence <span class="math inline">\(x\)</span>, BERT first constructs a corrupted version <span class="math inline">\(\hat{x}\)</span> by randomly setting a portion (e.g. <span class="math inline">\(15 \%\)</span> ) of tokens in <span class="math inline">\(x\)</span> to a special symbol [MASK]. Let the masked tokens be <span class="math inline">\(\bar{x}\)</span>. The training objective is to reconstruct <span class="math inline">\(\overline{\mathbf{x}}\)</span> from <span class="math inline">\(\hat{\mathbf{x}}\)</span> :</p>
+<p><span class="math display">\[
+\max _{\theta} \log p_{\theta}(\overline{\mathbf{x}} \mid \hat{\mathbf{x}}) \approx \sum_{t=1}^{T} m_{t} \log p_{\theta}\left(x_{t} \mid \hat{\mathbf{x}}\right)=\sum_{t=1}^{T} m_{t} \log \frac{\exp \left(H_{\theta}(\hat{\mathbf{x}})_{t}^{\top} e\left(x_{t}\right)\right)}{\sum_{x^{\prime}} \exp \left(H_{\theta}(\hat{\mathbf{x}})_{t}^{\top} e\left(x^{\prime}\right)\right)}
+\]</span></p>
+<p>where <span class="math inline">\(m_{t}=1\)</span> indicates <span class="math inline">\(x_{t}\)</span> is masked, and <span class="math inline">\(H_{\theta}\)</span> is a Transformer that maps a length- <span class="math inline">\(T\)</span> text sequence <span class="math inline">\(\mathbf{x}\)</span> into a sequence of hidden vectors <span class="math inline">\(H_{\theta}(\mathbf{x})=\left[H_{\theta}(\mathbf{x})_{1}, H_{\theta}(\mathbf{x})_{2}, \cdots, H_{\theta}(\mathbf{x})_{T}\right] .\)</span> The pros and cons of
+the two pretraining objectives are compared in the following aspects:
+- Independence Assumption: As emphasized by the <span class="math inline">\(\approx\)</span> sign in Eq. (2), BERT factorizes the joint conditional probability <span class="math inline">\(p(\overline{\mathbf{x}} \mid \hat{\mathbf{x}})\)</span> based on an independence assumption that all masked tokens <span class="math inline">\(\overline{\mathbf{x}}\)</span> are separately reconstructed. In comparison, the AR language modeling objective (1) factorizes <span class="math inline">\(p_{\theta}(\mathbf{x})\)</span> using the product rule that holds universally without such an independence assumption.
+- Input noise: The input to BERT contains artificial symbols like [MASK] that never occur in downstream tasks, which creates a pretrain-finetune discrepancy. Replacing [MASK] with original tokens as in [10] does not solve the problem because original tokens can be only used with a small probability - otherwise Eq. (2) will be trivial to optimize. In comparison, AR language modeling does not rely on any input corruption and does not suffer from this issue. Context dependency: The AR representation <span class="math inline">\(h_{\theta}\left(\mathbf{x}_{1: t-1}\right)\)</span> is only conditioned on the tokens up to position <span class="math inline">\(t\)</span> (i.e. tokens to the left), while the BERT representation <span class="math inline">\(H_{\theta}(\mathbf{x})_{t}\)</span> has access to the contextual information on both sides. As a result, the BERT objective allows the model to be pretrained to better capture bidirectional context.</p>
 </div>
 </div>
 <div id="参考文献" class="section level2 unnumbered" number="">

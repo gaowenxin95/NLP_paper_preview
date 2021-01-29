@@ -1,13 +1,11 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
 
 ## Attention is all you need
 
+
+### introduction
+
 > the Transformer,based solely on attention mechanisms, dispensing with
-> recurrence and convolutions entirely.
+> recurrence and convolutions entirely.[@2017Attention]
 
 transformer只依靠attention机制，舍弃了之前的rnn和cnn的结构
 
@@ -59,9 +57,9 @@ attention在序列模型传导机制中允许对依赖项进行建模而**无需
 前人的研究有使用卷积神经进行序列建模建立block结构（卷积核？）并行计算所有输入和输出位置的隐藏表示，在这些模型中，关联来自两个任意输入或输出位置的信号所需的操作数随位置之间的距离而增加，对于ConvS2S的参数呈线性增长，而对于ByteNet参数则对数增长。
 这使得学习远位置之间的依赖关系变得更加困难。
 
-在Transformer中，讲参数减少到一个固定的维度，尽管这是由于平均注意力加权位置而导致有效分辨率降低的结果，可以使用多头注意力抵消这种影响\~
+在Transformer中，将参数减少到一个固定的维度，尽管这是由于平均注意力加权位置而导致有效分辨率降低的结果，可以使用多头注意力抵消这种影响
 
-**所以多头注意力机制是为了限制参数增长的？解决这个问题之前先知道cnn是怎样让参数爆炸的？**
+
 
 > Self-attention, sometimes called intra-attention is an attention
 > mechanism relating different positions of a single sequence in order
@@ -82,13 +80,69 @@ Transformer是第一个完全依靠自我注意力来计算其输入和输出表
 > encoder and decoder, shown in the left and right halves of Figure
 > 1,respectively.
 
-下面介绍的transfomer都是基于自注意力elf-attention和
-point-wise（计算注意力时候用的是点积的形式:可以理解为逐点扫描就像kernel
-size为1的卷积操作,对输出的每一个位置做同样的变化?)
+下面这个图是TRM模型的完整的结构，N个encoder和N个decoderz组成
 
-![](https://img2020.cnblogs.com/blog/1365906/202008/1365906-20200815115042282-1192701119.png)
+![](../figs/TRM_1.png)
 
-transformer的结构也是由encoder和decoder组成
+本篇文章重点应用在机器翻译的领域，因此一个形象的例子是[@DASOU]
+
+![](../figs/TRM_2.png)
+
+鉴于这个文章写的内容板块比较乱，就不按照文章的顺序了
+
+### input
+
+![](../figs/TRM_3.png)
+
+第一部分是输入层，从图来看是两部分组成的，包括一个token embedding和一个positional encoding两部分做求和作为input。
+
+token embedding就是w2VEC训练出来的词向量，每个词向量的维度是512，这个很常规。TRM并没有使用RNN这种序列网络，而是使用的self-attention这种结构。
+
+>Since our model contains no recurrence and no convolution, in order for the model to make use of the order of the sequence, we must inject some information about the relative or absolute position of the tokens in the sequence. To this end, we add "positional encodings" to the input embeddings at the bottoms of the encoder and decoder stacks. The positional encodings have the same dimension $d_{\text {model }}$ as the embeddings, so that the two can be summed. There are many choices of positional encodings, learned and fixed [9].
+In this work, we use sine and cosine functions of different frequencies: 
+
+RNN处理的是序列的特征，是有先后顺序的，例如"我爱你"这个序列，RNN的处理方式是先处理我，然后再根据"我"的信息处理"爱"等等，RNN中的每个time step是共享U,W,V的。
+
+![](../figs/TRM_4.png)
+
+但是transformer不一样，transformer是对每个字/词做并行训练的，可以同时处理，这样的好处是加快了速度，因此transformer就缺少告诉一个序列谁前谁后的一个方法，此时有了位置编码
+
+两种Positional Encoding方法：
+
+
+
+$$
+\begin{aligned}
+P E_{(p o s, 2 i)} &=\sin \left(p o s / 10000^{2 i / d_{\text {model }}}\right) \\
+P E_{(p o s, 2 i+1)} &=\cos \left(p o s / 10000^{2 i / d_{\text {model }}}\right)
+\end{aligned}
+$$
+
+在512维度中，$2i$表示偶数位置使用的是$sin$,$2i+1$表示奇数位置使用cos,也就是下图
+
+![](../figs/TRM_5.png)
+
+
+
+得到位置编码后，将词向量的512维度的tokenembedding和位置向量的512维度的embedding相加，得到最终的512维度作为整个transformer的input。
+
+
+![](../figs/TRM_6.png)
+
+sin,cos体现的绝对的位置编码，这里我其实没太懂这个，绝对位置编码中有相对位置编码的表示。
+
+- [ ] 为什么位置编码有用？
+
+![](../figs/TRM_7.png)
+
+> 任意位置的 $PE_{pos+k}$都可以被$PE_{pos}$的线性函数表示。考虑到在NLP任务中，除了单词的绝对位置，单词的相对位置也非常重要。根据公式
+> $sin(\alpha+\beta) = sin \alpha cos \beta + cos \alpha sin\beta 以及cos(\alpha + \beta) = cos \alpha cos \beta - sin \alpha sin\beta，$这表明位置
+> $k+p$的位置向量可以表示为位置 k
+> 的特征向量的线性变化，这为模型捕捉单词之间的相对位置关系提供了非常大的便利。
+
+
+
+### encoder
 
 > **encoder**: The encoder is composed of a stack of $N=6$ identical
 > layers. Each layer has two sub-layers. The first is a multi-head
@@ -101,32 +155,17 @@ transformer的结构也是由encoder和decoder组成
 > connections, all sub-layers in the model, as well as the embedding
 > layers, produce outputs of dimension $d_{\text {model }}=512$.
 
-encoder部分是由6个相同的堆网络层组成的，每一层有2个子网络：第一个子网络是多头注意力和自注意力机制，第二个子网络是一个位置全连接前馈神经网络（这个咋理解？）
+encoder部分是由6个相同的堆网络层组成的，每一层有2个子网络：第一个子网络是多头注意力和自注意力机制，第二个子网络是一个位置全连接前馈神经网络
 
-在两个子网络周围用残差网络连接（也就是没两个子网络之间用到了残差网络）LayerNorm（这个需要查下：LN中同层神经元输入拥有相同的均值和方差，不同的输入样本有不同的均值和方差；BN中则针对不同神经元输入计算均值和方差，同一个batch中的输入拥有相同的均值和方差。所以，LN不依赖于batch的大小和输入sequence的深度，因此可以用于batchsize为1和RNN中对边长的输入sequence的normalize操作。）然后进行图1画的还是很直观的。
+6个encoder是一模一样的结构，但是参数并不共享，训练的时候6个encoder是同时巡训练的，参数是独立的，不共享
 
-因此每个子层的输出就是正则化后的$(x+$ Sublayer
-$(x)),$sub-layers和embedding
-layers的输出维度设置为512，这样是为了更好的进行残差连接（补下残差连接)
+后面albert做改进的时候参数是共享的，因此来减少参数的量级。6个decoder的结构是完全相同的，但是encoder和decoder是完全不同的
 
-> **Decoder:** The decoder is also composed of a stack of $N=6$
-> identical layers. In addition to the two sub-layers in each encoder
-> layer, the decoder inserts a third sub-layer, which performs
-> multi-head attention over the output of the encoder stack. Similar to
-> the encoder, we employ residual connections around each of the
-> sub-layers, followed by layer normalization.
-> decoder部分也是由6个相同的块结构组成，除了每个编码器层中的两个子层之外，解码器还插入一个第三子层，该子层对编码器堆栈的输出执行多头关注，在每个sub-layers之间同样使用了残差神经网络。
 
-> We also modify the self-attention sub-layer in the decoder stack to
-> prevent positions from attending to subsequent positions. This
-> masking, combined with fact that the output embeddings are offset by
-> one position, ensures that the predictions for position $i$ can depend
-> only on the known outputs at positions less than $i$.
+### self-attention
 
-修改了解码器堆栈中的自我注意子层，以防止位置关注后续位置。
-这种掩盖，加上输出嵌入被一个位置偏移的事实，确保了对位置\$ i
-$的预测只能依赖于位置小于$ i
-\$的已知输出。(这里感觉用到了HMM的齐次一阶马尔可夫？）
+>Instead of performing a single attention function with $d_{\text {model }}$ -dimensional keys, values and queries, we found it beneficial to linearly project the queries, keys and values $h$ times with different, learned linear projections to $d_{k}, d_{k}$ and $d_{v}$ dimensions, respectively. On each of these projected versions of queries, keys and values we then perform the attention function in parallel, yielding $d_{v}$ -dimensional output values. These are concatenated and once again projected, resulting in the final values, as depicted in Figure 2.
+
 
 > An attention function can be described as mapping a query and a set of
 > key-value pairs to an output,where the query, keys, values, and output
@@ -137,42 +176,20 @@ $的预测只能依赖于位置小于$ i
 attention可以描述为将查询和一组键值对映射到输出，其中查询，键，值和输出都是向量。
 **将输出计算为值的加权总和，其中分配给每个值的权重是通过查询与相应键的兼容性函数来计算**
 
-> We call our particular attention "Scaled Dot-Product Attention"
-> (Figure 2). The input consists of queries and keys of dimension
-> $d_{k},$ and values of dimension $d_{v} .$ We compute the dot products
-> of the query with all keys, divide each by $\sqrt{d_{k}}$, and apply a
-> softmax function to obtain the weights on the values.
-
-Scaled Dot-Product
-Attention:输入是$d_{k},$维的键值和$d_{v} .$维的值，用所有的k计算查询的点积，将每个QK的除以\$
- sqrt {d\_ {k}} \$，然后应用softmax函数来获得值的权重。
-
-![](https://img2020.cnblogs.com/blog/1365906/202008/1365906-20200814154338891-1651205929.png)
-
 > In practice, we compute the attention function on a set of queries
 > simultaneously, packed together into a matrix $Q .$ The keys and
 > values are also packed together into matrices $K$ and $V$. We compute
 > the matrix of outputs as:
 
-查询,键值分别对应Q,K,V三个矩阵，因此attention的矩阵运算如下
+普通的注意力的得分怎么算？可以借鉴一个图
+
 
 $$
 \operatorname{Attention}(Q, K, V)=\operatorname{softmax}\left(\frac{Q K^{T}}{\sqrt{d_{k}}}\right) V
 $$
 
-> Transformer会在三个地方使用multi-head attention： 1. encoder-decoder
-> attention：输入为encoder的输出和decoder的self-attention输出，其中encoder的self-attention作为
-> key and value，decoder的self-attention作为query。 2. encoder
-> self-attention：输入的Q、K、V都是encoder的input embedding and
-> positional embedding。 3. decoder
-> self-attention：在decoder的self-attention层中，deocder
-> 都能够访问当前位置前面的位置，输入的Q、K、V都是decoder的input
-> embedding and positional embedding。 **Note:**
-> 在一般的attention模型中，Q就是decoder的隐层，K就是encoder的隐层，V也是encoder的隐层。所谓的self-attention就是取Q，K，V相同，均为encoder或者decoder的input
-> embedding and positional
-> embedding，更具体为"网络输入是三个相同的向量q, k和v，是word
-> embedding和position
-> embedding相加得到的结果"。[csdn](https://blog.csdn.net/Sakura55/article/details/86679826)
+![](../figs/TRM_8.png)
+
 
 > The two most commonly used attention functions are additive attention
 > [2], and dot-product (multiplicative) attention. Dot-product attention
@@ -184,8 +201,10 @@ $$
 > practice, since it can be implemented using highly optimized matrix
 > multiplication code.
 
-计算attention的方式有2种，一种是点积的形式，另一种是求和的形式这里可以看下参考文献2，transformer中用的是点积的形式，此外还多了一个标准化的$\frac{1}{\sqrt{d_{k}}} .$
-求和形式的注意力使用具有单个隐藏层的前馈网络来计算兼容性函数.实际中点积形式的会更快更省内存
+计算attention的方式有2种，一种是点积的形式，另一种是求和的形式这里可以看下参考文献2，transformer中用的是点积的形式，此外还多了一个标准化的$\frac{1}{\sqrt{d_{k}}}$
+求和形式的注意力使用具有单个隐藏层的前馈网络来计算兼容性函数.实际中点积形式的会更快更省内存。
+
+
 
 > While for small values of $d_{k}$ the two mechanisms perform
 > similarly, additive attention outperforms dot product attention
@@ -195,143 +214,87 @@ $$
 > gradients ${ }^{4} .$ To counteract this effect, we scale the dot
 > products by $\frac{1}{\sqrt{d_{k}}}$
 
-虽然对于\$ d\_ {k} $较小的，这两种机制的执行方式相似，但是对于$ d\_ {k}
-较大的，加法注意的性能优于点积注意，而无需缩放。$我们怀疑对于$ d\_
-{k的较大值， }，$点积的幅度增大，将softmax函数推入梯度极小的区域$ {} \^
-{4}。$为了抵消这种影响，我们用$  frac {1} {  sqrt {d\_ {k}}} \$
+虽然对于$ d\_ {k} $较小的，这两种机制的执行方式相似，但是对于$ d_ {k}$
+较大的，加法注意的性能优于点积注意，而无需缩放。我们怀疑对于$d_{k}$的较大，点积的幅度增大，将softmax函数推入梯度极小的区域。为了抵消这种影响，用$\frac{1}{\sqrt{d_{k}}}$
 
-这里不知所云？
+### Multi-head attention
 
-> **Multi-Head Attention**:Instead of performing a single attention
-> function with $d_{\text {model }}$ -dimensional keys, values and
-> queries, we found it beneficial to linearly project the queries, keys
-> and values $h$ times with different, learned linear projections to
-> $d_{k}, d_{k}$ and $d_{v}$ dimensions, respectively. On each of these
-> projected versions of queries, keys and values we then perform the
-> attention function in parallel, yielding $d_{v}$ -dimensional output
-> values. These are concatenated and once again projected, resulting in
-> the final values, as depicted in Figure 2 .
 
-与使用$d _ {\ text {model}}$维的键，值和查询执行单个注意功能相比，multi-head
-attention则是通过h个不同的线性变换对Q，K，V进行投影，最后将不同的attention结果拼接起来再次训练，有点像cnn有咩有。。
+查询,键值分别对应Q,K,V三个矩阵，因此attention的矩阵运算如下
 
-> Multi-head attention allows the model to jointly attend to information
-> from different representation subspaces at different positions. With a
-> single attention head, averaging inhibits this.
-
-多头注意力使模型共同关注来自不同位置的不同表示子空间的信息。
-对于一个注意力集中的头部，平均抑制了这一点。
+Multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions. With a single attention head, averaging inhibits this.
 
 $$
 \begin{aligned}
-\operatorname{MultiHead}(Q, K, V) &=\operatorname{Concat}\left(\operatorname{head}_{1}, \ldots, \operatorname{head}_{\mathrm{h}}\right) W^{O} \\
-\text { where head }_{\mathrm{i}} &=\text { Attention }\left(Q W_{i}^{Q}, K W_{i}^{K}, V W_{i}^{V}\right)
+\text { MultiHead }(Q, K, V) &=\text { Concat }\left(\text { head }_{1}, \ldots, \text { head }_{\mathrm{h}}\right) W^{O} \\
+\text { where head }_{\mathrm{i}} &=\operatorname{Attention}\left(Q W_{i}^{Q}, K W_{i}^{K}, V W_{i}^{V}\right)
 \end{aligned}
 $$
 
-> Where the projections are parameter matrices
-> $W_{i}^{Q} \in \mathbb{R}^{d_{\text {model }} \times d_{k}}, W_{i}^{K} \in \mathbb{R}^{d_{\text {model }} \times d_{k}}, W_{i}^{V} \in \mathbb{R}^{d_{\text {model }} \times d_{v}}$
-> and $W^{O} \in \mathbb{R}^{h d_{v} \times d_{\text {model }}}$
+这个公式中并没有解释Q,K,V是怎样得到的，[jay alammar](https://jalammar.github.io/illustrated-transformer/)的这篇解析中解释的很详细其实就是给三个矩阵$W^{Q}$,$ W^{K}$, $W^{V}$，然后用每个字向量去乘矩阵得到的。
+截个图来
 
-> In this work we employ $h=8$ parallel attention layers, or heads. For
-> each of these we use $d_{k}=d_{v}=d_{\text {model }} / h=64 .$ Due to
-> the reduced dimension of each head, the total computational cost is
-> similar to that of single-head attention with full dimensionality.
+![](../figs/TRM_9.png)
 
-这里multi-head的头部个数8
+Where the projections are parameter matrices $W_{i}^{Q} \in \mathbb{R}^{d_{\text {model }} \times d_{k}}, W_{i}^{K} \in \mathbb{R}^{d_{\text {model }} \times d_{k}}, W_{i}^{V} \in \mathbb{R}^{d_{\text {model }} \times d_{v}}$ and $W^{O} \in \mathbb{R}^{h d_{v} \times d_{\text {model }}}$
+In this work we employ $h=8$ parallel attention layers, or heads. For each of these we use $d_{k}=d_{v}=d_{\text {model }} / h=64 .$ Due to the reduced dimension of each head, the total computational cost is similar to that of single-head attention with full dimensionality.
 
-> **Position-wise Feed-Forward Networks**：In addition to attention
-> sub-layers, each of the layers in our encoder and decoder contains a
-> fully connected feed-forward network, which is applied to each
-> position separately and identically. This consists of two linear
-> transformations with a ReLU activation in between.
+Q,K,V每个矩阵的维度是一样的是512*64,面试中问到了。注意力头数是8.
 
-Position-wise Feed-Forward Networks：位置全连接前馈神经网络
 
-$$
-\operatorname{FFN}(x)=\max \left(0, x W_{1}+b_{1}\right) W_{2}+b_{2}
-$$ \>While the linear transformations are the same across different
-positions, they use different parameters from layer to layer. Another
-way of describing this is as two convolutions with kernel size 1 The
-dimensionality of input and output is $d_{\text {model }}=512,$ and the
-inner-layer has dimensionality $d_{f f}=2048$
 
-> 位置全链接前馈网络一一MLP变形。之所以是position-wise (i/o维度一样)
-> 是因为处理的attention输出是某一个
-> 位置i的attention输出。hidden\_size变化为：768-\>3072-\>768（或者512-\>2048-\>512）。
 
-> Position-wise feed forward network**其实就是一个MLP
-> 网络**(多层感知机）, i的输出中, 每个$d_model$维向量 x 在此先由
-> $\mathrm{xW}_{-} 1+\mathrm{b}_{-} 1$ 变为 $\mathrm{d}_{1}$ 维的
-> $\mathrm{x}^{\prime},$ 再经过max
-> $\left(0, \mathrm{x}^{\prime}\right) \mathrm{W}_{2} +\mathrm{b}_{-2} 2$
-> 回归 $\mathrm{d}_{model}$ 维。 Feed Forward Neural
-> Network全连接有两层dense,
-> 第一层的激活函数是ReLU(或者其更平滑的版本Gaussian Error Linear
-> Unit-gelu), 第二层是一个线性激活函数, 如果multi-head输出表示为Z,
-> 则FFN可以表示为： $$
-> \mathrm{FFN}(Z)=\max \left(0, Z W_{1}+b_{1}\right) W_{2}+b_{2}
-> $$ 之后就是对hidden层进行dropout,
-> 最后加一个resnet并normalization（tensor的最后一维, 即feature维进行）。
-> Transformer通过对输入的文本不断进行这样的注意力机制层和普通的非线性层交叠来得到最终的文本表达。[csdn](https://blog.csdn.net/Sakura55/article/details/86679826)
+### 残差网络的结构
 
-那这样我就明白了，也就是input是经过attention层和普通的全连接层（使用的激活函数是relu）
+为了使网络层变变深，并且缓解梯度消失。
 
-> **Embeddings and Softmax:**Similarly to other sequence transduction
-> models, we use learned embeddings to convert the input tokens and
-> output tokens to vectors of dimension $d_{\text {model. }}$. We also
-> use the usual learned linear transformation and softmax function to
-> convert the decoder output to predicted next-token probabilities. In
-> our model, we share the same weight matrix between the two embedding
-> layers and the pre-softmax linear transformation, similar to [30]. In
-> the embedding layers, we multiply those weights by
-> $\sqrt{d_{\text {model }}}$.
 
-有embedding层，decoder到output时用到了线性转移和softmax，在模型里面embedding层是共享参数的
+![](../figs/TRM_10.png)
 
-> Positional Encoding:Since our model contains no recurrence and no
-> convolution, in order for the model to make use of the order of the
-> sequence, we must inject some information about the relative or
-> absolute position of the tokens in the sequence. To this end, we add
-> "positional encodings" to the input embeddings at the bottoms of the
-> encoder and decoder stacks. The positional encodings have the same
-> dimension dmodel as the embeddings, so that the two can be summed.
-> There are many choices of positional encodings, learned and fixed.
+这里推到下resnet为什么能缓解梯度消失?
 
-Transformer抛弃了RNN，而RNN最大的优点就是在时间序列上对数据的抽象，所以文章中作者提出两种Positional
-Encoding的方法，将Positional
-Encoding后的数据与输入embedding数据求和，加入了相对位置信息。
+![](../figs/TRM_11.png)
 
-两种Positional Encoding方法：
 
--   用不同频率的sine和cosine函数直接计算
--   学习出一份positional embedding。学习时注意，每个batch的pos
-    emb都一样，即在batch维度进行broadcast。
-    经过实验发现两者的结果一样，所以最后选择了第一种方法，公式如下：
+![](../figs/TRM_12.png)
+### LN
 
-$$\begin{aligned}
-P E_{(p o s, 2 i)} &=\sin \left(p o s / 10000^{2 i / d_{\text {model }}}\right) \\
-P E_{(p o s, 2 i+1)} &=\cos \left(p o s / 10000^{2 i / d_{\text {model }}}\right)
-\end{aligned}$$
+因为BN效果差，有一个说法，BN在NLP任务中用到的少，一般都是LN,具体原因可以查一下feature scaling
 
-> 任意位置的 \$PE\_{pos+k} \$都可以被 \$PE\_{pos}
-> \$的线性函数表示。考虑到在NLP任务中，除了单词的绝对位置，单词的相对位置也非常重要。根据公式
-> $sin(\alpha+\beta) = sin \alpha cos \beta + cos \alpha sin\beta 以及cos(\alpha + \beta) = cos \alpha cos \beta - sin \alpha sin\beta，$这表明位置
-> \$k+p \$的位置向量可以表示为位置 k
-> 的特征向量的线性变化，这为模型捕捉单词之间的相对位置关系提供了非常大的便利。
 
-2.  如果是学习到的positional
-    embedding，可能会像词向量一样受限于词典大小。也就是只能学习到"位置2对应的向量是(1,1,1,2)"这样的表示。所以用三角公式明显不受序列长度的限制，也就是可以对
-    比所遇到序列的更长的序列 进行表示。
+### decoder
+
+> **Decoder:** The decoder is also composed of a stack of $N=6$
+> identical layers. In addition to the two sub-layers in each encoder
+> layer, the decoder inserts a third sub-layer, which performs
+> multi-head attention over the output of the encoder stack. Similar to
+> the encoder, we employ residual connections around each of the
+> sub-layers, followed by layer normalization.
+
+decoder部分也是由6个相同的块结构组成，除了每个编码器层中的两个子层之外，解码器还插入一个第三子层，该子层对编码器堆栈的输出执行多头关注，在每个sub-layers之间同样使用了残差神经网络。DECODER部分是产生Q的
+
+> We also modify the self-attention sub-layer in the decoder stack to
+> prevent positions from attending to subsequent positions. This
+> masking, combined with fact that the output embeddings are offset by
+> one position, ensures that the predictions for position $i$ can depend
+> only on the known outputs at positions less than $i$.
+
+修改了解码器堆栈中的自我注意子层，以防止位置关注后续位置。
+这种掩盖，加上输出嵌入被一个位置偏移的事实，确保了对位置$ i$的预测只能依赖于位置小于$ i$的已知输出。(这里感觉用到了HMM的齐次一阶马尔可夫？）
+
+
 
 > Transformer注意力机制有效的解释：Transformer所使用的注意力机制的核心思想是去计算一句话中的每个词对于这句话中所有词的相互关系，然后认为这些词与词之间的相互关系在一定程度上反应了这句话中不同词之间的关联性以及重要程度。因此再利用这些相互关系来调整每个词的重要性（权重）就可以获得每个词新的表达。这个新的表征不但蕴含了该词本身，还蕴含了其他词与这个词的关系，**因此和单纯的词向量相比是一个更加全局的表达**。使用了Attention机制，将序列中的任意两个位置之间的距离缩小为一个常量。
 > Attention之后还有一个线性的dense层，即multi-head
-> attention\_output经过一个hidden\_size为768的dense层，然后对hidden层进行dropout，最后加上resnet并进行normalization（tensor的最后一维，即feature维进行）。
+> attention_output经过一个hidden_size为768的dense层，然后对hidden层进行dropout，最后加上resnet并进行normalization（tensor的最后一维，即feature维进行）。
 
-总结的很到位
-
-Transformer里最为核心的机制是Self-attention，正是因为Self-attention的存在，才使得Transformer在做类似翻译问题的时候，可以让其Encoder不用做序列输入，而是将整个序列一次全输入，并且超长序列的输入也变得可能
 
 OOV就是out-of-vocabulary，不在词库里的意思。
 
--   新词产生，这个问题的解决方式？
+- 新词产生，这个问题的解决方式？
+
+
+RNN的梯度消失和普通梯度消失有什么不一样？
+
+RNN的梯度是
+一个总的梯度和，它的梯度消失并不是变为零，总梯度被近距离的梯度主导，远距离梯度忽略不计
