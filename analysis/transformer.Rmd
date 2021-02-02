@@ -298,3 +298,57 @@ RNN的梯度消失和普通梯度消失有什么不一样？
 
 RNN的梯度是
 一个总的梯度和，它的梯度消失并不是变为零，总梯度被近距离的梯度主导，远距离梯度忽略不计
+
+
+to do:
+
+- [ ] transfomer 中的sin,cos的相对位置编码每个位置编码的分量存在周期变化，对位置编码向量产生的影响不大。
+
+- [ ] QKV,有没有都存在的必要？
+
+一部分人说是有，一部分人说是无。
+
+
+TRM中的PE实现？
+
+```r
+# coding=utf-8
+import numpy as np
+import matplotlib.pyplot as plt
+# Code from https://www.tensorflow.org/tutorials/text/transformer
+def get_angles(pos, i, d_model):
+    angle_rates = 1 / np.power(10000, (2 * (i//2)) / np.float32(d_model))
+    return pos * angle_rates
+
+def positional_encoding(position, d_model):
+    angle_rads = get_angles(np.arange(position)[:, np.newaxis],
+                            np.arange(d_model)[np.newaxis, :],
+                            d_model)
+
+    # apply sin to even indices in the array; 2i
+    angle_rads[:, 0::2] = np.sin(angle_rads[:, 0::2])
+
+    # apply cos to odd indices in the array; 2i+1
+    angle_rads[:, 1::2] = np.cos(angle_rads[:, 1::2])
+
+    pos_encoding = angle_rads[np.newaxis, ...]
+
+    return pos_encoding
+if __name__ == '__main__':
+    tokens = 10000 #sequence length
+    dimensions = 512
+
+    pos_encoding = positional_encoding(tokens, dimensions)
+    print (pos_encoding.shape)
+
+    plt.figure(figsize=(12,8))
+    plt.pcolormesh(pos_encoding[0], cmap='viridis')
+    plt.xlabel('Embedding Dimensions')
+    plt.xlim((0, dimensions))
+    plt.ylim((tokens,0))
+    plt.ylabel('Token Position')
+    plt.colorbar()
+    plt.show()
+```
+
+![](../figs/TRM_PE.png)

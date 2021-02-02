@@ -27,11 +27,11 @@ MLM只是随机进行mask的，而且只有15%中的80%是被随机mask的，重
 
 >AR language modeling seeks to estimate the probability distribution of a text corpus with an autoregressive model [7], 24,25$] .$ Specifically, given a text sequence $x=\left(x_{1}, \cdots, x_{T}\right),$ AR language modeling factorizes the likelihood into a forward product $p(\mathbf{x})=\prod_{t=1}^{T} p\left(x_{t} \mid \mathbf{x}_{<t}\right)$ or a backward one $p(\mathbf{x})=\prod_{t=T}^{1} p\left(x_{t} \mid \mathbf{x}_{>t}\right)$. A parametric model (e.g. a neural network) is trained to model each conditional distribution. Since an AR language model is only trained to encode a uni-directional context (either forward or backward), it is not effective at modeling deep bidirectional contexts. On the contrary, downstream language understanding tasks often require bidirectional context information. This results in a gap between AR language modeling and effective pretraining.
 
-AR模型是计算语料的最大似然估计，例如：给定一段文本序列$x=\left(x_{1}, \cdots, x_{T}\right),$，AR模型前向/后向语言序列的最大似然估计$p(\mathbf{x})=\prod_{t=1}^{T} p\left(x_{t} \mid \mathbf{x}_{<t}\right)$ or a backward one $p(\mathbf{x})=\prod_{t=T}^{1} p\left(x_{t} \mid \mathbf{x}_{>t}\right)$，由于AR语言模型仅经过训练才能对单向上下文（向前或向后）进行编码，因此在建模深层双向上下文时没有作用。 相反，下游语言理解任务通常需要双向上下文信息。 这导致AR语言建模与有效的预训练之间存在差距。
+AR模型是计算语料的最大似然估计，也就是每次只能根据上文或者下文来预测当前词，无法同时依赖上下文的语义，例如：给定一段文本序列$x=\left(x_{1}, \cdots, x_{T}\right),$，AR模型前向/后向语言序列的最大似然估计$p(\mathbf{x})=\prod_{t=1}^{T} p\left(x_{t} \mid \mathbf{x}_{<t}\right)$ or a backward one $p(\mathbf{x})=\prod_{t=T}^{1} p\left(x_{t} \mid \mathbf{x}_{>t}\right)$，由于AR语言模型仅经过训练才能对单向上下文（向前或向后）进行编码，因此在建模深层双向上下文时没有作用。 相反，下游语言理解任务通常需要双向上下文信息。 这导致AR语言建模与有效的预训练之间存在差距。
 
 >In comparison, AE based pretraining does not perform explicit density estimation but instead aims to reconstruct the original data from corrupted input. A notable example is BERT [10] , which has been the state-of-the-art pretraining approach. Given the input token sequence, a certain portion of tokens are replaced by a special symbol [MASK] , and the model is trained to recover the original tokens from the corrupted version. Since density estimation is not part of the objective, BERT is allowed to utilize bidirectional contexts for reconstruction. As an immediate benefit, this closes the aforementioned bidirectional information gap in AR language modeling, leading to improved performance. However, the artificial symbols like [MASK] used by BERT during pretraining are absent from real data at finetuning time, resulting in a pretrain-finetune discrepancy. Moreover, since the predicted tokens are masked in the input, BERT is not able to model the joint probability using the product rule as in AR language modeling. In other words, BERT assumes the predicted tokens are independent of each other given the unmasked tokens, which is oversimplified as high-order, long-range dependency is prevalent in natural language [9] .
 
-相比之下，基于AE的预训练不会执行显式的密度估计(这个应该是指最大似然估计)，而是旨在从损坏的输入中重建原始数据。 一个著名的例子是BERT [10]，它是最先进的预训练方法。 给定输入token序列，将token的某些部分替换为特殊符号[MASK]，并且训练模型以从损坏的版本中恢复原始令牌。 由于密度估算不是目标的一部分，因此允许BERT利用双向上下文进行重建。 作为直接好处，这消除了AR语言建模中的上述双向信息障碍，从而提高了性能。 但是，在预训练期间，真实数据中缺少BERT在预训练期间使用的人工符号，例如[MASK]，从而导致了预训练与微调之间的差异。 此外，由于预测的令牌在输入中被屏蔽，因此BERT无法像AR语言建模那样使用乘积规则对联合概率进行建模。 换句话说，BERT假设给定了未屏蔽的token牌，预测的token彼此独立，这被简化为自然语言中普遍存在的高阶，长距离依赖性。
+相比之下，基于AE的预训练不会执行显式的密度估计(这个应该是指最大似然估计)，而是旨在从损坏的输入中重建原始数据。 一个著名的例子是BERT [10]，它是最先进的预训练方法。 给定输入token序列，将token的某些部分替换为特殊符号[MASK]，并且训练模型以从损坏的版本中恢复原始token。 由于密度估算不是目标的一部分，因此允许BERT利用双向上下文进行重建。 作为直接好处，这消除了AR语言建模中的上述双向信息障碍，从而提高了性能。 但是，在预训练期间，bert的预训练和微调之间是存在差异的。 此外，由于预测的token在输入中被屏蔽，因此BERT无法像AR语言建模那样使用乘积规则对联合概率进行建模。 换句话说，BERT假设给定了未屏蔽的token，预测的token彼此独立，这被简化为自然语言中普遍存在的高阶，长距离依赖性。
 
 Faced with the pros and cons of existing language pretraining objectives, in this work, we propose XLNet, a generalized autoregressive method that leverages the best of both AR language modeling and $\mathrm{AE}$ while avoiding their limitations.
 
@@ -39,12 +39,16 @@ Faced with the pros and cons of existing language pretraining objectives, in thi
 >
 - Firstly, instead of using a fixed forward or backward factorization order as in conventional AR models, XLNet maximizes the expected log likelihood of a sequence w.r.t. all possible permutations of the factorization order. Thanks to the permutation operation, the context for each position can consist of tokens from both left and right. In expectation, each position learns to utilize contextual information from all positions, i.e., capturing bidirectional context. 
 
-首先替换掉了AR模型中原有的前向后向语言模型的最大似然估计，XLNET使用序列最大似然估计。 分解阶数的所有可能因子排列。 因为进行了排序，每个位置的上下文都可以由左右两个标记组成。 每个位置学会从所有位置利用上下文信息，即捕获双向上下文。
+首先，XLNet 不使用传统AR模型中固定的前向或后向因式分解顺序，而是最大化所有可能因式分解顺序的期望对数似然。由于对因式分解顺序的排列操作，每个位置的语境都包含来自左侧和右侧的 token。因此，每个位置都能学习来自所有位置的语境信息，即捕捉双向语境。
 
 >
 - Secondly, as a generalized AR language model, XLNet does not rely on data corruption. Hence, XLNet does not suffer from the pretrain-finetune discrepancy that BERT is subject to. Meanwhile, the autoregressive objective also provides a natural way to use the product rule for factorizing the joint probability of the predicted tokens, eliminating the independence assumption made in BERT.
 
-第二点,作为一个AR语言模型，XLNet不存在数据干扰问题。因此，XLNet不会存在BERT所受的预训练-fine-tune差异的困扰。同时，自回归目标还提供了一种自然的方式，可以使用乘积规则将预测代币的联合概率分解为因数，从而消除了BERT中的独立性假设。
+
+
+其次，作为一个泛化 AR 语言模型，XLNet 不依赖残缺数据。因此，XLNet 不会有 BERT 的预训练-微调差异。同时，自回归目标提供一种自然的方式，来利用乘法法则对预测 token 的联合概率执行因式分解（factorize），这消除了 BERT 的MLM任务中的独立性假设。
+
+除了提出一个新的预训练目标，XLNet 还改进了预训练的架构设计。
 
 
 >In addition to a novel pretraining objective, XLNet improves architectural designs for pretraining.
@@ -54,8 +58,9 @@ Faced with the pros and cons of existing language pretraining objectives, in thi
 >
 Inspired by the latest advancements in AR language modeling, XLNet integrates the segment recurrence mechanism and relative encoding scheme of Transformer-XL [9] into pretraining, which empirically improves the performance especially for tasks involving a longer text sequence. Naively applying a Transformer(-XL) architecture to permutation-based language modeling does not work because the factorization order is arbitrary and the target is ambiguous. As a solution, we propose to reparameterize the Transformer $(-X L)$ network to remove the ambiguity.
 
-受AR模型的启发，XLNet将分段递归机制和Transformer-XL中的相对编码方案[9]集成到预训练中，从而从经验上提高了性能，尤其是对于涉及较长文本序列的任务。将Transformer（-XL）体系结构应用于基于置换的语言建模是行不通的，因为分解顺序是任意的并且目标是模棱两可的。 作为解决方案，建议对Transformer(-XL)网络重新参数化以消除歧义。
+受到 AR 语言建模领域最新进展的启发，XLNet 将 Transformer-XL 的分割循环机制（segment recurrence mechanism）和相对编码范式（relative encoding）整合到预训练中，实验表明，这种做法提高了性能，尤其是在那些包含较长文本序列的任务中。
 
+简单地使用 Transformer(-XL) 架构进行基于排列的（permutation-based）语言建模是不成功的，因为因式分解顺序是任意的、训练目标是模糊的。因此，研究人员提出，对 Transformer(-XL) 网络的参数化方式进行修改，移除模糊性。
 
 
 >
@@ -77,11 +82,49 @@ $$
 
 where $h_{\theta}\left(\mathbf{x}_{1: t-1}\right)$ is a context representation produced by neural models, such as RNNs or Transformers, and $e(x)$ denotes the embedding of $x$. In comparison, BERT is based on denoising auto-encoding. Specifically, for a text sequence $x$, BERT first constructs a corrupted version $\hat{x}$ by randomly setting a portion (e.g. $15 \%$ ) of tokens in $x$ to a special symbol [MASK]. Let the masked tokens be $\bar{x}$. The training objective is to reconstruct $\overline{\mathbf{x}}$ from $\hat{\mathbf{x}}$ :
 
+而BERT是denoising auto-encoding的自编码的方法。对于序列$x$，BERT会随机挑选15%的Token变成[MASK]得到带噪声版本的$hat{x}$。假设被Mask的原始值为x¯，那么BERT希望尽量根据上下文恢复(猜测)出原始值了，也就是：
+
 $$
 \max _{\theta} \log p_{\theta}(\overline{\mathbf{x}} \mid \hat{\mathbf{x}}) \approx \sum_{t=1}^{T} m_{t} \log p_{\theta}\left(x_{t} \mid \hat{\mathbf{x}}\right)=\sum_{t=1}^{T} m_{t} \log \frac{\exp \left(H_{\theta}(\hat{\mathbf{x}})_{t}^{\top} e\left(x_{t}\right)\right)}{\sum_{x^{\prime}} \exp \left(H_{\theta}(\hat{\mathbf{x}})_{t}^{\top} e\left(x^{\prime}\right)\right)}
 $$
 
 where $m_{t}=1$ indicates $x_{t}$ is masked, and $H_{\theta}$ is a Transformer that maps a length- $T$ text sequence $\mathbf{x}$ into a sequence of hidden vectors $H_{\theta}(\mathbf{x})=\left[H_{\theta}(\mathbf{x})_{1}, H_{\theta}(\mathbf{x})_{2}, \cdots, H_{\theta}(\mathbf{x})_{T}\right] .$ The pros and cons of
 the two pretraining objectives are compared in the following aspects:
+$m_{t}=1$表示$x_{t}$被mask，$H_{\theta}$表示序列x的隐藏层向量$H_{\theta}(\mathbf{x})=\left[H_{\theta}(\mathbf{x})_{1}, H_{\theta}(\mathbf{x})_{2}, \cdots, H_{\theta}(\mathbf{x})_{T}\right] .$ 
+
+有如下两个假设
+
+>
 - Independence Assumption: As emphasized by the $\approx$ sign in Eq. (2), BERT factorizes the joint conditional probability $p(\overline{\mathbf{x}} \mid \hat{\mathbf{x}})$ based on an independence assumption that all masked tokens $\overline{\mathbf{x}}$ are separately reconstructed. In comparison, the AR language modeling objective (1) factorizes $p_{\theta}(\mathbf{x})$ using the product rule that holds universally without such an independence assumption.
-- Input noise: The input to BERT contains artificial symbols like [MASK] that never occur in downstream tasks, which creates a pretrain-finetune discrepancy. Replacing [MASK] with original tokens as in [10] does not solve the problem because original tokens can be only used with a small probability - otherwise Eq. (2) will be trivial to optimize. In comparison, AR language modeling does not rely on any input corruption and does not suffer from this issue. Context dependency: The AR representation $h_{\theta}\left(\mathbf{x}_{1: t-1}\right)$ is only conditioned on the tokens up to position $t$ (i.e. tokens to the left), while the BERT representation $H_{\theta}(\mathbf{x})_{t}$ has access to the contextual information on both sides. As a result, the BERT objective allows the model to be pretrained to better capture bidirectional context.
+
+独立性假设：主要是说bert中的mask部分是默认每个词之间是相互独立的。AR模型没有这种假设
+
+>
+-  Input noise: The input to BERT contains artificial symbols like [MASK] that never occur in downstream tasks, which creates a pretrain-finetune discrepancy. Replacing [MASK] with original tokens as in [10] does not solve the problem because original tokens can be only used with a small probability - otherwise Eq. (2) will be trivial to optimize. In comparison, AR language modeling does not rely on any input corruption and does not suffer from this issue. 
+
+输入噪音：BERT的在预训练时会出现特殊的[MASK]，但是它在下游的fine-tuning中不会出现，这就是出现了不匹配。而语言模型不会有这个问题。
+
+>
+Context dependency: The AR representation $h_{\theta}\left(\mathbf{x}_{1: t-1}\right)$ is only conditioned on the tokens up to position $t$ (i.e. tokens to the left), while the BERT representation $H_{\theta}(\mathbf{x})_{t}$ has access to the contextual information on both sides. As a result, the BERT objective allows the model to be pretrained to better capture bidirectional context.
+
+AR模型只能学习到 上文或者下文，bert可以同时学习上下文。
+
+XLnet的排序模型结构如图
+
+![](figs/xlnet_1.png)
+
+>According to the comparison above, AR language modeling and BERT possess their unique advantages over the other. A natural question to ask is whether there exists a pretraining objective that brings the advantages of both while avoiding their weaknesses.
+
+AR和bert各有优势，想找到一个能结合两者优势的方法。
+
+>Borrowing ideas from orderless NADE [32], we propose the permutation language modeling objective that not only retains the benefits of AR models but also allows models to capture bidirectional contexts. Specifically, for a sequence $x$ of length $T,$ there are $T !$ different orders to perform a valid autoregressive factorization. Intuitively, if model parameters are shared across all factorization orders, in expectation, the model will learn to gather information from all positions on both sides.
+
+从无序的NADE中得到的idea，提出了一种排序语言模型，既能保持AR模型的优点，又能同时捕捉双向的语义。
+对于一个序列X，其长度为T，有$T !$中不同的因子分解排序方法，如果模型参数在所有的分解顺序中共享，，理论上说模型将学习从两边的所有位置收集信息。
+
+To formalize the idea, let $\mathcal{Z}_{T}$ be the set of all possible permutations of the length- $T$ index sequence $[1,2, \ldots, T] .$ We use $z_{t}$ and $\mathbf{z}_{<t}$ to denote the $t$ -th element and the first $t-1$ elements of a permutation $\mathbf{z} \in \mathcal{Z}_{T}$. Then, our proposed permutation language modeling objective can be expressed as follows:
+
+排序语言模型的目标函数如下
+$$
+\max _{\theta} \mathbb{E}_{\mathbf{z} \sim \mathcal{Z}_{T}}\left[\sum_{t=1}^{T} \log p_{\theta}\left(x_{z_{t}} \mid \mathbf{x}_{\mathbf{z}<t}\right)\right]
+$$
