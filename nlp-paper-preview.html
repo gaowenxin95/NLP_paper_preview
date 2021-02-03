@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2021-01-30" />
+<meta name="date" content="2021-02-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -226,7 +226,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">NLP相关paper阅读</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2021-01-30</em></p>
+<p class="date"><em>2021-02-03</em></p>
 </div>
 <div id="nlp-paper-preview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> NLP paper preview</h1>
@@ -684,7 +684,7 @@ R_{k} &amp;=\left\{\mathbf{x}_{k}^{L M}, \overrightarrow{\mathbf{h}}_{k, j}^{L M
 <h3><span class="header-section-number">1.6.1</span> introduction</h3>
 <blockquote>
 <p>the Transformer,based solely on attention mechanisms, dispensing with
-recurrence and convolutions entirely.</p>
+recurrence and convolutions entirely.<span class="citation">(Vaswani et al. 2017)</span></p>
 </blockquote>
 <p>transformer只依靠attention机制，舍弃了之前的rnn和cnn的结构</p>
 <blockquote>
@@ -755,14 +755,14 @@ encoder and decoder, shown in the left and right halves of Figure
 1,respectively.</p>
 </blockquote>
 <p>下面这个图是TRM模型的完整的结构，N个encoder和N个decoderz组成</p>
-<p><img src="../figs/TRM_1.png" /></p>
-<p>本篇文章重点应用在机器翻译的领域，因此一个形象的例子是</p>
-<p><img src="../figs/TRM_2.png" /></p>
+<p><img src="figs/TRM_1.png" /></p>
+<p>本篇文章重点应用在机器翻译的领域，因此一个形象的例子是<span class="citation">(“TRANSFORMER详解” 2021)</span></p>
+<p><img src="figs/TRM_2.png" /></p>
 <p>鉴于这个文章写的内容板块比较乱，就不按照文章的顺序了</p>
 </div>
 <div id="input" class="section level3" number="1.6.2">
 <h3><span class="header-section-number">1.6.2</span> input</h3>
-<p><img src="../figs/TRM_3.png" /></p>
+<p><img src="figs/TRM_3.png" /></p>
 <p>第一部分是输入层，从图来看是两部分组成的，包括一个token embedding和一个positional encoding两部分做求和作为input。</p>
 <p>token embedding就是w2VEC训练出来的词向量，每个词向量的维度是512，这个很常规。TRM并没有使用RNN这种序列网络，而是使用的self-attention这种结构。</p>
 <blockquote>
@@ -770,7 +770,7 @@ encoder and decoder, shown in the left and right halves of Figure
 In this work, we use sine and cosine functions of different frequencies:</p>
 </blockquote>
 <p>RNN处理的是序列的特征，是有先后顺序的，例如“我爱你”这个序列，RNN的处理方式是先处理我，然后再根据“我”的信息处理“爱”等等，RNN中的每个time step是共享U,W,V的。</p>
-<p><img src="../figs/TRM_4.png" /></p>
+<p><img src="figs/TRM_4.png" /></p>
 <p>但是transformer不一样，transformer是对每个字/词做并行训练的，可以同时处理，这样的好处是加快了速度，因此transformer就缺少告诉一个序列谁前谁后的一个方法，此时有了位置编码</p>
 <p>两种Positional Encoding方法：</p>
 <p><span class="math display">\[
@@ -780,15 +780,15 @@ P E_{(p o s, 2 i+1)} &amp;=\cos \left(p o s / 10000^{2 i / d_{\text {model }}}\r
 \end{aligned}
 \]</span></p>
 <p>在512维度中，<span class="math inline">\(2i\)</span>表示偶数位置使用的是<span class="math inline">\(sin\)</span>,<span class="math inline">\(2i+1\)</span>表示奇数位置使用cos,也就是下图</p>
-<p><img src="../figs/TRM_5.png" /></p>
+<p><img src="figs/TRM_5.png" /></p>
 <p>得到位置编码后，将词向量的512维度的tokenembedding和位置向量的512维度的embedding相加，得到最终的512维度作为整个transformer的input。</p>
-<p><img src="../figs/TRM_6.png" /></p>
+<p><img src="figs/TRM_6.png" /></p>
 <p>sin,cos体现的绝对的位置编码，这里我其实没太懂这个，绝对位置编码中有相对位置编码的表示。</p>
 <ul class="task-list">
 <li><input type="checkbox" disabled="" />
 为什么位置编码有用？</li>
 </ul>
-<p><img src="../figs/TRM_7.png" /></p>
+<p><img src="figs/TRM_7.png" /></p>
 <blockquote>
 <p>任意位置的 <span class="math inline">\(PE_{pos+k}\)</span>都可以被<span class="math inline">\(PE_{pos}\)</span>的线性函数表示。考虑到在NLP任务中，除了单词的绝对位置，单词的相对位置也非常重要。根据公式
 <span class="math inline">\(sin(\alpha+\beta) = sin \alpha cos \beta + cos \alpha sin\beta 以及cos(\alpha + \beta) = cos \alpha cos \beta - sin \alpha sin\beta，\)</span>这表明位置
@@ -838,7 +838,7 @@ the matrix of outputs as:</p>
 <p><span class="math display">\[
 \operatorname{Attention}(Q, K, V)=\operatorname{softmax}\left(\frac{Q K^{T}}{\sqrt{d_{k}}}\right) V
 \]</span></p>
-<p><img src="../figs/TRM_8.png" /></p>
+<p><img src="figs/TRM_8.png" /></p>
 <blockquote>
 <p>The two most commonly used attention functions are additive attention
 [2], and dot-product (multiplicative) attention. Dot-product attention
@@ -876,7 +876,7 @@ products by <span class="math inline">\(\frac{1}{\sqrt{d_{k}}}\)</span></p>
 \]</span></p>
 <p>这个公式中并没有解释Q,K,V是怎样得到的，<a href="https://jalammar.github.io/illustrated-transformer/">jay alammar</a>的这篇解析中解释的很详细其实就是给三个矩阵<span class="math inline">\(W^{Q}\)</span>,$ W^{K}$, <span class="math inline">\(W^{V}\)</span>，然后用每个字向量去乘矩阵得到的。
 截个图来</p>
-<p><img src="../figs/TRM_9.png" /></p>
+<p><img src="figs/TRM_9.png" /></p>
 <p>Where the projections are parameter matrices <span class="math inline">\(W_{i}^{Q} \in \mathbb{R}^{d_{\text {model }} \times d_{k}}, W_{i}^{K} \in \mathbb{R}^{d_{\text {model }} \times d_{k}}, W_{i}^{V} \in \mathbb{R}^{d_{\text {model }} \times d_{v}}\)</span> and <span class="math inline">\(W^{O} \in \mathbb{R}^{h d_{v} \times d_{\text {model }}}\)</span>
 In this work we employ <span class="math inline">\(h=8\)</span> parallel attention layers, or heads. For each of these we use <span class="math inline">\(d_{k}=d_{v}=d_{\text {model }} / h=64 .\)</span> Due to the reduced dimension of each head, the total computational cost is similar to that of single-head attention with full dimensionality.</p>
 <p>Q,K,V每个矩阵的维度是一样的是512*64,面试中问到了。注意力头数是8.</p>
@@ -884,10 +884,10 @@ In this work we employ <span class="math inline">\(h=8\)</span> parallel attenti
 <div id="残差网络的结构" class="section level3" number="1.6.6">
 <h3><span class="header-section-number">1.6.6</span> 残差网络的结构</h3>
 <p>为了使网络层变变深，并且缓解梯度消失。</p>
-<p><img src="../figs/TRM_10.png" /></p>
+<p><img src="figs/TRM_10.png" /></p>
 <p>这里推到下resnet为什么能缓解梯度消失?</p>
-<p><img src="../figs/TRM_11.png" /></p>
-<p><img src="../figs/TRM_12.png" />
+<p><img src="figs/TRM_11.png" /></p>
+<p><img src="figs/TRM_12.png" />
 ### LN</p>
 <p>因为BN效果差，有一个说法，BN在NLP任务中用到的少，一般都是LN,具体原因可以查一下feature scaling</p>
 </div>
@@ -923,6 +923,53 @@ attention_output经过一个hidden_size为768的dense层，然后对hidden层进
 <p>RNN的梯度消失和普通梯度消失有什么不一样？</p>
 <p>RNN的梯度是
 一个总的梯度和，它的梯度消失并不是变为零，总梯度被近距离的梯度主导，远距离梯度忽略不计</p>
+<p>to do:</p>
+<ul class="task-list">
+<li><p><input type="checkbox" disabled="" />
+transfomer 中的sin,cos的相对位置编码每个位置编码的分量存在周期变化，对位置编码向量产生的影响不大。</p></li>
+<li><p><input type="checkbox" disabled="" />
+QKV,有没有都存在的必要？</p></li>
+</ul>
+<p>一部分人说是有，一部分人说是无。</p>
+<p>TRM中的PE实现？</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># coding=utf-8</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>import numpy as np</span>
+<span id="cb2-3"><a href="#cb2-3"></a>import matplotlib.pyplot as plt</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># Code from https://www.tensorflow.org/tutorials/text/transformer</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>def <span class="kw">get_angles</span>(pos, i, d_model)<span class="op">:</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="st">    </span>angle_rates =<span class="st"> </span><span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="kw">np.power</span>(<span class="dv">10000</span>, (<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(i<span class="op">/</span><span class="er">/</span><span class="dv">2</span>)) <span class="op">/</span><span class="st"> </span><span class="kw">np.float32</span>(d_model))</span>
+<span id="cb2-7"><a href="#cb2-7"></a>    return pos <span class="op">*</span><span class="st"> </span>angle_rates</span>
+<span id="cb2-8"><a href="#cb2-8"></a></span>
+<span id="cb2-9"><a href="#cb2-9"></a>def <span class="kw">positional_encoding</span>(position, d_model)<span class="op">:</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="st">    </span>angle_rads =<span class="st"> </span><span class="kw">get_angles</span>(<span class="kw">np.arange</span>(position)[<span class="op">:</span>, np.newaxis],</span>
+<span id="cb2-11"><a href="#cb2-11"></a>                            <span class="kw">np.arange</span>(d_model)[np.newaxis, <span class="op">:</span>],</span>
+<span id="cb2-12"><a href="#cb2-12"></a>                            d_model)</span>
+<span id="cb2-13"><a href="#cb2-13"></a></span>
+<span id="cb2-14"><a href="#cb2-14"></a>    <span class="co"># apply sin to even indices in the array; 2i</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a>    angle_rads[<span class="op">:</span>, <span class="dv">0</span><span class="op">::</span><span class="dv">2</span>] =<span class="st"> </span><span class="kw">np.sin</span>(angle_rads[<span class="op">:</span>, <span class="dv">0</span><span class="op">::</span><span class="dv">2</span>])</span>
+<span id="cb2-16"><a href="#cb2-16"></a></span>
+<span id="cb2-17"><a href="#cb2-17"></a>    <span class="co"># apply cos to odd indices in the array; 2i+1</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a>    angle_rads[<span class="op">:</span>, <span class="dv">1</span><span class="op">::</span><span class="dv">2</span>] =<span class="st"> </span><span class="kw">np.cos</span>(angle_rads[<span class="op">:</span>, <span class="dv">1</span><span class="op">::</span><span class="dv">2</span>])</span>
+<span id="cb2-19"><a href="#cb2-19"></a></span>
+<span id="cb2-20"><a href="#cb2-20"></a>    pos_encoding =<span class="st"> </span>angle_rads[np.newaxis, ...]</span>
+<span id="cb2-21"><a href="#cb2-21"></a></span>
+<span id="cb2-22"><a href="#cb2-22"></a>    return pos_encoding</span>
+<span id="cb2-23"><a href="#cb2-23"></a><span class="cf">if</span> __name__ <span class="op">==</span><span class="st"> &#39;__main__&#39;</span><span class="op">:</span></span>
+<span id="cb2-24"><a href="#cb2-24"></a><span class="st">    </span>tokens =<span class="st"> </span><span class="dv">10000</span> <span class="co">#sequence length</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a>    dimensions =<span class="st"> </span><span class="dv">512</span></span>
+<span id="cb2-26"><a href="#cb2-26"></a></span>
+<span id="cb2-27"><a href="#cb2-27"></a>    pos_encoding =<span class="st"> </span><span class="kw">positional_encoding</span>(tokens, dimensions)</span>
+<span id="cb2-28"><a href="#cb2-28"></a>    <span class="kw">print</span> (pos_encoding.shape)</span>
+<span id="cb2-29"><a href="#cb2-29"></a></span>
+<span id="cb2-30"><a href="#cb2-30"></a>    <span class="kw">plt.figure</span>(<span class="dt">figsize=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
+<span id="cb2-31"><a href="#cb2-31"></a>    <span class="kw">plt.pcolormesh</span>(pos_encoding[<span class="dv">0</span>], <span class="dt">cmap=</span><span class="st">&#39;viridis&#39;</span>)</span>
+<span id="cb2-32"><a href="#cb2-32"></a>    <span class="kw">plt.xlabel</span>(<span class="st">&#39;Embedding Dimensions&#39;</span>)</span>
+<span id="cb2-33"><a href="#cb2-33"></a>    <span class="kw">plt.xlim</span>((<span class="dv">0</span>, dimensions))</span>
+<span id="cb2-34"><a href="#cb2-34"></a>    <span class="kw">plt.ylim</span>((tokens,<span class="dv">0</span>))</span>
+<span id="cb2-35"><a href="#cb2-35"></a>    <span class="kw">plt.ylabel</span>(<span class="st">&#39;Token Position&#39;</span>)</span>
+<span id="cb2-36"><a href="#cb2-36"></a>    <span class="kw">plt.colorbar</span>()</span>
+<span id="cb2-37"><a href="#cb2-37"></a>    <span class="kw">plt.show</span>()</span></code></pre></div>
+<p><img src="figs/TRM_PE.png" /></p>
 <p>tranformer这里最近看了一篇还不错的分享，等空了把重点内容，之前理解没到位的记录下 这里先放一个链接</p>
 <p><a href="https://mp.weixin.qq.com/s?__biz=MzI4MDYzNzg4Mw==&amp;mid=2247521353&amp;idx=6&amp;sn=5c1d369457feb0e85d2dc0ce15013551&amp;chksm=ebb7ac9ddcc0258b844f4c3e96e0a4e6092908eae6101582998d9023472fda4f853195d0483d&amp;mpshare=1&amp;scene=23&amp;srcid=0103cJP102hkdnRNQfXSAOuQ&amp;sharer_sharetime=1609723757487&amp;sharer_shareid=df15c342306c746b0423e3fd6ee52a86#rd">万能的transformer</a></p>
 <p>上面这个文章中回答了一些在看attention is all you need 论文中的没有讲清楚的几个问题</p>
@@ -931,9 +978,9 @@ attention_output经过一个hidden_size为768的dense层，然后对hidden层进
 transformer中Q,K,V的作用是什么？</li>
 </ul>
 <p>Transformer 中采用的是多头自注意力机制。在 Encoder 中，Q、K、V均为输入的序列编码，而多头的线性层可以方便地扩展模型参数。</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>Q  =<span class="st"> </span>x <span class="op">*</span><span class="st"> </span>Wq</span>
-<span id="cb2-2"><a href="#cb2-2"></a>K  =<span class="st"> </span>x <span class="op">*</span><span class="st"> </span>Wk</span>
-<span id="cb2-3"><a href="#cb2-3"></a>V  =<span class="st"> </span>x <span class="op">*</span><span class="st"> </span>Wv</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>Q  =<span class="st"> </span>x <span class="op">*</span><span class="st"> </span>Wq</span>
+<span id="cb3-2"><a href="#cb3-2"></a>K  =<span class="st"> </span>x <span class="op">*</span><span class="st"> </span>Wk</span>
+<span id="cb3-3"><a href="#cb3-3"></a>V  =<span class="st"> </span>x <span class="op">*</span><span class="st"> </span>Wv</span></code></pre></div>
 <p>此处应该有个图</p>
 <p>x对应信息V的注意力权重 与 Q*K.tranpose 成正比 等于说：x的注意力权重，由x自己来决定，所以叫自注意力。 Wq,Wk,Wv会根据任务目标更新变化，保证了自注意力机制的效果。 <a href="https://www.zhihu.com/question/427629601/answer/1545963545">赵明明</a></p>
 <p>换一个通俗易懂的解释</p>
@@ -1340,22 +1387,23 @@ bert中的双向和elmo中的双向有什么不同？</li>
 <blockquote>
 <p>AR language modeling seeks to estimate the probability distribution of a text corpus with an autoregressive model [7], 24,25<span class="math inline">\(] .\)</span> Specifically, given a text sequence <span class="math inline">\(x=\left(x_{1}, \cdots, x_{T}\right),\)</span> AR language modeling factorizes the likelihood into a forward product <span class="math inline">\(p(\mathbf{x})=\prod_{t=1}^{T} p\left(x_{t} \mid \mathbf{x}_{&lt;t}\right)\)</span> or a backward one <span class="math inline">\(p(\mathbf{x})=\prod_{t=T}^{1} p\left(x_{t} \mid \mathbf{x}_{&gt;t}\right)\)</span>. A parametric model (e.g. a neural network) is trained to model each conditional distribution. Since an AR language model is only trained to encode a uni-directional context (either forward or backward), it is not effective at modeling deep bidirectional contexts. On the contrary, downstream language understanding tasks often require bidirectional context information. This results in a gap between AR language modeling and effective pretraining.</p>
 </blockquote>
-<p>AR模型是计算语料的最大似然估计，例如：给定一段文本序列<span class="math inline">\(x=\left(x_{1}, \cdots, x_{T}\right),\)</span>，AR模型前向/后向语言序列的最大似然估计<span class="math inline">\(p(\mathbf{x})=\prod_{t=1}^{T} p\left(x_{t} \mid \mathbf{x}_{&lt;t}\right)\)</span> or a backward one <span class="math inline">\(p(\mathbf{x})=\prod_{t=T}^{1} p\left(x_{t} \mid \mathbf{x}_{&gt;t}\right)\)</span>，由于AR语言模型仅经过训练才能对单向上下文（向前或向后）进行编码，因此在建模深层双向上下文时没有作用。 相反，下游语言理解任务通常需要双向上下文信息。 这导致AR语言建模与有效的预训练之间存在差距。</p>
+<p>AR模型是计算语料的最大似然估计，也就是每次只能根据上文或者下文来预测当前词，无法同时依赖上下文的语义，例如：给定一段文本序列<span class="math inline">\(x=\left(x_{1}, \cdots, x_{T}\right),\)</span>，AR模型前向/后向语言序列的最大似然估计<span class="math inline">\(p(\mathbf{x})=\prod_{t=1}^{T} p\left(x_{t} \mid \mathbf{x}_{&lt;t}\right)\)</span> or a backward one <span class="math inline">\(p(\mathbf{x})=\prod_{t=T}^{1} p\left(x_{t} \mid \mathbf{x}_{&gt;t}\right)\)</span>，由于AR语言模型仅经过训练才能对单向上下文（向前或向后）进行编码，因此在建模深层双向上下文时没有作用。 相反，下游语言理解任务通常需要双向上下文信息。 这导致AR语言建模与有效的预训练之间存在差距。</p>
 <blockquote>
 <p>In comparison, AE based pretraining does not perform explicit density estimation but instead aims to reconstruct the original data from corrupted input. A notable example is BERT [10] , which has been the state-of-the-art pretraining approach. Given the input token sequence, a certain portion of tokens are replaced by a special symbol [MASK] , and the model is trained to recover the original tokens from the corrupted version. Since density estimation is not part of the objective, BERT is allowed to utilize bidirectional contexts for reconstruction. As an immediate benefit, this closes the aforementioned bidirectional information gap in AR language modeling, leading to improved performance. However, the artificial symbols like [MASK] used by BERT during pretraining are absent from real data at finetuning time, resulting in a pretrain-finetune discrepancy. Moreover, since the predicted tokens are masked in the input, BERT is not able to model the joint probability using the product rule as in AR language modeling. In other words, BERT assumes the predicted tokens are independent of each other given the unmasked tokens, which is oversimplified as high-order, long-range dependency is prevalent in natural language [9] .</p>
 </blockquote>
-<p>相比之下，基于AE的预训练不会执行显式的密度估计(这个应该是指最大似然估计)，而是旨在从损坏的输入中重建原始数据。 一个著名的例子是BERT [10]，它是最先进的预训练方法。 给定输入token序列，将token的某些部分替换为特殊符号[MASK]，并且训练模型以从损坏的版本中恢复原始令牌。 由于密度估算不是目标的一部分，因此允许BERT利用双向上下文进行重建。 作为直接好处，这消除了AR语言建模中的上述双向信息障碍，从而提高了性能。 但是，在预训练期间，真实数据中缺少BERT在预训练期间使用的人工符号，例如[MASK]，从而导致了预训练与微调之间的差异。 此外，由于预测的令牌在输入中被屏蔽，因此BERT无法像AR语言建模那样使用乘积规则对联合概率进行建模。 换句话说，BERT假设给定了未屏蔽的token牌，预测的token彼此独立，这被简化为自然语言中普遍存在的高阶，长距离依赖性。</p>
+<p>相比之下，基于AE的预训练不会执行显式的密度估计(这个应该是指最大似然估计)，而是旨在从损坏的输入中重建原始数据。 一个著名的例子是BERT [10]，它是最先进的预训练方法。 给定输入token序列，将token的某些部分替换为特殊符号[MASK]，并且训练模型以从损坏的版本中恢复原始token。 由于密度估算不是目标的一部分，因此允许BERT利用双向上下文进行重建。 作为直接好处，这消除了AR语言建模中的上述双向信息障碍，从而提高了性能。 但是，在预训练期间，bert的预训练和微调之间是存在差异的。 此外，由于预测的token在输入中被屏蔽，因此BERT无法像AR语言建模那样使用乘积规则对联合概率进行建模。 换句话说，BERT假设给定了未屏蔽的token，预测的token彼此独立，这被简化为自然语言中普遍存在的高阶，长距离依赖性。</p>
 <p>Faced with the pros and cons of existing language pretraining objectives, in this work, we propose XLNet, a generalized autoregressive method that leverages the best of both AR language modeling and <span class="math inline">\(\mathrm{AE}\)</span> while avoiding their limitations.</p>
 <p>本文中提出了XLNET模型，同时结合了AR和AE模型的优势，避免了AE模型的的限制。
 &gt;
 - Firstly, instead of using a fixed forward or backward factorization order as in conventional AR models, XLNet maximizes the expected log likelihood of a sequence w.r.t. all possible permutations of the factorization order. Thanks to the permutation operation, the context for each position can consist of tokens from both left and right. In expectation, each position learns to utilize contextual information from all positions, i.e., capturing bidirectional context.</p>
-<p>首先替换掉了AR模型中原有的前向后向语言模型的最大似然估计，XLNET使用序列最大似然估计。 分解阶数的所有可能因子排列。 因为进行了排序，每个位置的上下文都可以由左右两个标记组成。 每个位置学会从所有位置利用上下文信息，即捕获双向上下文。</p>
+<p>首先，XLNet 不使用传统AR模型中固定的前向或后向因式分解顺序，而是最大化所有可能因式分解顺序的期望对数似然。由于对因式分解顺序的排列操作，每个位置的语境都包含来自左侧和右侧的 token。因此，每个位置都能学习来自所有位置的语境信息，即捕捉双向语境。</p>
 <blockquote>
 <ul>
 <li>Secondly, as a generalized AR language model, XLNet does not rely on data corruption. Hence, XLNet does not suffer from the pretrain-finetune discrepancy that BERT is subject to. Meanwhile, the autoregressive objective also provides a natural way to use the product rule for factorizing the joint probability of the predicted tokens, eliminating the independence assumption made in BERT.</li>
 </ul>
 </blockquote>
-<p>第二点,作为一个AR语言模型，XLNet不存在数据干扰问题。因此，XLNet不会存在BERT所受的预训练-fine-tune差异的困扰。同时，自回归目标还提供了一种自然的方式，可以使用乘积规则将预测代币的联合概率分解为因数，从而消除了BERT中的独立性假设。</p>
+<p>其次，作为一个泛化 AR 语言模型，XLNet 不依赖残缺数据。因此，XLNet 不会有 BERT 的预训练-微调差异。同时，自回归目标提供一种自然的方式，来利用乘法法则对预测 token 的联合概率执行因式分解（factorize），这消除了 BERT 的MLM任务中的独立性假设。</p>
+<p>除了提出一个新的预训练目标，XLNet 还改进了预训练的架构设计。</p>
 <blockquote>
 <p>In addition to a novel pretraining objective, XLNet improves architectural designs for pretraining.</p>
 </blockquote>
@@ -1363,7 +1411,8 @@ bert中的双向和elmo中的双向有什么不同？</li>
 <blockquote>
 <p>Inspired by the latest advancements in AR language modeling, XLNet integrates the segment recurrence mechanism and relative encoding scheme of Transformer-XL [9] into pretraining, which empirically improves the performance especially for tasks involving a longer text sequence. Naively applying a Transformer(-XL) architecture to permutation-based language modeling does not work because the factorization order is arbitrary and the target is ambiguous. As a solution, we propose to reparameterize the Transformer <span class="math inline">\((-X L)\)</span> network to remove the ambiguity.</p>
 </blockquote>
-<p>受AR模型的启发，XLNet将分段递归机制和Transformer-XL中的相对编码方案[9]集成到预训练中，从而从经验上提高了性能，尤其是对于涉及较长文本序列的任务。将Transformer（-XL）体系结构应用于基于置换的语言建模是行不通的，因为分解顺序是任意的并且目标是模棱两可的。 作为解决方案，建议对Transformer(-XL)网络重新参数化以消除歧义。</p>
+<p>受到 AR 语言建模领域最新进展的启发，XLNet 将 Transformer-XL 的分割循环机制（segment recurrence mechanism）和相对编码范式（relative encoding）整合到预训练中，实验表明，这种做法提高了性能，尤其是在那些包含较长文本序列的任务中。</p>
+<p>简单地使用 Transformer(-XL) 架构进行基于排列的（permutation-based）语言建模是不成功的，因为因式分解顺序是任意的、训练目标是模糊的。因此，研究人员提出，对 Transformer(-XL) 网络的参数化方式进行修改，移除模糊性。</p>
 <blockquote>
 <p>Empirically, XLNet achieves state-of-the-art results on 18 tasks, i.e., 7 GLUE language understanding tasks, 3 reading comprehension tasks including <span class="math inline">\(S Q u A D\)</span> and <span class="math inline">\(R A C E, 7\)</span> text classification tasks including Yelp and IMDB, and the ClueWeb09-B document ranking task. Under a set of fair comparison experiments, XLNet consistently outperforms BERT [10] on multiple benchmarks.</p>
 </blockquote>
@@ -1374,13 +1423,62 @@ bert中的双向和elmo中的双向有什么不同？</li>
 \max _{\theta} \log p_{\theta}(\mathbf{x})=\sum_{t=1}^{T} \log p_{\theta}\left(x_{t} \mid \mathbf{x}_{&lt;t}\right)=\sum_{t=1}^{T} \log \frac{\exp \left(h_{\theta}\left(\mathbf{x}_{1: t-1}\right)^{\top} e\left(x_{t}\right)\right)}{\sum_{x^{\prime}} \exp \left(h_{\theta}\left(\mathbf{x}_{1: t-1}\right)^{\top} e\left(x^{\prime}\right)\right)}
 \]</span></p>
 <p>where <span class="math inline">\(h_{\theta}\left(\mathbf{x}_{1: t-1}\right)\)</span> is a context representation produced by neural models, such as RNNs or Transformers, and <span class="math inline">\(e(x)\)</span> denotes the embedding of <span class="math inline">\(x\)</span>. In comparison, BERT is based on denoising auto-encoding. Specifically, for a text sequence <span class="math inline">\(x\)</span>, BERT first constructs a corrupted version <span class="math inline">\(\hat{x}\)</span> by randomly setting a portion (e.g. <span class="math inline">\(15 \%\)</span> ) of tokens in <span class="math inline">\(x\)</span> to a special symbol [MASK]. Let the masked tokens be <span class="math inline">\(\bar{x}\)</span>. The training objective is to reconstruct <span class="math inline">\(\overline{\mathbf{x}}\)</span> from <span class="math inline">\(\hat{\mathbf{x}}\)</span> :</p>
+<p>而BERT是denoising auto-encoding的自编码的方法。对于序列<span class="math inline">\(x\)</span>，BERT会随机挑选15%的Token变成[MASK]得到带噪声版本的<span class="math inline">\(hat{x}\)</span>。假设被Mask的原始值为x¯，那么BERT希望尽量根据上下文恢复(猜测)出原始值了，也就是：</p>
 <p><span class="math display">\[
 \max _{\theta} \log p_{\theta}(\overline{\mathbf{x}} \mid \hat{\mathbf{x}}) \approx \sum_{t=1}^{T} m_{t} \log p_{\theta}\left(x_{t} \mid \hat{\mathbf{x}}\right)=\sum_{t=1}^{T} m_{t} \log \frac{\exp \left(H_{\theta}(\hat{\mathbf{x}})_{t}^{\top} e\left(x_{t}\right)\right)}{\sum_{x^{\prime}} \exp \left(H_{\theta}(\hat{\mathbf{x}})_{t}^{\top} e\left(x^{\prime}\right)\right)}
 \]</span></p>
 <p>where <span class="math inline">\(m_{t}=1\)</span> indicates <span class="math inline">\(x_{t}\)</span> is masked, and <span class="math inline">\(H_{\theta}\)</span> is a Transformer that maps a length- <span class="math inline">\(T\)</span> text sequence <span class="math inline">\(\mathbf{x}\)</span> into a sequence of hidden vectors <span class="math inline">\(H_{\theta}(\mathbf{x})=\left[H_{\theta}(\mathbf{x})_{1}, H_{\theta}(\mathbf{x})_{2}, \cdots, H_{\theta}(\mathbf{x})_{T}\right] .\)</span> The pros and cons of
 the two pretraining objectives are compared in the following aspects:
-- Independence Assumption: As emphasized by the <span class="math inline">\(\approx\)</span> sign in Eq. (2), BERT factorizes the joint conditional probability <span class="math inline">\(p(\overline{\mathbf{x}} \mid \hat{\mathbf{x}})\)</span> based on an independence assumption that all masked tokens <span class="math inline">\(\overline{\mathbf{x}}\)</span> are separately reconstructed. In comparison, the AR language modeling objective (1) factorizes <span class="math inline">\(p_{\theta}(\mathbf{x})\)</span> using the product rule that holds universally without such an independence assumption.
-- Input noise: The input to BERT contains artificial symbols like [MASK] that never occur in downstream tasks, which creates a pretrain-finetune discrepancy. Replacing [MASK] with original tokens as in [10] does not solve the problem because original tokens can be only used with a small probability - otherwise Eq. (2) will be trivial to optimize. In comparison, AR language modeling does not rely on any input corruption and does not suffer from this issue. Context dependency: The AR representation <span class="math inline">\(h_{\theta}\left(\mathbf{x}_{1: t-1}\right)\)</span> is only conditioned on the tokens up to position <span class="math inline">\(t\)</span> (i.e. tokens to the left), while the BERT representation <span class="math inline">\(H_{\theta}(\mathbf{x})_{t}\)</span> has access to the contextual information on both sides. As a result, the BERT objective allows the model to be pretrained to better capture bidirectional context.</p>
+<span class="math inline">\(m_{t}=1\)</span>表示<span class="math inline">\(x_{t}\)</span>被mask，<span class="math inline">\(H_{\theta}\)</span>表示序列x的隐藏层向量<span class="math inline">\(H_{\theta}(\mathbf{x})=\left[H_{\theta}(\mathbf{x})_{1}, H_{\theta}(\mathbf{x})_{2}, \cdots, H_{\theta}(\mathbf{x})_{T}\right] .\)</span></p>
+<p>有如下两个假设</p>
+<blockquote>
+<ul>
+<li>Independence Assumption: As emphasized by the <span class="math inline">\(\approx\)</span> sign in Eq. (2), BERT factorizes the joint conditional probability <span class="math inline">\(p(\overline{\mathbf{x}} \mid \hat{\mathbf{x}})\)</span> based on an independence assumption that all masked tokens <span class="math inline">\(\overline{\mathbf{x}}\)</span> are separately reconstructed. In comparison, the AR language modeling objective (1) factorizes <span class="math inline">\(p_{\theta}(\mathbf{x})\)</span> using the product rule that holds universally without such an independence assumption.</li>
+</ul>
+</blockquote>
+<p>独立性假设：主要是说bert中的mask部分是默认每个词之间是相互独立的。AR模型没有这种假设</p>
+<blockquote>
+<ul>
+<li>Input noise: The input to BERT contains artificial symbols like [MASK] that never occur in downstream tasks, which creates a pretrain-finetune discrepancy. Replacing [MASK] with original tokens as in [10] does not solve the problem because original tokens can be only used with a small probability - otherwise Eq. (2) will be trivial to optimize. In comparison, AR language modeling does not rely on any input corruption and does not suffer from this issue.</li>
+</ul>
+</blockquote>
+<p>输入噪音：BERT的在预训练时会出现特殊的[MASK]，但是它在下游的fine-tuning中不会出现，这就是出现了不匹配。而语言模型不会有这个问题。</p>
+<blockquote>
+<p>Context dependency: The AR representation <span class="math inline">\(h_{\theta}\left(\mathbf{x}_{1: t-1}\right)\)</span> is only conditioned on the tokens up to position <span class="math inline">\(t\)</span> (i.e. tokens to the left), while the BERT representation <span class="math inline">\(H_{\theta}(\mathbf{x})_{t}\)</span> has access to the contextual information on both sides. As a result, the BERT objective allows the model to be pretrained to better capture bidirectional context.</p>
+</blockquote>
+<p>AR模型只能学习到 上文或者下文，bert可以同时学习上下文。</p>
+<p>XLnet的排序模型结构如图</p>
+<p><img src="figs/xlnet_1.png" /></p>
+<blockquote>
+<p>According to the comparison above, AR language modeling and BERT possess their unique advantages over the other. A natural question to ask is whether there exists a pretraining objective that brings the advantages of both while avoiding their weaknesses.</p>
+</blockquote>
+<p>AR和bert各有优势，想找到一个能结合两者优势的方法。</p>
+<blockquote>
+<p>Borrowing ideas from orderless NADE [32], we propose the permutation language modeling objective that not only retains the benefits of AR models but also allows models to capture bidirectional contexts. Specifically, for a sequence <span class="math inline">\(x\)</span> of length <span class="math inline">\(T,\)</span> there are <span class="math inline">\(T !\)</span> different orders to perform a valid autoregressive factorization. Intuitively, if model parameters are shared across all factorization orders, in expectation, the model will learn to gather information from all positions on both sides.</p>
+</blockquote>
+<p>从无序的NADE中得到的idea，提出了一种排序语言模型，既能保持AR模型的优点，又能同时捕捉双向的语义。</p>
+<p>To formalize the idea, let <span class="math inline">\(\mathcal{Z}_{T}\)</span> be the set of all possible permutations of the length- <span class="math inline">\(T\)</span> index sequence <span class="math inline">\([1,2, \ldots, T] .\)</span> We use <span class="math inline">\(z_{t}\)</span> and <span class="math inline">\(\mathbf{z}_{&lt;t}\)</span> to denote the <span class="math inline">\(t\)</span> -th element and the first <span class="math inline">\(t-1\)</span> elements of a permutation <span class="math inline">\(\mathbf{z} \in \mathcal{Z}_{T}\)</span>. Then, our proposed permutation language modeling objective can be expressed as follows:</p>
+<p>对于一个序列X,其长度为T，有<span class="math inline">\(T !\)</span>中不同的因子分解方法，如果模型参数在所有的分解顺序中共享，，理论上说模型将学习从两边的所有位置收集信息。</p>
+<p>排序语言模型的极大似然估计的目标函数如下:</p>
+<p><span class="math display">\[
+\max _{\theta} \mathbb{E}_{\mathbf{z} \sim \mathcal{Z}_{T}}\left[\sum_{t=1}^{T} \log p_{\theta}\left(x_{z_{t}} \mid \mathbf{x}_{\mathbf{z}&lt;t}\right)\right]
+\]</span></p>
+<blockquote>
+<p>Essentially, for a text sequence <span class="math inline">\(x\)</span>, we sample a factorization order <span class="math inline">\(z\)</span> at a time and decompose the likelihood <span class="math inline">\(p_{\theta}(\mathbf{x})\)</span> according to factorization order. Since the same model parameter <span class="math inline">\(\theta\)</span> is shared across all factorization orders during training, in expectation, <span class="math inline">\(x_{t}\)</span> has seen every possible element <span class="math inline">\(x_{i} \neq x_{t}\)</span> in the sequence, hence being able to capture the bidirectional context. Moreover, as this objective fits into the AR framework, it naturally avoids the independence assumption and the pretrain-finetune discrepancy discussed in Section 2.1</p>
+</blockquote>
+<p>对于一个序列X，对因子分解的排序z进行采样，然后根据因子在分解得到 <span class="math inline">\(p_{\theta}(\mathbf{x})\)</span>，因为这个模型所有的参数在进行因子分解是是共享的，因此当<span class="math inline">\(x_{i} \neq x_{t}\)</span> 是能够很好的捕捉上下文语义的，这样的目标函数比较适合AR模型，会减少预训练和微调之间的不一致的现象。</p>
+<p>举个栗子：</p>
+<p><span class="math display">\[
+\begin{array}{l}
+p(\mathbf{x})=p\left(x_{1}\right) p\left(x_{2} \mid x_{1}\right) p\left(x_{3} \mid x_{1} x_{2}\right) \Rightarrow 1 \rightarrow 2 \rightarrow 3 \\
+p(\mathbf{x})=p\left(x_{1}\right) p\left(x_{2} \mid x_{1} x_{3}\right) p\left(x_{3} \mid x_{1}\right) \Rightarrow 1 \rightarrow 3 \rightarrow 2 \\
+p(\mathbf{x})=p\left(x_{1} \mid x_{2}\right) p\left(x_{2}\right) p\left(x_{3} \mid x_{1} x_{2}\right) \Rightarrow 2 \rightarrow 1 \rightarrow 3 \\
+p(\mathbf{x})=p\left(x_{1} \mid x_{2} x_{3}\right) p\left(x_{2}\right) p\left(x_{3} \mid x_{2}\right) \Rightarrow 2 \rightarrow 3 \rightarrow 1 \\
+p(\mathbf{x})=p\left(x_{1} \mid x_{3}\right) p\left(x_{2} \mid x_{1} x_{3}\right) p\left(x_{3}\right) \Rightarrow 3 \rightarrow 1 \rightarrow 2
+\end{array}
+\]</span></p>
+<p>Remark on Permutation The proposed objective only permutes the factorization order, not the sequence order. In other words, we keep the original sequence order, use the positional encodings corresponding to the original sequence, and rely on a proper attention mask in Transformers to achieve permutation of the factorization order. Note that this choice is necessary, since the model will only encounter text sequences with the natural order during finetuning.</p>
+<p>To provide an overall picture, we show an example of predicting the token <span class="math inline">\(x_{3}\)</span> given the same input sequence <span class="math inline">\(x\)</span> but under different factorization orders in Figure 1</p>
 </div>
 </div>
 <div id="参考文献" class="section level2 unnumbered" number="">
@@ -1388,6 +1486,12 @@ the two pretraining objectives are compared in the following aspects:
 <div id="refs" class="references hanging-indent">
 <div>
 <p>Radford, Alec, Karthik Narasimhan, Tim Salimans, and Ilya Sutskever. 2018. “Improving Language Understanding by Generative Pre-Training.”</p>
+</div>
+<div>
+<p>“TRANSFORMER详解.” 2021. 2021.</p>
+</div>
+<div>
+<p>Vaswani, Ashish, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Lukasz Kaiser, and Illia Polosukhin. 2017. “Attention Is All You Need.” <em>arXiv</em>.</p>
 </div>
 </div>
 </div>

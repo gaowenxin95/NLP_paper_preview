@@ -82,17 +82,17 @@ Transformer是第一个完全依靠自我注意力来计算其输入和输出表
 
 下面这个图是TRM模型的完整的结构，N个encoder和N个decoderz组成
 
-![](../figs/TRM_1.png)
+![](figs/TRM_1.png)
 
 本篇文章重点应用在机器翻译的领域，因此一个形象的例子是[@DASOU]
 
-![](../figs/TRM_2.png)
+![](figs/TRM_2.png)
 
 鉴于这个文章写的内容板块比较乱，就不按照文章的顺序了
 
 ### input
 
-![](../figs/TRM_3.png)
+![](figs/TRM_3.png)
 
 第一部分是输入层，从图来看是两部分组成的，包括一个token embedding和一个positional encoding两部分做求和作为input。
 
@@ -103,7 +103,7 @@ In this work, we use sine and cosine functions of different frequencies:
 
 RNN处理的是序列的特征，是有先后顺序的，例如"我爱你"这个序列，RNN的处理方式是先处理我，然后再根据"我"的信息处理"爱"等等，RNN中的每个time step是共享U,W,V的。
 
-![](../figs/TRM_4.png)
+![](figs/TRM_4.png)
 
 但是transformer不一样，transformer是对每个字/词做并行训练的，可以同时处理，这样的好处是加快了速度，因此transformer就缺少告诉一个序列谁前谁后的一个方法，此时有了位置编码
 
@@ -120,20 +120,20 @@ $$
 
 在512维度中，$2i$表示偶数位置使用的是$sin$,$2i+1$表示奇数位置使用cos,也就是下图
 
-![](../figs/TRM_5.png)
+![](figs/TRM_5.png)
 
 
 
 得到位置编码后，将词向量的512维度的tokenembedding和位置向量的512维度的embedding相加，得到最终的512维度作为整个transformer的input。
 
 
-![](../figs/TRM_6.png)
+![](figs/TRM_6.png)
 
 sin,cos体现的绝对的位置编码，这里我其实没太懂这个，绝对位置编码中有相对位置编码的表示。
 
 - [ ] 为什么位置编码有用？
 
-![](../figs/TRM_7.png)
+![](figs/TRM_7.png)
 
 > 任意位置的 $PE_{pos+k}$都可以被$PE_{pos}$的线性函数表示。考虑到在NLP任务中，除了单词的绝对位置，单词的相对位置也非常重要。根据公式
 > $sin(\alpha+\beta) = sin \alpha cos \beta + cos \alpha sin\beta 以及cos(\alpha + \beta) = cos \alpha cos \beta - sin \alpha sin\beta，$这表明位置
@@ -188,7 +188,7 @@ $$
 \operatorname{Attention}(Q, K, V)=\operatorname{softmax}\left(\frac{Q K^{T}}{\sqrt{d_{k}}}\right) V
 $$
 
-![](../figs/TRM_8.png)
+![](figs/TRM_8.png)
 
 
 > The two most commonly used attention functions are additive attention
@@ -234,7 +234,7 @@ $$
 这个公式中并没有解释Q,K,V是怎样得到的，[jay alammar](https://jalammar.github.io/illustrated-transformer/)的这篇解析中解释的很详细其实就是给三个矩阵$W^{Q}$,$ W^{K}$, $W^{V}$，然后用每个字向量去乘矩阵得到的。
 截个图来
 
-![](../figs/TRM_9.png)
+![](figs/TRM_9.png)
 
 Where the projections are parameter matrices $W_{i}^{Q} \in \mathbb{R}^{d_{\text {model }} \times d_{k}}, W_{i}^{K} \in \mathbb{R}^{d_{\text {model }} \times d_{k}}, W_{i}^{V} \in \mathbb{R}^{d_{\text {model }} \times d_{v}}$ and $W^{O} \in \mathbb{R}^{h d_{v} \times d_{\text {model }}}$
 In this work we employ $h=8$ parallel attention layers, or heads. For each of these we use $d_{k}=d_{v}=d_{\text {model }} / h=64 .$ Due to the reduced dimension of each head, the total computational cost is similar to that of single-head attention with full dimensionality.
@@ -249,14 +249,14 @@ Q,K,V每个矩阵的维度是一样的是512*64,面试中问到了。注意力�
 为了使网络层变变深，并且缓解梯度消失。
 
 
-![](../figs/TRM_10.png)
+![](figs/TRM_10.png)
 
 这里推到下resnet为什么能缓解梯度消失?
 
-![](../figs/TRM_11.png)
+![](figs/TRM_11.png)
 
 
-![](../figs/TRM_12.png)
+![](figs/TRM_12.png)
 ### LN
 
 因为BN效果差，有一个说法，BN在NLP任务中用到的少，一般都是LN,具体原因可以查一下feature scaling
@@ -351,4 +351,4 @@ if __name__ == '__main__':
     plt.show()
 ```
 
-![](../figs/TRM_PE.png)
+![](figs/TRM_PE.png)

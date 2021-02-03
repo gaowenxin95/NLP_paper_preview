@@ -120,11 +120,38 @@ AR和bert各有优势，想找到一个能结合两者优势的方法。
 >Borrowing ideas from orderless NADE [32], we propose the permutation language modeling objective that not only retains the benefits of AR models but also allows models to capture bidirectional contexts. Specifically, for a sequence $x$ of length $T,$ there are $T !$ different orders to perform a valid autoregressive factorization. Intuitively, if model parameters are shared across all factorization orders, in expectation, the model will learn to gather information from all positions on both sides.
 
 从无序的NADE中得到的idea，提出了一种排序语言模型，既能保持AR模型的优点，又能同时捕捉双向的语义。
-对于一个序列X，其长度为T，有$T !$中不同的因子分解排序方法，如果模型参数在所有的分解顺序中共享，，理论上说模型将学习从两边的所有位置收集信息。
+
 
 To formalize the idea, let $\mathcal{Z}_{T}$ be the set of all possible permutations of the length- $T$ index sequence $[1,2, \ldots, T] .$ We use $z_{t}$ and $\mathbf{z}_{<t}$ to denote the $t$ -th element and the first $t-1$ elements of a permutation $\mathbf{z} \in \mathcal{Z}_{T}$. Then, our proposed permutation language modeling objective can be expressed as follows:
 
-排序语言模型的目标函数如下
+对于一个序列X,其长度为T，有$T !$中不同的因子分解方法，如果模型参数在所有的分解顺序中共享，，理论上说模型将学习从两边的所有位置收集信息。
+
+
+
+排序语言模型的极大似然估计的目标函数如下:
+
 $$
 \max _{\theta} \mathbb{E}_{\mathbf{z} \sim \mathcal{Z}_{T}}\left[\sum_{t=1}^{T} \log p_{\theta}\left(x_{z_{t}} \mid \mathbf{x}_{\mathbf{z}<t}\right)\right]
 $$
+
+
+>Essentially, for a text sequence $x$, we sample a factorization order $z$ at a time and decompose the likelihood $p_{\theta}(\mathbf{x})$ according to factorization order. Since the same model parameter $\theta$ is shared across all factorization orders during training, in expectation, $x_{t}$ has seen every possible element $x_{i} \neq x_{t}$ in the sequence, hence being able to capture the bidirectional context. Moreover, as this objective fits into the AR framework, it naturally avoids the independence assumption and the pretrain-finetune discrepancy discussed in Section 2.1
+
+对于一个序列X，对因子分解的排序z进行采样，然后根据因子在分解得到 $p_{\theta}(\mathbf{x})$，因为这个模型所有的参数在进行因子分解是是共享的，因此当$x_{i} \neq x_{t}$ 是能够很好的捕捉上下文语义的，这样的目标函数比较适合AR模型，会减少预训练和微调之间的不一致的现象。
+
+举个栗子：
+
+
+$$
+\begin{array}{l}
+p(\mathbf{x})=p\left(x_{1}\right) p\left(x_{2} \mid x_{1}\right) p\left(x_{3} \mid x_{1} x_{2}\right) \Rightarrow 1 \rightarrow 2 \rightarrow 3 \\
+p(\mathbf{x})=p\left(x_{1}\right) p\left(x_{2} \mid x_{1} x_{3}\right) p\left(x_{3} \mid x_{1}\right) \Rightarrow 1 \rightarrow 3 \rightarrow 2 \\
+p(\mathbf{x})=p\left(x_{1} \mid x_{2}\right) p\left(x_{2}\right) p\left(x_{3} \mid x_{1} x_{2}\right) \Rightarrow 2 \rightarrow 1 \rightarrow 3 \\
+p(\mathbf{x})=p\left(x_{1} \mid x_{2} x_{3}\right) p\left(x_{2}\right) p\left(x_{3} \mid x_{2}\right) \Rightarrow 2 \rightarrow 3 \rightarrow 1 \\
+p(\mathbf{x})=p\left(x_{1} \mid x_{3}\right) p\left(x_{2} \mid x_{1} x_{3}\right) p\left(x_{3}\right) \Rightarrow 3 \rightarrow 1 \rightarrow 2
+\end{array}
+$$
+
+Remark on Permutation The proposed objective only permutes the factorization order, not the sequence order. In other words, we keep the original sequence order, use the positional encodings corresponding to the original sequence, and rely on a proper attention mask in Transformers to achieve permutation of the factorization order. Note that this choice is necessary, since the model will only encounter text sequences with the natural order during finetuning.
+
+To provide an overall picture, we show an example of predicting the token $x_{3}$ given the same input sequence $x$ but under different factorization orders in Figure 1
