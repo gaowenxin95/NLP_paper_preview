@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2021-02-03" />
+<meta name="date" content="2021-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -177,6 +177,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.6.5" data-path=""><a href="#multi-head-attention"><i class="fa fa-check"></i><b>1.6.5</b> Multi-head attention</a></li>
 <li class="chapter" data-level="1.6.6" data-path=""><a href="#残差网络的结构"><i class="fa fa-check"></i><b>1.6.6</b> 残差网络的结构</a></li>
 <li class="chapter" data-level="1.6.7" data-path=""><a href="#decoder-1"><i class="fa fa-check"></i><b>1.6.7</b> decoder</a></li>
+<li class="chapter" data-level="1.6.8" data-path=""><a href="#decoder-2"><i class="fa fa-check"></i><b>1.6.8</b> decoder</a></li>
 </ul></li>
 <li class="chapter" data-level="1.7" data-path=""><a href="#gpt"><i class="fa fa-check"></i><b>1.7</b> GPT</a>
 <ul>
@@ -203,6 +204,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="1.10.1" data-path=""><a href="#abstract"><i class="fa fa-check"></i><b>1.10.1</b> ABSTRACT</a></li>
 <li class="chapter" data-level="1.10.2" data-path=""><a href="#introduction-6"><i class="fa fa-check"></i><b>1.10.2</b> introduction</a></li>
+<li class="chapter" data-level="1.10.3" data-path=""><a href="#two-stream-self-attention"><i class="fa fa-check"></i><b>1.10.3</b> Two-Stream Self-Attention</a></li>
+<li class="chapter" data-level="1.10.4" data-path=""><a href="#局部预测"><i class="fa fa-check"></i><b>1.10.4</b> 局部预测</a></li>
+<li class="chapter" data-level="1.10.5" data-path=""><a href="#incorporating-ideas-from-transformer-x"><i class="fa fa-check"></i><b>1.10.5</b> Incorporating Ideas from Transformer-X</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path=""><a href="#参考文献"><i class="fa fa-check"></i>参考文献</a></li>
 </ul></li>
@@ -226,7 +230,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">NLP相关paper阅读</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2021-02-03</em></p>
+<p class="date"><em>2021-02-06</em></p>
 </div>
 <div id="nlp-paper-preview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> NLP paper preview</h1>
@@ -970,6 +974,11 @@ QKV,有没有都存在的必要？</p></li>
 <span id="cb2-36"><a href="#cb2-36"></a>    <span class="kw">plt.colorbar</span>()</span>
 <span id="cb2-37"><a href="#cb2-37"></a>    <span class="kw">plt.show</span>()</span></code></pre></div>
 <p><img src="figs/TRM_PE.png" /></p>
+</div>
+<div id="decoder-2" class="section level3" number="1.6.8">
+<h3><span class="header-section-number">1.6.8</span> decoder</h3>
+<p>TRM中的decoder部分一直没好好看，我一直以为里面的mask和bert中的一样，其实TRM中是存在两种bert的，一个的作用是padding 0的部分进行mask，还有事多头注意力机制中的mask</p>
+<p>逐个解释</p>
 <p>tranformer这里最近看了一篇还不错的分享，等空了把重点内容，之前理解没到位的记录下 这里先放一个链接</p>
 <p><a href="https://mp.weixin.qq.com/s?__biz=MzI4MDYzNzg4Mw==&amp;mid=2247521353&amp;idx=6&amp;sn=5c1d369457feb0e85d2dc0ce15013551&amp;chksm=ebb7ac9ddcc0258b844f4c3e96e0a4e6092908eae6101582998d9023472fda4f853195d0483d&amp;mpshare=1&amp;scene=23&amp;srcid=0103cJP102hkdnRNQfXSAOuQ&amp;sharer_sharetime=1609723757487&amp;sharer_shareid=df15c342306c746b0423e3fd6ee52a86#rd">万能的transformer</a></p>
 <p>上面这个文章中回答了一些在看attention is all you need 论文中的没有讲清楚的几个问题</p>
@@ -1370,7 +1379,7 @@ bert中的双向和elmo中的双向有什么不同？</li>
 <div id="abstract" class="section level3" number="1.10.1">
 <h3><span class="header-section-number">1.10.1</span> ABSTRACT</h3>
 <blockquote>
-<p>With the capability of modeling bidirectional contexts, denoising autoencoding based pretraining like BERT achieves better performance than pretraining approaches based on autoregressive language modeling. However, relying on corrupting the input with masks, BERT neglects dependency between the masked positions and suffers from a pretrain-finetune discrepancy. In light of these pros and cons, we propose XLNet, a generalized autoregressive pretraining method that (1) enables learning bidirectional contexts by maximizing the expected likelihood over all permutations of the factorization order and (2) overcomes the limitations of BERT thanks to its autoregressive formulation. Furthermore, XLNet integrates ideas from Transformer-XL, the state-of-the-art autoregressive model, into pretraining. Empirically, XLNet outperforms BERT on 20 tasks, often by a large margin, and achieves state-of-the-art results on 18 tasks including question answering, natural language inference, sentiment analysis, and document ranking.</p>
+<p>With the capability of modeling bidirectional contexts, denoising autoencoding based pretraining like BERT achieves better performance than pretraining approaches based on autoregressive language modeling. However, relying on corrupting the input with masks, BERT neglects dependency between the masked positions and suffers from a pretrain-finetune discrepancy. In light of these pros and cons, we propose XLNet, a generalized autoregressive pretraining method that (1) enables learning bidirectional contexts by maximizing the expected likelihood over all permutations of the factorization order and (2) overcomes the limitations of BERT thanks to its autoregressive formulation. Furthermore, XLNet integrates ideas from Transformer-XL, the state-of-the-art autoregressive model, into pretraining. Empirically, XLNet outperforms BERT on 20 tasks, often by a large margin, and achieves state-of-the-art results on 18 tasks including question answering, natural language inference, sentiment analysis, and document ranking.<span class="citation">(Yang et al. 2019)</span></p>
 </blockquote>
 <p>双向上下文进行建模的功能像基于BERT的基于自动编码的降噪方法比基于自回归语言建模的预训练方法具有更好的性能。但是，BERT依赖于使用mask输入，因此忽略了mask位置之间的依赖性，并且预训练使用MAAK而微调不使用mask异。鉴于这些优点和缺点，本文提出XLNet，这是一种广义的自回归预训练方法，该方法主要包括两部分的创新。</p>
 <ul>
@@ -1393,9 +1402,12 @@ bert中的双向和elmo中的双向有什么不同？</li>
 </blockquote>
 <p>相比之下，基于AE的预训练不会执行显式的密度估计(这个应该是指最大似然估计)，而是旨在从损坏的输入中重建原始数据。 一个著名的例子是BERT [10]，它是最先进的预训练方法。 给定输入token序列，将token的某些部分替换为特殊符号[MASK]，并且训练模型以从损坏的版本中恢复原始token。 由于密度估算不是目标的一部分，因此允许BERT利用双向上下文进行重建。 作为直接好处，这消除了AR语言建模中的上述双向信息障碍，从而提高了性能。 但是，在预训练期间，bert的预训练和微调之间是存在差异的。 此外，由于预测的token在输入中被屏蔽，因此BERT无法像AR语言建模那样使用乘积规则对联合概率进行建模。 换句话说，BERT假设给定了未屏蔽的token，预测的token彼此独立，这被简化为自然语言中普遍存在的高阶，长距离依赖性。</p>
 <p>Faced with the pros and cons of existing language pretraining objectives, in this work, we propose XLNet, a generalized autoregressive method that leverages the best of both AR language modeling and <span class="math inline">\(\mathrm{AE}\)</span> while avoiding their limitations.</p>
-<p>本文中提出了XLNET模型，同时结合了AR和AE模型的优势，避免了AE模型的的限制。
-&gt;
-- Firstly, instead of using a fixed forward or backward factorization order as in conventional AR models, XLNet maximizes the expected log likelihood of a sequence w.r.t. all possible permutations of the factorization order. Thanks to the permutation operation, the context for each position can consist of tokens from both left and right. In expectation, each position learns to utilize contextual information from all positions, i.e., capturing bidirectional context.</p>
+<p>本文中提出了XLNET模型，同时结合了AR和AE模型的优势，避免了AE模型的的限制。</p>
+<blockquote>
+<ul>
+<li>Firstly, instead of using a fixed forward or backward factorization order as in conventional AR models, XLNet maximizes the expected log likelihood of a sequence w.r.t. all possible permutations of the factorization order. Thanks to the permutation operation, the context for each position can consist of tokens from both left and right. In expectation, each position learns to utilize contextual information from all positions, i.e., capturing bidirectional context.</li>
+</ul>
+</blockquote>
 <p>首先，XLNet 不使用传统AR模型中固定的前向或后向因式分解顺序，而是最大化所有可能因式分解顺序的期望对数似然。由于对因式分解顺序的排列操作，每个位置的语境都包含来自左侧和右侧的 token。因此，每个位置都能学习来自所有位置的语境信息，即捕捉双向语境。</p>
 <blockquote>
 <ul>
@@ -1467,7 +1479,7 @@ the two pretraining objectives are compared in the following aspects:
 <p>Essentially, for a text sequence <span class="math inline">\(x\)</span>, we sample a factorization order <span class="math inline">\(z\)</span> at a time and decompose the likelihood <span class="math inline">\(p_{\theta}(\mathbf{x})\)</span> according to factorization order. Since the same model parameter <span class="math inline">\(\theta\)</span> is shared across all factorization orders during training, in expectation, <span class="math inline">\(x_{t}\)</span> has seen every possible element <span class="math inline">\(x_{i} \neq x_{t}\)</span> in the sequence, hence being able to capture the bidirectional context. Moreover, as this objective fits into the AR framework, it naturally avoids the independence assumption and the pretrain-finetune discrepancy discussed in Section 2.1</p>
 </blockquote>
 <p>对于一个序列X，对因子分解的排序z进行采样，然后根据因子在分解得到 <span class="math inline">\(p_{\theta}(\mathbf{x})\)</span>，因为这个模型所有的参数在进行因子分解是是共享的，因此当<span class="math inline">\(x_{i} \neq x_{t}\)</span> 是能够很好的捕捉上下文语义的，这样的目标函数比较适合AR模型，会减少预训练和微调之间的不一致的现象。</p>
-<p>举个栗子：</p>
+<p>举个栗子：公式来自<span class="citation">(“Xlnet详解” 2019)</span></p>
 <p><span class="math display">\[
 \begin{array}{l}
 p(\mathbf{x})=p\left(x_{1}\right) p\left(x_{2} \mid x_{1}\right) p\left(x_{3} \mid x_{1} x_{2}\right) \Rightarrow 1 \rightarrow 2 \rightarrow 3 \\
@@ -1477,8 +1489,99 @@ p(\mathbf{x})=p\left(x_{1} \mid x_{2} x_{3}\right) p\left(x_{2}\right) p\left(x_
 p(\mathbf{x})=p\left(x_{1} \mid x_{3}\right) p\left(x_{2} \mid x_{1} x_{3}\right) p\left(x_{3}\right) \Rightarrow 3 \rightarrow 1 \rightarrow 2
 \end{array}
 \]</span></p>
+<blockquote>
 <p>Remark on Permutation The proposed objective only permutes the factorization order, not the sequence order. In other words, we keep the original sequence order, use the positional encodings corresponding to the original sequence, and rely on a proper attention mask in Transformers to achieve permutation of the factorization order. Note that this choice is necessary, since the model will only encounter text sequences with the natural order during finetuning.</p>
+</blockquote>
+<p>所提出的目标只对分解顺序进行排列，而不是对序列顺序进行排列。换句话说，保持原始序列的顺序，使用与原始序列对应的位置编码，并依靠transformer中适当的注意掩码来实现因式分解顺序的排列。注意，这个选择是必要的，因为模型在微调过程中只会遇到具有自然顺序的文本序列。</p>
 <p>To provide an overall picture, we show an example of predicting the token <span class="math inline">\(x_{3}\)</span> given the same input sequence <span class="math inline">\(x\)</span> but under different factorization orders in Figure 1</p>
+<p>上面这一大类的叙述都是为了说明XLNET引入了PLM排序的方法，但是此时也注意到了，排序一时爽，一直排不一定爽，因为需要保留原来的为位置信息(这段话真的很上帝视角了)</p>
+</div>
+<div id="two-stream-self-attention" class="section level3" number="1.10.3">
+<h3><span class="header-section-number">1.10.3</span> Two-Stream Self-Attention</h3>
+<p><img src="figs/xlnet_2.png" /></p>
+<p>图2中的a图是content-attention和self-att是一致的，b是quary-att,和content-att是不同的，c是plm模型的两个双流机制的作用</p>
+<blockquote>
+<p>While the permutation language modeling objective has desired properties, naive implementation with standard Transformer parameterization may not work. To see the problem, assume we parameterize the next-token distribution <span class="math inline">\(p_{\theta}\left(X_{z_{t}} \mid \mathbf{x}_{\mathbf{z}_{&lt;t}}\right)\)</span> using the standard Softmax formulation, i.e., <span class="math inline">\(p_{\theta}\left(X_{z_{t}}=\right.\)</span> <span class="math inline">\(\left.x \mid \mathbf{x}_{\mathbf{z}_{&lt;t}}\right)=\frac{\exp \left(e(x)^{\top} h_{\theta}\left(\mathbf{x}_{\mathbf{z}&lt;t}\right)\right)}{\sum_{x^{\prime}} \exp \left(e\left(x^{\prime}\right)^{\top} h_{\theta}\left(\mathbf{x}_{\mathbf{z}&lt;t}\right)\right)},\)</span> where <span class="math inline">\(h_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}\right)\)</span> denotes the hidden representation of <span class="math inline">\(\mathbf{x}_{\mathbf{z}_{&lt;t}}\)</span>
+produced by the shared Transformer network after proper masking. Now notice that the representation <span class="math inline">\(h_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}\right)\)</span> does not depend on which position it will predict, i.e., the value of <span class="math inline">\(z_{t} .\)</span> Consequently, the same distribution is predicted regardless of the target position, which is not able to learn useful representations (see Appendix A.1 for a concrete example). To avoid this problem, we propose to re-parameterize the next-token distribution to be target position aware:</p>
+</blockquote>
+<p>在plm算法中，self-att可能不起作用吗，假设学习下一个token的的分布<span class="math inline">\(p_{\theta}\left(X_{z_{t}} \mid \mathbf{x}_{\mathbf{z}_{&lt;t}}\right)\)</span> 是使用softmax的标准化的公式 <span class="math inline">\(p_{\theta}\left(X_{z_{t}}=\right.\)</span> <span class="math inline">\(\left.x \mid \mathbf{x}_{\mathbf{z}_{&lt;t}}\right)=\frac{\exp \left(e(x)^{\top} h_{\theta}\left(\mathbf{x}_{\mathbf{z}&lt;t}\right)\right)}{\sum_{x^{\prime}} \exp \left(e\left(x^{\prime}\right)^{\top} h_{\theta}\left(\mathbf{x}_{\mathbf{z}&lt;t}\right)\right)},\)</span></p>
+<p>其中<span class="math inline">\(h_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}\right)\)</span> 表示 <span class="math inline">\(\mathbf{x}_{\mathbf{z}_{&lt;t}}\)</span>经过mask的transformer的操作的隐藏层的信息，transformer中的哪个mask？感觉是后者</p>
+<p><span class="math display">\[
+p_{\theta}\left(X_{z_{t}}=x \mid \mathbf{x}_{z_{&lt;t}}\right)=\frac{\exp \left(e(x)^{\top} g_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}, z_{t}\right)\right)}{\sum_{x^{\prime}} \exp \left(e\left(x^{\prime}\right)^{\top} g_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;} t}, z_{t}\right)\right)}
+\]</span></p>
+<p>其中 <span class="math inline">\(g_{\theta}\left(x_{z&lt;t}, \quad z_{t}\right)\)</span> 是新的表示形式, 并且把位置信息 <span class="math inline">\(z_{t}\)</span> 作为了其输入。</p>
+<blockquote>
+<p>Two-Stream Self-Attention While the idea of target-aware representations removes the ambiguity in target prediction, how to formulate <span class="math inline">\(g_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}, z_{t}\right)\)</span> remains a non-trivial problem. Among other possibilities, we propose to “stand” at the target position <span class="math inline">\(z_{t}\)</span> and rely on the position <span class="math inline">\(z_{t}\)</span> to gather information from the context <span class="math inline">\(\mathbf{x}_{\mathbf{z}&lt;t}\)</span> through attention. For this parameterization to work, there are two requirements that are contradictory in a standard Transformer architecture:</p>
+</blockquote>
+<p>双流注意力机制减少了预测过程中的模糊性？</p>
+<ul>
+<li><ol style="list-style-type: decimal">
+<li>to predict the token <span class="math inline">\(x_{z_{t}}, g_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}, z_{t}\right)\)</span> should only use the position <span class="math inline">\(z_{t}\)</span> and not the content <span class="math inline">\(x_{z_{t}},\)</span> otherwise the objective becomes trivial;</li>
+</ol></li>
+<li><p>如果目标是预测 <span class="math inline">\(x_{z_{t}}, \quad g_{\theta}\left(x_{z&lt;t}, \quad z_{t}\right)\)</span> 那么只能有其位置信息 <span class="math inline">\(z_{t}\)</span> 而不能包含内容信息 <span class="math inline">\(x_{z_{t}}\)</span></p></li>
+<li><ol start="2" style="list-style-type: decimal">
+<li>to predict the other tokens <span class="math inline">\(x_{z_{j}}\)</span> with <span class="math inline">\(j&gt;t, g_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}, z_{t}\right)\)</span> should also encode the content <span class="math inline">\(x_{z_{t}}\)</span> to provide full contextual information.</li>
+</ol></li>
+<li><p>如果目标是预测其他tokens即 <span class="math inline">\(x_{z_{j}}, \quad j&gt;t,\)</span> 那么应该包含 <span class="math inline">\(x_{z_{t}}\)</span> 的内容信息这样才有完整的上下文信息。</p></li>
+</ul>
+<p>这个地方我理解了很久：做完plm排序之后是没有位置信息的，因此为了增加为了位置信息需要增加位置矩阵，但是待预测的信息又不能看到其token的具体内容，因此把attenton分开分成下文的双流att</p>
+<p>To resolve such a contradiction, we propose to use two sets of hidden representations instead of one:</p>
+<blockquote>
+<ul>
+<li>The content representation <span class="math inline">\(h_{\theta}\left(\mathbf{x}_{\mathbf{z}&lt;t}\right),\)</span> or abbreviated as <span class="math inline">\(h_{z_{t}},\)</span> which serves a similar role to the standard hidden states in Transformer. This representation encodes both the context and <span class="math inline">\(x_{z_{t}}\)</span> itself.</li>
+</ul>
+</blockquote>
+<p><span class="math inline">\(h_{z_{t}}\)</span>的内容表示和transformer中的self-att一样，这个是学习上下文语义的。</p>
+<ul>
+<li>The query representation <span class="math inline">\(g_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}, z_{t}\right),\)</span> or abbreviated as <span class="math inline">\(g_{z_{t}},\)</span> which only has access to the contextual information <span class="math inline">\(\mathrm{x}_{\mathbf{z}_{&lt;t}}\)</span> and the position <span class="math inline">\(z_{t},\)</span> but not the content <span class="math inline">\(x_{z_{t}},\)</span> as discussed above.</li>
+</ul>
+<p><span class="math inline">\(g_{z_{t}},\)</span>只只是单纯的用来学习位置关系的，不包含语义信息。</p>
+<blockquote>
+<p>Computationally, the first layer query stream is initialized with a trainable vector, i.e. <span class="math inline">\(g_{i}^{(0)}=w\)</span>, while the content stream is set to the corresponding word embedding, i.e. <span class="math inline">\(h_{i}^{(0)}=e\left(x_{i}\right)\)</span>. For each self-attention layer <span class="math inline">\(m=1, \ldots, M,\)</span> the two streams of representations are schematically <span class="math inline">\(^{2}\)</span> updated with a shared set of parameters as follows (illustrated in Figures <span class="math inline">\(2(\mathrm{a})\)</span> and <span class="math inline">\((\mathrm{b}))\)</span> :
+<span class="math inline">\(g_{z_{t}}^{(m)} \leftarrow\)</span> Attention <span class="math inline">\(\left(\mathrm{Q}=g_{z_{t}}^{(m-1)}, \mathrm{KV}=\mathbf{h}_{\mathrm{z}&lt;t}^{(m-1)} ; \theta\right), \quad\left(\right.\)</span> query stream: use <span class="math inline">\(z_{t}\)</span> but cannot see <span class="math inline">\(\left.x_{z_{t}}\right)\)</span></p>
+</blockquote>
+<p>首先, 第一层的查询流是随机初始化了一个向量即 <span class="math inline">\(g_{i}^{(0)}=w,\)</span> 内容流是采用的词向量即 <span class="math inline">\(h_{i}^{(0)}=e\left(x_{i}\right)\)</span>, self-attention的计算过程中两个流的网络权重是共享的，最后在微调阶段，只需要简单的把query stream移除, 只采用content stream即 可。</p>
+<p>图2中的右边部分，提到了了attention mask,这个怎么理解?感觉文中并没有仔细的回答,这里引用下知乎张俊林老师的回答<span class="citation">(“Xlnet与bert的异同” 2019)</span></p>
+<blockquote>
+<p>上面说的Attention掩码，我估计你还是没了解它的意思，我再用例子解释一下。Attention Mask的机制，核心就是说，尽管当前输入看上去仍然是x1-&gt;x2-&gt;x3-&gt;x4，但是我们已经改成随机排列组合的另外一个顺序x3-&gt;x2-&gt;x4-&gt;x1了，如果用这个例子用来从左到右训练LM，意味着当预测x2的时候，它只能看到上文x3；当预测x4的时候，只能看到上文x3和x2，以此类推……这样，比如对于x2来说，就看到了下文x3了。这种在输入侧维持表面的X句子单词顺序，但是其实在Transformer内部，看到的已经是被重新排列组合后的顺序，是通过Attention掩码来实现的。如上图所示，输入看上去仍然是x1,x2,x3,x4，可以通过不同的掩码矩阵，让当前单词Xi只能看到被排列组合后的顺序x3-&gt;x2-&gt;x4-&gt;x1中自己前面的单词。这样就在内部改成了被预测单词同时看到上下文单词，但是输入侧看上去仍然维持原先的单词顺序了。关键要看明白上图右侧那个掩码矩阵，我相信很多人刚开始没看明白，因为我刚开始也没看明白，因为没有标出掩码矩阵的单词坐标，它的坐标是1-2-3-4，就是表面那个X的单词顺序，通过掩码矩阵，就能改成你想要的排列组合，并让当前单词看到它该看到的所谓上文，其实是掺杂了上文和下文的内容。这是attention mask来实现排列组合的背后的意思。</p>
+</blockquote>
+<blockquote>
+<p>尽管看上去，XLNet在预训练机制引入的Permutation Language Model这种新的预训练目标，和Bert采用Mask标记这种方式，有很大不同。其实你深入思考一下，会发现，两者本质是类似的。区别主要在于：Bert是直接在输入端显示地通过引入Mask标记，在输入侧隐藏掉一部分单词，让这些单词在预测的时候不发挥作用，要求利用上下文中其它单词去预测某个被Mask掉的单词；而XLNet则抛弃掉输入侧的Mask标记，通过Attention Mask机制，在Transformer内部随机Mask掉一部分单词（这个被Mask掉的单词比例跟当前单词在句子中的位置有关系，位置越靠前，被Mask掉的比例越高，位置越靠后，被Mask掉的比例越低），让这些被Mask掉的单词在预测某个单词的时候不发生作用。所以，本质上两者并没什么太大的不同，只是Mask的位置，Bert更表面化一些，XLNet则把这个过程隐藏在了Transformer内部而已。这样，就可以抛掉表面的[Mask]标记，解决它所说的预训练里带有[Mask]标记导致的和Fine-tuning过程不一致的问题。至于说XLNet说的，Bert里面被Mask掉单词的相互独立问题，也就是说，在预测某个被Mask单词的时候，其它被Mask单词不起作用，这个问题，你深入思考一下，其实是不重要的，因为XLNet在内部Attention Mask的时候，也会Mask掉一定比例的上下文单词，只要有一部分被Mask掉的单词，其实就面临这个问题。而如果训练数据足够大，其实不靠当前这个例子，靠其它例子，也能弥补被Mask单词直接的相互关系问题，因为总有其它例子能够学会这些单词的相互依赖关系。</p>
+</blockquote>
+<blockquote>
+<p>我相信，通过改造Bert的预训练过程，其实是可以模拟XLNet的Permutation Language Model过程的：Bert目前的做法是，给定输入句子X，随机Mask掉15%的单词，然后要求利用剩下的85%的单词去预测任意一个被Mask掉的单词，被Mask掉的单词在这个过程中相互之间没有发挥作用。如果我们把Bert的预训练过程改造成：对于输入句子，随机选择其中任意一个单词Ti，只把这个单词改成Mask标记，假设Ti在句子中是第i个单词，那么此时随机选择X中的任意i个单词，只用这i个单词去预测被Mask掉的单词。当然，这个过程理论上也可以在Transformer内采用attention mask来实现。如果是这样，其实Bert的预训练模式就和XLNet是基本等价的了。</p>
+</blockquote>
+<blockquote>
+<p>或者换个角度思考，假设仍然利用Bert目前的Mask机制，但是把Mask掉15%这个条件极端化，改成，每次一个句子只Mask掉一个单词，利用剩下的单词来预测被Mask掉的单词。那么，这个过程其实跟XLNet的PLM也是比较相像的，区别主要在于每次预测被Mask掉的单词的时候，利用的上下文更多一些（XLNet在实现的时候，为了提升效率，其实也是选择每个句子最后末尾的1/K单词被预测，假设K=7，意味着一个句子X，只有末尾的1/7的单词会被预测，这意味着什么呢？意味着至少保留了6/7的Context单词去预测某个单词，对于最末尾的单词，意味着保留了所有的句子中X的其它单词，这其实和上面提到的Bert只保留一个被Mask单词是一样的）。或者我们站在Bert预训练的角度来考虑XLNet，如果XLNet改成对于句子X，只需要预测句子中最后一个单词，而不是最后的1/K（就是假设K特别大的情况），那么其实和Bert每个输入句子只Mask掉一个单词，两者基本是等价的。
+当然，XLNet这种改造，维持了表面看上去的自回归语言模型的从左向右的模式，这个Bert做不到，这个有明显的好处，就是对于生成类的任务，能够在维持表面从左向右的生成过程前提下，模型里隐含了上下文的信息。所以看上去，XLNet貌似应该对于生成类型的NLP任务，会比Bert有明显优势。另外，因为XLNet还引入了Transformer XL的机制，所以对于长文档输入类型的NLP任务，也会比Bert有明显优势。</p>
+</blockquote>
+<p>好长~，简单的来说就是Bert中的mask的15%是在input中mask的，xlnet中的plm并不是真正的先排序再随机抽样一些进行训练，而是使用了在attention中同样使用了mask</p>
+<p><span class="math display">\[
+h_{z_{t}}^{(m)} \leftarrow \text { Attention }\left(\mathrm{Q}=h_{z_{t}}^{(m-1)}, \mathrm{KV}=\mathbf{h}_{\mathrm{z}&lt;t}^{(m-1)} ; \theta\right), \quad\left(\text { content stream: use both } z_{t} \text { and } x_{z_{t}}\right)
+\]</span></p>
+<blockquote>
+<p>where <span class="math inline">\(\mathrm{Q}, \mathrm{K}, \mathrm{V}\)</span> denote the query, key, and value in an attention operation <span class="math inline">\([33] .\)</span> The update rule of the content representations is exactly the same as the standard self-attention, so during finetuning, we can simply drop the query stream and use the content stream as a normal Transformer <span class="math inline">\((-X L)\)</span>. Finally, we can use the last-layer query representation <span class="math inline">\(g_{z_{t}}^{(M)}\)</span> to compute Eq. (4).</p>
+</blockquote>
+</div>
+<div id="局部预测" class="section level3" number="1.10.4">
+<h3><span class="header-section-number">1.10.4</span> 局部预测</h3>
+<blockquote>
+<p>Partial Prediction While the permutation language modeling objective (3) has several benefits, it is a much more challenging optimization problem due to the permutation and causes slow convergence in preliminary experiments. To reduce the optimization difficulty, we choose to only predict the last tokens in a factorization order. Formally, we split <span class="math inline">\(\mathbf{z}\)</span> into a non-target subsequence <span class="math inline">\(\mathbf{z}_{\leq c}\)</span> and a target subsequence <span class="math inline">\(\mathbf{z}_{&gt;}, c,\)</span> where <span class="math inline">\(c\)</span> is the cutting point. The objective is to maximize the log-likelihood of the target subsequence conditioned on the non-target subsequence, i.e.,</p>
+</blockquote>
+<p>这个地方是说使用plm效果虽好，但是因为使用到了排序模型，就会非常的耗时，因此在在因子分解的排序中只会预测最后几个token也就是不全部预测，只选择部分作为target.具体地，就是取一个位置 <span class="math inline">\(c,\)</span> 满足 <span class="math inline">\(c&lt;t, \quad \boldsymbol{z}_{\leq c}\)</span> 不作为target, <span class="math inline">\(\boldsymbol{z}_{&gt;c}\)</span> 作为target进行训练。</p>
+<p><span class="math display">\[
+\max _{\theta} \mathbb{E}_{\mathbf{z} \sim \mathcal{Z}_{T}}\left[\log p_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&gt;} c} \mid \mathbf{x}_{\mathbf{z} \leq c}\right)\right]=\mathbb{E}_{\mathbf{z} \sim \mathcal{Z}_{T}}\left[\sum_{t=c+1}^{|\mathbf{z}|} \log p_{\theta}\left(x_{z_{t}} \mid \mathbf{x}_{\mathbf{z}_{&lt;t}}\right)\right]
+\]</span>
+Note that <span class="math inline">\(\mathbf{z}_{&gt;} c\)</span> is chosen as the target because it possesses the longest context in the sequence given the current factorization order <span class="math inline">\(\mathbf{z}\)</span>. A hyperparameter <span class="math inline">\(K\)</span> is used such that about <span class="math inline">\(1 / K\)</span> tokens are selected for predictions; i.e., <span class="math inline">\(|\mathbf{z}| /(|\mathbf{z}|-c) \approx K\)</span>. For unselected tokens, their query representations need not be computed, which saves speed and memory.</p>
+<p>引入一个参数K，来计算C的取值。</p>
+</div>
+<div id="incorporating-ideas-from-transformer-x" class="section level3" number="1.10.5">
+<h3><span class="header-section-number">1.10.5</span> Incorporating Ideas from Transformer-X</h3>
+<p>结合了transformer-XL中的方法</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" />
+看下原文</li>
+</ul>
 </div>
 </div>
 <div id="参考文献" class="section level2 unnumbered" number="">
@@ -1488,10 +1591,19 @@ p(\mathbf{x})=p\left(x_{1} \mid x_{3}\right) p\left(x_{2} \mid x_{1} x_{3}\right
 <p>Radford, Alec, Karthik Narasimhan, Tim Salimans, and Ilya Sutskever. 2018. “Improving Language Understanding by Generative Pre-Training.”</p>
 </div>
 <div>
-<p>“TRANSFORMER详解.” 2021. 2021.</p>
+<p>“TRANSFORMER详解.” 2021. 2021. <a href="https://www.bilibili.com/video/BV1Di4y1c7Zm?p=7">https://www.bilibili.com/video/BV1Di4y1c7Zm?p=7</a>.</p>
 </div>
 <div>
 <p>Vaswani, Ashish, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Lukasz Kaiser, and Illia Polosukhin. 2017. “Attention Is All You Need.” <em>arXiv</em>.</p>
+</div>
+<div>
+<p>“Xlnet与bert的异同.” 2019. 2019. <a href="https://zhuanlan.zhihu.com/p/70257427">https://zhuanlan.zhihu.com/p/70257427</a>.</p>
+</div>
+<div>
+<p>“Xlnet详解.” 2019. 2019. <a href="https://blog.csdn.net/weixin_37947156/article/details/93035607">https://blog.csdn.net/weixin_37947156/article/details/93035607</a>.</p>
+</div>
+<div>
+<p>Yang, Zhilin, Zihang Dai, Yiming Yang, Jaime Carbonell, Ruslan Salakhutdinov, and Quoc V. Le. 2019. “XLNet: Generalized Autoregressive Pretraining for Language Understanding.” <a href="http://arxiv.org/abs/1906.08237">http://arxiv.org/abs/1906.08237</a>.</p>
 </div>
 </div>
 </div>

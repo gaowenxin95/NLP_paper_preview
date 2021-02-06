@@ -352,3 +352,9 @@ if __name__ == '__main__':
 ```
 
 ![](figs/TRM_PE.png)
+
+### decoder
+
+TRM中的decoder部分一直没好好看，我一直以为里面的mask和bert中的一样，其实TRM中是存在两种bert的，一个的作用是padding 0的部分进行mask，还有事多头注意力机制中的mask
+
+逐个解释
