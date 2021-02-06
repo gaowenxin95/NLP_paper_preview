@@ -253,11 +253,42 @@ $$
 $$
 Note that $\mathbf{z}_{>} c$ is chosen as the target because it possesses the longest context in the sequence given the current factorization order $\mathbf{z}$. A hyperparameter $K$ is used such that about $1 / K$ tokens are selected for predictions; i.e., $|\mathbf{z}| /(|\mathbf{z}|-c) \approx K$. For unselected tokens, their query representations need not be computed, which saves speed and memory.
 
-引入一个参数K，来计算C的取值。
+引入一个参数K，来计算C的取值。bert中的mask是随机15%，k的取值一般是？
 
 
 ### Incorporating Ideas from Transformer-X
 
-结合了transformer-XL中的方法
+
 
 - [ ] 看下原文
+
+>We integrate two important techniques in Transformer-XL, namely the relative positional encoding scheme and the segment recurrence mechanism. We apply relative positional encodings based on the original sequence as discussed earlier, which is straightforward. Now we discuss how to integrate the recurrence mechanism into the proposed permutation setting and enable the model to reuse hidden states from previous segments. Without loss of generality, suppose we have two segments taken from a long sequence $\mathbf{s} ;$ i.e., $\tilde{\mathbf{x}}=\mathbf{s}_{1: T}$ and $\mathbf{x}=\mathbf{s}_{T+1: 2 T}$. Let $\mathbf{z}$ and $\mathbf{z}$ be permutations of $[1 \cdots T]$ and $[T+1 \cdots 2 T]$ respectively. Then, based on the permutation $\tilde{\mathbf{z}},$ we process the first segment, and then cache the obtained content representations $\tilde{\mathbf{h}}^{(m)}$ for each layer $m .$ Then, for the next segment $\mathbf{x}$, the attention update with memory can be written as
+
+$$
+h_{z_{t}}^{(m)} \leftarrow \text { Attention }\left(\mathrm{Q}=h_{z_{t}}^{(m-1)}, \mathrm{KV}=\left[\tilde{\mathbf{h}}^{(m-1)}, \mathbf{h}_{\mathbf{z} \leq t}^{(m-1)}\right] ; \theta\right)
+$$
+
+>
+where $[., .]$ denotes concatenation along the sequence dimension. Notice that positional encodings only depend on the actual positions in the original sequence. Thus, the above attention update is independent of $\tilde{\mathbf{z}}$ once the representations $\tilde{\mathbf{h}}^{(m)}$ are obtained. This allows caching and reusing the memory without knowing the factorization order of the previous segment. In expectation, the model learns to utilize the memory over all factorization orders of the last segment. The query stream can be computed in the same way. Finally, Figure 2 (c) presents an overview of the proposed permutation language modeling with two-stream attention (see Appendix A.4 for more detailed illustration).
+
+结合了transformer-XL中的方法，应该是introduction中提到的分割循环机制（segment recurrence mechanism）和相对编码范式（relative encoding）整合到预训练中，简单来说是为了解决文本过长的问题。这个等看了xl再补充
+
+### Modeling Multiple Segments
+
+>
+Many downstream tasks have multiple input segments, e.g., a question and a context paragraph in question answering. We now discuss how we pretrain XLNet to model multiple segments in the autoregressive framework. During the pretraining phase, following BERT, we randomly sample two segments (either from the same context or not) and treat the concatenation of two segments as one sequence to perform permutation language modeling. We only reuse the memory that belongs to the same context. Specifically, the input to our model is similar to BERT: [A, SEP, B, SEP, CLS], where "SEP" and "CLL" are two special symbols and "A" and "B" are the two segments. Although we follow the two-segment data format, XLNet-Large does not use the objective of next sentence prediction [10] as it does not show consistent improvement in our ablation study (see Section 3.7).
+
+许多下游任务有多个输入部分，例如，一个问题和一个回答问题的上下文段落。现在讨论如何预先训练XLNet在自回归框架中对多个片段进行建模。在BERT之后的预训练阶段，随机抽取两个片段(无论是否来自同一上下文)，并将两个片段的连接作为一个序列来执行排列语言建模。只重用属于同一上下文的内存。具体来说，我们模型的输入类似于BERT: [A, SEP, B, SEP, CLS]，其中“SEP”和“CLL”是两个特殊符号，“A”和“B”是两个片段。XLNET中无NSP任务,这也是和bert中不同的一点
+
+>
+Relative Segment Encodings Architecturally, different from BERT that adds an absolute segment embedding to the word embedding at each position, we extend the idea of relative encodings from Transformer-XL to also encode the segments. 
+
+bert中使用的是绝对位置的9编码，XLNET中使用的是TRM-XL中的相对位置编码，下面这段是在解释相对位置编码的定义。
+
+
+>
+Given a pair of positions $i$ and $j$ in the sequence, if
+$i$ and $j$ are from the same segment, we use a segment encoding $\mathbf{s}_{i j}=\mathbf{s}_{+}$ or otherwise $\mathbf{s}_{i j}=\mathbf{s}_{-},$ where $\mathbf{s}_{+}$ and $\mathbf{s}_{-}$ are learnable model parameters for each attention head. In other words, we only consider whether the two positions are within the same segment, as opposed to considering which specific segments they are from. This is consistent with the core idea of relative encodings; i.e., only modeling the relationships between positions. When $i$ attends to $j,$ the segment encoding $\mathbf{s}_{i j}$ is used to compute an attention weight $a_{i j}=\left(\mathbf{q}_{i}+\mathbf{b}\right)^{\top} \mathbf{s}_{i j},$ where $\mathbf{q}_{i}$ is the query vector as in a standard attention operation and $\mathbf{b}$ is a learnable head-specific bias vector. Finally, the value $a_{i j}$ is added to the normal attention weight. There are two benefits of using relative segment encodings. First, the inductive bias of relative encodings improves generalization [9]. Second, it opens the possibility of finetuning on tasks that have more than two input segments, which is not possible using absolute segment encodings.
+
+
+这篇paper后面的部分主要是解释xlnet与bert等pre-train的异同，其实前面已经介绍了。不做说明。实验略。
