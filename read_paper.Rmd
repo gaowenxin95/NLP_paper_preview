@@ -557,6 +557,7 @@ GPT是一个包含两阶段的训练的过程
 
 ### Framework
 
+
 这里主要是看下GPT的结构
 
 ### Unsupervised pre-training
@@ -953,6 +954,8 @@ emlo的本质是单向，单项训练完concat两个方向到一起，算是函�
 ```{r child='analysis/XLNET.Rmd'}
 
 ```
+
+
 
 
 
