@@ -1,0 +1,112 @@
+### introduction
+
+>ALBERT incorporates two parameter reduction techniques that lift the major obstacles in scaling pre-trained models. The first one is a factorized embedding parameterization. By decomposing the large vocabulary embedding matrix into two small matrices, we separate the size of the hidden layers from the size of vocabulary embedding. This separation makes it easier to grow the hidden size without significantly increasing the parameter size of the vocabulary embeddings. The second technique is cross-layer parameter sharing. This technique prevents the parameter from growing with the depth of the network. Both techniques significantly reduce the number of parameters for BERT without seriously hurting performance, thus improving parameter-efficiency. An ALBERT configuration similar to BERT-large has $18 x$ fewer parameters and can be trained about $1.7 x$ faster. The parameter reduction techniques also act as a form of regularization that stabilizes the training and helps with generalization.
+
+这段是对albert的一个总结，主要是有两个减少模型参数的方法。
+
+- 一种是对参数矩阵进行因子分解，由两个大的矩阵相乘变成两组小的矩阵相加$V*H=V*E+E*H$,将隐藏层的大小与词汇嵌入的大小分开。这种分离使得增加隐藏大小更容易，而不需要显著增加词汇表嵌入的参数大小
+
+- 第二种技术是跨层参数共享。这种技术可以防止参数随着网络深度的增加而增加。这两种技术都显著减少了BERT的参数数量，而损害性能较小，从而提高了参数效率。ALBERT配置与BERT-large类似，参数少$18 x$，训练速度快$1.7 x$。参数约简技术也可以作为一种正则化形式，稳定训练并有助于推广。
+
+>To further improve the performance of ALBERT, we also introduce a self-supervised loss for sentence-order prediction (SOP). SOP primary focuses on intersentence coherence and is designed to address the ineffectiveness (Yang et al., 2019; Liu et al., 2019) of the next sentence prediction (NSP) loss proposed in the original BERT.
+
+
+SOP这种方式主要是为了解决句子的连贯性问题，是对BERT中NSP任务的优化。
+
+>As a result of these design decisions, we are able to scale up to much larger ALBERT configurations that still have fewer parameters than BERT-large but achieve significantly better performance.
+
+因为上述的三种的方式，还可以提高ALBERT的配置规模，不过这个配置规模不是很理解是什么意思?~
+
+### SCALING UP REPRESENTATION LEARNING FOR NATURAL LANGUAGE
+
+增加自然语言的表征学习的规模
+
+>
+In addition, it is difficult to experiment with large models due to computational constraints, especially in terms of GPU/TPU memory limitations. Given that current state-of-the-art models often have hundreds of millions or even billions of parameters, we can easily hit memory limits. To address this issue, Chen et al. (2016) propose a method called gradient checkpointing to reduce the memory requirement to be sublinear at the cost of an extra forward pass. Gomez et al. (2017) propose a way to reconstruct each layer's activations from the next layer so that they do not need to store the intermediate activations. Both methods reduce the memory consumption at the cost of speed. In contrast, our parameter-reduction techniques reduce memory consumption and increase training speed.
+
+因为GPU和TPU的限制，很多的大型模型是无法训练的，对现如今的sota模型很多是有几百亿的参数量，有内存的限制。为了解决这个问题，Chen等人(2016)提出了一种叫做梯度检查点的方法，以额外的前向通过为代价来减少次线性的内存需求。Gomez等人(2017)提出了一种从下一层重建每一层激活的方法，这样他们就不需要存储中间激活。这两种方法都以速度为代价减少了内存消耗。相比之下，参数减少技术减少了内存消耗并提高了训练速度。
+
+- [ ] 这里是对存储的结构做了优化，减少中间层的存储过程!但是具体的不是很明白
+
+
+### CROSS-LAYER PARAMETER SHARING
+
+交叉层参数共享
+
+>The idea of sharing parameters across layers has been previously explored with the Transformer architecture (Vaswani et al., 2017 ), but this prior work has focused on training for standard encoderdecoder tasks rather than the pretraining/finetuning setting. Different from our observations, Dehghani et al. (2018) show that networks with cross-layer parameter sharing (Universal Transformer, UT) get better performance on language modeling and subject-verb agreement than the standard transformer. Very recently, Bai et al. (2019) propose a Deep Equilibrium Model (DQE) for transformer networks and show that DQE can reach an equilibrium point for which the input embedding and the output embedding of a certain layer stay the same. Our observations show that our embeddings are oscillating rather than converging. Hao et al. (2019) combine a parameter-sharing transformer with the standard one, which further increases the number of parameters of the standard transformer.
+
+参数共享之前在TRANSFORMER的结构中提出，但是TRM这篇文章主要是介绍encorder-decoder结构，而不是主要介绍预训练模型。Dehghani等人(2018)表明，具有跨层参数共享(Universal Transformer, UT)的网络在语言建模和主谓一致方面比标准Transformer有更好的性能。最近，Bai等人(2019)提出了一种针对transformer网络的深度均衡模型(DQE)，并证明了DQE可以达到某一层的输入嵌入和输出嵌入保持一致的平衡点。嵌入是振荡而不是收敛。Hao等人(2019)将参数共享transformer与标准transformer相结合，进一步增加了标准transformer的参数数量。
+
+### SENTENCE ORDERING OBJECTIVES
+
+句子排序的目标
+
+>ALBERT uses a pretraining loss based on predicting the ordering of two consecutive segments of text. Several researchers have experimented with pretraining objectives that similarly relate to discourse coherence. Coherence and cohesion in discourse have been widely studied and many phenomena have been identified that connect neighboring text segments (Hobbs, 1979 ; Halliday \& Hasan, 1976 ; Grosz et al., 1995). Most objectives found effective in practice are quite simple. Skipthought (Kiros et al., 2015 ) and FastSent (Hill et al., 2016) sentence embeddings are learned by using an encoding of a sentence to predict words in neighboring sentences. Other objectives for sentence embedding learning include predicting future sentences rather than only neighbors (Gan et al., 2017 ) and predicting explicit discourse markers (Jernite et al., 2017; Nie et al., 2019). Our loss is most similar to the sentence ordering objective of Jernite et al. (2017), where sentence embeddings are learned in order to determine the ordering of two consecutive sentences. Unlike most of the above work, however, our loss is defined on textual segments rather than sentences. BERT (Devlin et al.,
+2019) uses a loss based on predicting whether the second segment in a pair has been swapped with a segment from another document. We compare to this loss in our experiments and find that sentence ordering is a more challenging pretraining task and more useful for certain downstream
+tasks. Concurrently to our work, Wang et al. (2019) also try to predict the order of two consecutive segments of text, but they combine it with the original next sentence prediction in a three-way classification task rather than empirically comparing the two.
+
+ALBERT使用了一个基于预测两个连续文本片段顺序的预训练损失。一些研究人员对与语篇连贯类似的前训练目标进行了实验。语篇中的连贯和衔接已经得到了广泛的研究，并发现了许多连接相邻语段的现象(Hobbs, 1979;哈利迪,哈桑,1976;Grosz等人，1995年)。大多数在实践中发现有效的目标是相当简单的。
+
+然后对比了不同模型用到的句向量方法，这里其实每个模型里面用到的句向量的方法都不一样。
+
+- skip-thought,fastsent直接用到的句子向量的id,做embedding
+- 
+
+
+>The backbone of the ALBERT architecture is similar to BERT in that it uses a transformer encoder (Vaswani et al., 2017 ) with GELU nonlinearities (Hendrycks \& Gimpel, 2016). We follow the BERT notation conventions and denote the vocabulary embedding size as $E,$ the number of encoder layers as $L,$ and the hidden size as $H .$ Following Devlin et al. $(2019),$ we set the feed-forward/filter size to be $4 H$ and the number of attention heads to be $H / 64$.
+There are three main contributions that ALBERT makes over the design choices of BERT.
+
+ALBERT和bert的结构是一致的，都是使用的transformer中的encoder的结构。ALBERT中主要有三点贡献
+
+### Factorized embedding parameterization
+
+
+embedding的参数进行因式分解
+
+>Factorized embedding parameterization. In BERT, as well as subsequent modeling improvements such as XLNet (Yang et al., 2019) and RoBERTa (Liu et al., 2019), the WordPiece embedding size $E$ is tied with the hidden layer size $H,$ i.e., $E \equiv H .$ This decision appears suboptimal for both modeling and practical reasons, as follows.
+
+bert,以及后续建模的改进如XLNet(杨et al ., 2019)和RoBERTa(liu et al ., 2019),E是词向量维度，H是隐藏层的维度
+
+
+>
+From a modeling perspective, WordPiece embeddings are meant to learn context-independent representations, whereas hidden-layer embeddings are meant to learn context-dependent representations. As experiments with context length indicate (Liu et al., 2019), the power of BERT-like representations comes from the use of context to provide the signal for learning such context-dependent representations. As such, untying the WordPiece embedding size $E$ from the hidden layer size $H$ allows us to make a more efficient usage of the total model parameters as informed by modeling needs, which dictate that $H \gg E$.
+
+从建模角度看，WordPiece嵌入旨在学习上下文无关的表示，而隐藏层嵌入旨在学习上下文相关的表示。 正如上下文长度的实验所表明的那样（Liu et al。，2019），类似BERT的表示的力量来自上下文的使用，以提供学习此类依赖于上下文的表示的信息。 这样，将WordPiece嵌入大小$E$与隐藏层大小$H$，可以使我们更有效地利用建模需求所指示的总模型参数，从而决定了$H \gg E$。
+
+>
+From a practical perspective, natural language processing usually require the vocabulary size $V$ to be large. ${ }^{1}$ If $E \equiv H,$ then increasing $H$ increases the size of the embedding matrix, which has size $V \times E$. This can easily result in a model with billions of parameters, most of which are only updated sparsely during training.
+Therefore, for ALBERT we use a factorization of the embedding parameters, decomposing them into two smaller matrices. Instead of projecting the one-hot vectors directly into the hidden space of size $H,$ we first project them into a lower dimensional embedding space of size $E,$ and then project it to the hidden space. By using this decomposition, we reduce the embedding parameters from $O(V \times H)$ to $O(V \times E+E \times H)$. This parameter reduction is significant when $H \gg E .$ We choose to use the same $\mathrm{E}$ for all word pieces because they are much more evenly distributed across documents compared to whole-word embedding, where having different embedding size (Grave et al. (2017); Baevski \& Auli (2018); Dai et al. (2019) ) for different words is important.
+
+从实用的角度来看，自然语言处理通常要求词汇表的大小$V$很大。${}^{1}$如果$E \equiv H，则增加$H$增加嵌入矩阵的大小，其大小为$V \乘以E$。这很容易产生一个有数十亿个参数的模型，其中大部分在训练过程中只进行稀疏的更新。因此，对于ALBERT，我们使用嵌入参数的因式分解，将它们分解成两个较小的矩阵。**这里很像SVD**
+
+
+不是将ONE-HOT直接投影到大小为$H$的隐藏空间中，而是先将其投影到大小为$E$的低维嵌入空间中，然后再将其投影到隐藏空间中。利用这种分解方法，将嵌入参数由$O(V \ * H)$减少到$O(V \ * E+E \ * H)$。当$H \gg E .$我们选择对所有词块使用相同的$mathrm{E}$时，这个参数的减少是显著的，因为与具有不同嵌入大小的全词嵌入相比，它们在文档中分布得更均匀(Grave et al. (2017);Baevski \,Auli (2018);Dai等人(2019))对于不同的词来说很重要。
+
+### 跨层参数共享
+
+>
+Cross-layer parameter sharing. For ALBERT, we propose cross-layer parameter sharing as another way to improve parameter efficiency. There are multiple ways to share parameters, e.g., only sharing feed-forward network (FFN) parameters across layers, or only sharing attention parameters. The default decision for ALBERT is to share all parameters across layers. All our experiments use this default decision unless otherwise specified We compare this design decision against other strategies in our experiments in Sec. $4.5 .$
+
+参数共享可以提升参数的有效性。有多种共享参数的方式，例如，仅跨层共享前馈网络（FFN）参数，或仅共享关注层参数。 ALBERT的默认决定是跨层共享所有参数。也就是FNN和注意力层的参数都共享。
+除非另有说明，否则所有的实验都使用该默认决策，除非在本节的实验中将这个设计决策与其他策略进行了比较。详细看本文的 $ 4.5。$
+
+
+>
+Similar strategies have been explored by Dehghani et al. (2018) (Universal Transformer, UT) and Bai et al. (2019) (Deep Equilibrium Models, DQE) for Transformer networks. Different from our observations, Dehghani et al. (2018) show that UT outperforms a vanilla Transformer. Bai et al.
+(2019) show that their DQEs reach an equilibrium point for which the input and output embedding of a certain layer stay the same. Our measurement on the $\mathrm{L} 2$ distances and cosine similarity show that our embeddings are oscillating rather than converging.
+
+
+很多学者用到了相似的策略
+对$ mathrm{L} 2$距离和余弦相似度的测量表明，本文的的embedding是振荡的，而不是收敛的。
+
+
+下图给出了albert和bert在L2距离和余弦相似度函数的上的对比图
+
+![](figs/albert_1.png)
+
+
+
+
+
+
+

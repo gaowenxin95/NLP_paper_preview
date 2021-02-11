@@ -290,7 +290,8 @@ bert中使用的是绝对位置的编码（这个部分其实论文中没有提�
 Given a pair of positions $i$ and $j$ in the sequence, if
 $i$ and $j$ are from the same segment, we use a segment encoding $\mathbf{s}_{i j}=\mathbf{s}_{+}$ or otherwise $\mathbf{s}_{i j}=\mathbf{s}_{-},$ where $\mathbf{s}_{+}$ and $\mathbf{s}_{-}$ are learnable model parameters for each attention head. In other words, we only consider whether the two positions are within the same segment, as opposed to considering which specific segments they are from. This is consistent with the core idea of relative encodings; i.e., only modeling the relationships between positions. When $i$ attends to $j,$ the segment encoding $\mathbf{s}_{i j}$ is used to compute an attention weight $a_{i j}=\left(\mathbf{q}_{i}+\mathbf{b}\right)^{\top} \mathbf{s}_{i j},$ where $\mathbf{q}_{i}$ is the query vector as in a standard attention operation and $\mathbf{b}$ is a learnable head-specific bias vector. Finally, the value $a_{i j}$ is added to the normal attention weight. There are two benefits of using relative segment encodings. First, the inductive bias of relative encodings improves generalization [9]. Second, it opens the possibility of finetuning on tasks that have more than two input segments, which is not possible using absolute segment encodings.
 
-只考虑i，j这两个位置是不是在统一哥segment中
+只考虑i，j这两个位置是不是在同一个segment中
+具体的操作其实没有看的很懂，需要康康源码呢~
 
 
 这篇paper后面的部分主要是解释xlnet与bert等pre-train的异同，其实前面已经介绍了。不做说明。实验略。

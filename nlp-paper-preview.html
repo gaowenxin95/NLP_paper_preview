@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2021-02-06" />
+<meta name="date" content="2021-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -209,6 +209,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.10.5" data-path=""><a href="#incorporating-ideas-from-transformer-x"><i class="fa fa-check"></i><b>1.10.5</b> Incorporating Ideas from Transformer-X</a></li>
 <li class="chapter" data-level="1.10.6" data-path=""><a href="#modeling-multiple-segments"><i class="fa fa-check"></i><b>1.10.6</b> Modeling Multiple Segments</a></li>
 </ul></li>
+<li class="chapter" data-level="1.11" data-path=""><a href="#albert"><i class="fa fa-check"></i><b>1.11</b> ALBERT</a>
+<ul>
+<li class="chapter" data-level="1.11.1" data-path=""><a href="#introduction-7"><i class="fa fa-check"></i><b>1.11.1</b> introduction</a></li>
+<li class="chapter" data-level="1.11.2" data-path=""><a href="#scaling-up-representation-learning-for-natural-language"><i class="fa fa-check"></i><b>1.11.2</b> SCALING UP REPRESENTATION LEARNING FOR NATURAL LANGUAGE</a></li>
+<li class="chapter" data-level="1.11.3" data-path=""><a href="#cross-layer-parameter-sharing"><i class="fa fa-check"></i><b>1.11.3</b> CROSS-LAYER PARAMETER SHARING</a></li>
+<li class="chapter" data-level="1.11.4" data-path=""><a href="#sentence-ordering-objectives"><i class="fa fa-check"></i><b>1.11.4</b> SENTENCE ORDERING OBJECTIVES</a></li>
+<li class="chapter" data-level="1.11.5" data-path=""><a href="#factorized-embedding-parameterization"><i class="fa fa-check"></i><b>1.11.5</b> Factorized embedding parameterization</a></li>
+<li class="chapter" data-level="1.11.6" data-path=""><a href="#跨层参数共享"><i class="fa fa-check"></i><b>1.11.6</b> 跨层参数共享</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path=""><a href="#参考文献"><i class="fa fa-check"></i>参考文献</a></li>
 </ul></li>
 </ul>
@@ -231,7 +240,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">NLP相关paper阅读</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2021-02-06</em></p>
+<p class="date"><em>2021-02-11</em></p>
 </div>
 <div id="nlp-paper-preview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> NLP paper preview</h1>
@@ -1602,12 +1611,110 @@ h_{z_{t}}^{(m)} \leftarrow \text { Attention }\left(\mathrm{Q}=h_{z_{t}}^{(m-1)}
 <blockquote>
 <p>Relative Segment Encodings Architecturally, different from BERT that adds an absolute segment embedding to the word embedding at each position, we extend the idea of relative encodings from Transformer-XL to also encode the segments.</p>
 </blockquote>
-<p>bert中使用的是绝对位置的9编码，XLNET中使用的是TRM-XL中的相对位置编码，下面这段是在解释相对位置编码的定义。</p>
+<p>bert中使用的是绝对位置的编码（这个部分其实论文中没有提到，需要到bert的<a href="https://github.com/google-research/bert/blob/master/modeling.py">源码</a>中看下），XLNET中使用的是TRM-XL中的相对位置编码，下面这段是在解释相对位置编码的定义。</p>
 <blockquote>
 <p>Given a pair of positions <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> in the sequence, if
 <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> are from the same segment, we use a segment encoding <span class="math inline">\(\mathbf{s}_{i j}=\mathbf{s}_{+}\)</span> or otherwise <span class="math inline">\(\mathbf{s}_{i j}=\mathbf{s}_{-},\)</span> where <span class="math inline">\(\mathbf{s}_{+}\)</span> and <span class="math inline">\(\mathbf{s}_{-}\)</span> are learnable model parameters for each attention head. In other words, we only consider whether the two positions are within the same segment, as opposed to considering which specific segments they are from. This is consistent with the core idea of relative encodings; i.e., only modeling the relationships between positions. When <span class="math inline">\(i\)</span> attends to <span class="math inline">\(j,\)</span> the segment encoding <span class="math inline">\(\mathbf{s}_{i j}\)</span> is used to compute an attention weight <span class="math inline">\(a_{i j}=\left(\mathbf{q}_{i}+\mathbf{b}\right)^{\top} \mathbf{s}_{i j},\)</span> where <span class="math inline">\(\mathbf{q}_{i}\)</span> is the query vector as in a standard attention operation and <span class="math inline">\(\mathbf{b}\)</span> is a learnable head-specific bias vector. Finally, the value <span class="math inline">\(a_{i j}\)</span> is added to the normal attention weight. There are two benefits of using relative segment encodings. First, the inductive bias of relative encodings improves generalization [9]. Second, it opens the possibility of finetuning on tasks that have more than two input segments, which is not possible using absolute segment encodings.</p>
 </blockquote>
+<p>只考虑i，j这两个位置是不是在同一个segment中
+具体的操作其实没有看的很懂，需要康康源码呢~</p>
 <p>这篇paper后面的部分主要是解释xlnet与bert等pre-train的异同，其实前面已经介绍了。不做说明。实验略。</p>
+</div>
+</div>
+<div id="albert" class="section level2" number="1.11">
+<h2><span class="header-section-number">1.11</span> ALBERT</h2>
+<div id="introduction-7" class="section level3" number="1.11.1">
+<h3><span class="header-section-number">1.11.1</span> introduction</h3>
+<blockquote>
+<p>ALBERT incorporates two parameter reduction techniques that lift the major obstacles in scaling pre-trained models. The first one is a factorized embedding parameterization. By decomposing the large vocabulary embedding matrix into two small matrices, we separate the size of the hidden layers from the size of vocabulary embedding. This separation makes it easier to grow the hidden size without significantly increasing the parameter size of the vocabulary embeddings. The second technique is cross-layer parameter sharing. This technique prevents the parameter from growing with the depth of the network. Both techniques significantly reduce the number of parameters for BERT without seriously hurting performance, thus improving parameter-efficiency. An ALBERT configuration similar to BERT-large has <span class="math inline">\(18 x\)</span> fewer parameters and can be trained about <span class="math inline">\(1.7 x\)</span> faster. The parameter reduction techniques also act as a form of regularization that stabilizes the training and helps with generalization.</p>
+</blockquote>
+<p>这段是对albert的一个总结，主要是有两个减少模型参数的方法。</p>
+<ul>
+<li><p>一种是对参数矩阵进行因子分解，由两个大的矩阵相乘变成两组小的矩阵相加<span class="math inline">\(V*H=V*E+E*H\)</span>,将隐藏层的大小与词汇嵌入的大小分开。这种分离使得增加隐藏大小更容易，而不需要显著增加词汇表嵌入的参数大小</p></li>
+<li><p>第二种技术是跨层参数共享。这种技术可以防止参数随着网络深度的增加而增加。这两种技术都显著减少了BERT的参数数量，而损害性能较小，从而提高了参数效率。ALBERT配置与BERT-large类似，参数少<span class="math inline">\(18 x\)</span>，训练速度快<span class="math inline">\(1.7 x\)</span>。参数约简技术也可以作为一种正则化形式，稳定训练并有助于推广。</p></li>
+</ul>
+<blockquote>
+<p>To further improve the performance of ALBERT, we also introduce a self-supervised loss for sentence-order prediction (SOP). SOP primary focuses on intersentence coherence and is designed to address the ineffectiveness (Yang et al., 2019; Liu et al., 2019) of the next sentence prediction (NSP) loss proposed in the original BERT.</p>
+</blockquote>
+<p>SOP这种方式主要是为了解决句子的连贯性问题，是对BERT中NSP任务的优化。</p>
+<blockquote>
+<p>As a result of these design decisions, we are able to scale up to much larger ALBERT configurations that still have fewer parameters than BERT-large but achieve significantly better performance.</p>
+</blockquote>
+<p>因为上述的三种的方式，还可以提高ALBERT的配置规模，不过这个配置规模不是很理解是什么意思?~</p>
+</div>
+<div id="scaling-up-representation-learning-for-natural-language" class="section level3" number="1.11.2">
+<h3><span class="header-section-number">1.11.2</span> SCALING UP REPRESENTATION LEARNING FOR NATURAL LANGUAGE</h3>
+<p>增加自然语言的表征学习的规模</p>
+<blockquote>
+<p>In addition, it is difficult to experiment with large models due to computational constraints, especially in terms of GPU/TPU memory limitations. Given that current state-of-the-art models often have hundreds of millions or even billions of parameters, we can easily hit memory limits. To address this issue, Chen et al. (2016) propose a method called gradient checkpointing to reduce the memory requirement to be sublinear at the cost of an extra forward pass. Gomez et al. (2017) propose a way to reconstruct each layer’s activations from the next layer so that they do not need to store the intermediate activations. Both methods reduce the memory consumption at the cost of speed. In contrast, our parameter-reduction techniques reduce memory consumption and increase training speed.</p>
+</blockquote>
+<p>因为GPU和TPU的限制，很多的大型模型是无法训练的，对现如今的sota模型很多是有几百亿的参数量，有内存的限制。为了解决这个问题，Chen等人(2016)提出了一种叫做梯度检查点的方法，以额外的前向通过为代价来减少次线性的内存需求。Gomez等人(2017)提出了一种从下一层重建每一层激活的方法，这样他们就不需要存储中间激活。这两种方法都以速度为代价减少了内存消耗。相比之下，参数减少技术减少了内存消耗并提高了训练速度。</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" />
+这里是对存储的结构做了优化，减少中间层的存储过程!但是具体的不是很明白</li>
+</ul>
+</div>
+<div id="cross-layer-parameter-sharing" class="section level3" number="1.11.3">
+<h3><span class="header-section-number">1.11.3</span> CROSS-LAYER PARAMETER SHARING</h3>
+<p>交叉层参数共享</p>
+<blockquote>
+<p>The idea of sharing parameters across layers has been previously explored with the Transformer architecture (Vaswani et al., 2017 ), but this prior work has focused on training for standard encoderdecoder tasks rather than the pretraining/finetuning setting. Different from our observations, Dehghani et al. (2018) show that networks with cross-layer parameter sharing (Universal Transformer, UT) get better performance on language modeling and subject-verb agreement than the standard transformer. Very recently, Bai et al. (2019) propose a Deep Equilibrium Model (DQE) for transformer networks and show that DQE can reach an equilibrium point for which the input embedding and the output embedding of a certain layer stay the same. Our observations show that our embeddings are oscillating rather than converging. Hao et al. (2019) combine a parameter-sharing transformer with the standard one, which further increases the number of parameters of the standard transformer.</p>
+</blockquote>
+<p>参数共享之前在TRANSFORMER的结构中提出，但是TRM这篇文章主要是介绍encorder-decoder结构，而不是主要介绍预训练模型。Dehghani等人(2018)表明，具有跨层参数共享(Universal Transformer, UT)的网络在语言建模和主谓一致方面比标准Transformer有更好的性能。最近，Bai等人(2019)提出了一种针对transformer网络的深度均衡模型(DQE)，并证明了DQE可以达到某一层的输入嵌入和输出嵌入保持一致的平衡点。嵌入是振荡而不是收敛。Hao等人(2019)将参数共享transformer与标准transformer相结合，进一步增加了标准transformer的参数数量。</p>
+</div>
+<div id="sentence-ordering-objectives" class="section level3" number="1.11.4">
+<h3><span class="header-section-number">1.11.4</span> SENTENCE ORDERING OBJECTIVES</h3>
+<p>句子排序的目标</p>
+<blockquote>
+<p>ALBERT uses a pretraining loss based on predicting the ordering of two consecutive segments of text. Several researchers have experimented with pretraining objectives that similarly relate to discourse coherence. Coherence and cohesion in discourse have been widely studied and many phenomena have been identified that connect neighboring text segments (Hobbs, 1979 ; Halliday &amp; Hasan, 1976 ; Grosz et al., 1995). Most objectives found effective in practice are quite simple. Skipthought (Kiros et al., 2015 ) and FastSent (Hill et al., 2016) sentence embeddings are learned by using an encoding of a sentence to predict words in neighboring sentences. Other objectives for sentence embedding learning include predicting future sentences rather than only neighbors (Gan et al., 2017 ) and predicting explicit discourse markers (Jernite et al., 2017; Nie et al., 2019). Our loss is most similar to the sentence ordering objective of Jernite et al. (2017), where sentence embeddings are learned in order to determine the ordering of two consecutive sentences. Unlike most of the above work, however, our loss is defined on textual segments rather than sentences. BERT (Devlin et al.,
+2019) uses a loss based on predicting whether the second segment in a pair has been swapped with a segment from another document. We compare to this loss in our experiments and find that sentence ordering is a more challenging pretraining task and more useful for certain downstream
+tasks. Concurrently to our work, Wang et al. (2019) also try to predict the order of two consecutive segments of text, but they combine it with the original next sentence prediction in a three-way classification task rather than empirically comparing the two.</p>
+</blockquote>
+<p>ALBERT使用了一个基于预测两个连续文本片段顺序的预训练损失。一些研究人员对与语篇连贯类似的前训练目标进行了实验。语篇中的连贯和衔接已经得到了广泛的研究，并发现了许多连接相邻语段的现象(Hobbs, 1979;哈利迪,哈桑,1976;Grosz等人，1995年)。大多数在实践中发现有效的目标是相当简单的。</p>
+<p>然后对比了不同模型用到的句向量方法，这里其实每个模型里面用到的句向量的方法都不一样。</p>
+<ul>
+<li>skip-thought,fastsent直接用到的句子向量的id,做embedding</li>
+<li></li>
+</ul>
+<blockquote>
+<p>The backbone of the ALBERT architecture is similar to BERT in that it uses a transformer encoder (Vaswani et al., 2017 ) with GELU nonlinearities (Hendrycks &amp; Gimpel, 2016). We follow the BERT notation conventions and denote the vocabulary embedding size as <span class="math inline">\(E,\)</span> the number of encoder layers as <span class="math inline">\(L,\)</span> and the hidden size as <span class="math inline">\(H .\)</span> Following Devlin et al. <span class="math inline">\((2019),\)</span> we set the feed-forward/filter size to be <span class="math inline">\(4 H\)</span> and the number of attention heads to be <span class="math inline">\(H / 64\)</span>.
+There are three main contributions that ALBERT makes over the design choices of BERT.</p>
+</blockquote>
+<p>ALBERT和bert的结构是一致的，都是使用的transformer中的encoder的结构。ALBERT中主要有三点贡献</p>
+</div>
+<div id="factorized-embedding-parameterization" class="section level3" number="1.11.5">
+<h3><span class="header-section-number">1.11.5</span> Factorized embedding parameterization</h3>
+<p>embedding的参数进行因式分解</p>
+<blockquote>
+<p>Factorized embedding parameterization. In BERT, as well as subsequent modeling improvements such as XLNet (Yang et al., 2019) and RoBERTa (Liu et al., 2019), the WordPiece embedding size <span class="math inline">\(E\)</span> is tied with the hidden layer size <span class="math inline">\(H,\)</span> i.e., <span class="math inline">\(E \equiv H .\)</span> This decision appears suboptimal for both modeling and practical reasons, as follows.</p>
+</blockquote>
+<p>bert,以及后续建模的改进如XLNet(杨et al ., 2019)和RoBERTa(liu et al ., 2019),E是词向量维度，H是隐藏层的维度</p>
+<blockquote>
+<p>From a modeling perspective, WordPiece embeddings are meant to learn context-independent representations, whereas hidden-layer embeddings are meant to learn context-dependent representations. As experiments with context length indicate (Liu et al., 2019), the power of BERT-like representations comes from the use of context to provide the signal for learning such context-dependent representations. As such, untying the WordPiece embedding size <span class="math inline">\(E\)</span> from the hidden layer size <span class="math inline">\(H\)</span> allows us to make a more efficient usage of the total model parameters as informed by modeling needs, which dictate that <span class="math inline">\(H \gg E\)</span>.</p>
+</blockquote>
+<p>从建模角度看，WordPiece嵌入旨在学习上下文无关的表示，而隐藏层嵌入旨在学习上下文相关的表示。 正如上下文长度的实验所表明的那样（Liu et al。，2019），类似BERT的表示的力量来自上下文的使用，以提供学习此类依赖于上下文的表示的信息。 这样，将WordPiece嵌入大小<span class="math inline">\(E\)</span>与隐藏层大小<span class="math inline">\(H\)</span>，可以使我们更有效地利用建模需求所指示的总模型参数，从而决定了<span class="math inline">\(H \gg E\)</span>。</p>
+<blockquote>
+<p>From a practical perspective, natural language processing usually require the vocabulary size <span class="math inline">\(V\)</span> to be large. <span class="math inline">\({ }^{1}\)</span> If <span class="math inline">\(E \equiv H,\)</span> then increasing <span class="math inline">\(H\)</span> increases the size of the embedding matrix, which has size <span class="math inline">\(V \times E\)</span>. This can easily result in a model with billions of parameters, most of which are only updated sparsely during training.
+Therefore, for ALBERT we use a factorization of the embedding parameters, decomposing them into two smaller matrices. Instead of projecting the one-hot vectors directly into the hidden space of size <span class="math inline">\(H,\)</span> we first project them into a lower dimensional embedding space of size <span class="math inline">\(E,\)</span> and then project it to the hidden space. By using this decomposition, we reduce the embedding parameters from <span class="math inline">\(O(V \times H)\)</span> to <span class="math inline">\(O(V \times E+E \times H)\)</span>. This parameter reduction is significant when <span class="math inline">\(H \gg E .\)</span> We choose to use the same <span class="math inline">\(\mathrm{E}\)</span> for all word pieces because they are much more evenly distributed across documents compared to whole-word embedding, where having different embedding size (Grave et al. (2017); Baevski &amp; Auli (2018); Dai et al. (2019) ) for different words is important.</p>
+</blockquote>
+<p>从实用的角度来看，自然语言处理通常要求词汇表的大小<span class="math inline">\(V\)</span>很大。<span class="math inline">\({}^{1}\)</span>如果<span class="math inline">\(E \equiv H，则增加\)</span>H<span class="math inline">\(增加嵌入矩阵的大小，其大小为\)</span>V $。这很容易产生一个有数十亿个参数的模型，其中大部分在训练过程中只进行稀疏的更新。因此，对于ALBERT，我们使用嵌入参数的因式分解，将它们分解成两个较小的矩阵。<strong>这里很像SVD</strong></p>
+<p>不是将ONE-HOT直接投影到大小为<span class="math inline">\(H\)</span>的隐藏空间中，而是先将其投影到大小为<span class="math inline">\(E\)</span>的低维嵌入空间中，然后再将其投影到隐藏空间中。利用这种分解方法，将嵌入参数由<span class="math inline">\(O(V \ * H)\)</span>减少到<span class="math inline">\(O(V \ * E+E \ * H)\)</span>。当<span class="math inline">\(H \gg E .\)</span>我们选择对所有词块使用相同的<span class="math inline">\(mathrm{E}\)</span>时，这个参数的减少是显著的，因为与具有不同嵌入大小的全词嵌入相比，它们在文档中分布得更均匀(Grave et al. (2017);Baevski ,Auli (2018);Dai等人(2019))对于不同的词来说很重要。</p>
+</div>
+<div id="跨层参数共享" class="section level3" number="1.11.6">
+<h3><span class="header-section-number">1.11.6</span> 跨层参数共享</h3>
+<blockquote>
+<p>Cross-layer parameter sharing. For ALBERT, we propose cross-layer parameter sharing as another way to improve parameter efficiency. There are multiple ways to share parameters, e.g., only sharing feed-forward network (FFN) parameters across layers, or only sharing attention parameters. The default decision for ALBERT is to share all parameters across layers. All our experiments use this default decision unless otherwise specified We compare this design decision against other strategies in our experiments in Sec. <span class="math inline">\(4.5 .\)</span></p>
+</blockquote>
+<p>参数共享可以提升参数的有效性。有多种共享参数的方式，例如，仅跨层共享前馈网络（FFN）参数，或仅共享关注层参数。 ALBERT的默认决定是跨层共享所有参数。也就是FNN和注意力层的参数都共享。
+除非另有说明，否则所有的实验都使用该默认决策，除非在本节的实验中将这个设计决策与其他策略进行了比较。详细看本文的 $ 4.5。$</p>
+<blockquote>
+<p>Similar strategies have been explored by Dehghani et al. (2018) (Universal Transformer, UT) and Bai et al. (2019) (Deep Equilibrium Models, DQE) for Transformer networks. Different from our observations, Dehghani et al. (2018) show that UT outperforms a vanilla Transformer. Bai et al.
+(2019) show that their DQEs reach an equilibrium point for which the input and output embedding of a certain layer stay the same. Our measurement on the <span class="math inline">\(\mathrm{L} 2\)</span> distances and cosine similarity show that our embeddings are oscillating rather than converging.</p>
+</blockquote>
+<p>很多学者用到了相似的策略
+对$ mathrm{L} 2$距离和余弦相似度的测量表明，本文的的embedding是振荡的，而不是收敛的。</p>
+<p>下图给出了albert和bert在L2距离和余弦相似度函数的上的对比图</p>
+<p><img src="figs/albert_1.png" /></p>
 </div>
 </div>
 <div id="参考文献" class="section level2 unnumbered" number="">

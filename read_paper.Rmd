@@ -955,8 +955,11 @@ emlo的本质是单向，单项训练完concat两个方向到一起，算是函�
 
 ```
 
+## ALBERT
 
 
+```{r child='analysis/ALBERT.Rmd'}
 
+```
 
 ## 参考文献
