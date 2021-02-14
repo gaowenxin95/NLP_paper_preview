@@ -1,6 +1,6 @@
 ### introduction
 
->ALBERT incorporates two parameter reduction techniques that lift the major obstacles in scaling pre-trained models. The first one is a factorized embedding parameterization. By decomposing the large vocabulary embedding matrix into two small matrices, we separate the size of the hidden layers from the size of vocabulary embedding. This separation makes it easier to grow the hidden size without significantly increasing the parameter size of the vocabulary embeddings. The second technique is cross-layer parameter sharing. This technique prevents the parameter from growing with the depth of the network. Both techniques significantly reduce the number of parameters for BERT without seriously hurting performance, thus improving parameter-efficiency. An ALBERT configuration similar to BERT-large has $18 x$ fewer parameters and can be trained about $1.7 x$ faster. The parameter reduction techniques also act as a form of regularization that stabilizes the training and helps with generalization.
+>ALBERT incorporates two parameter reduction techniques that lift the major obstacles in scaling pre-trained models. The first one is a factorized embedding parameterization. By decomposing the large vocabulary embedding matrix into two small matrices, we separate the size of the hidden layers from the size of vocabulary embedding. This separation makes it easier to grow the hidden size without significantly increasing the parameter size of the vocabulary embeddings. The second technique is cross-layer parameter sharing. This technique prevents the parameter from growing with the depth of the network. Both techniques significantly reduce the number of parameters for BERT without seriously hurting performance, thus improving parameter-efficiency. An ALBERT configuration similar to BERT-large has $18 x$ fewer parameters and can be trained about $1.7 x$ faster. The parameter reduction techniques also act as a form of regularization that stabilizes the training and helps with generalization.[@2019ALBERT]
 
 这段是对albert的一个总结，主要是有两个减少模型参数的方法。
 
@@ -49,8 +49,7 @@ ALBERT使用了一个基于预测两个连续文本片段顺序的预训练损�
 
 然后对比了不同模型用到的句向量方法，这里其实每个模型里面用到的句向量的方法都不一样。
 
-- skip-thought,fastsent直接用到的句子向量的id,做embedding
-- 
+有直接使用句子的，有使用句子片段的等做embedding。
 
 
 >The backbone of the ALBERT architecture is similar to BERT in that it uses a transformer encoder (Vaswani et al., 2017 ) with GELU nonlinearities (Hendrycks \& Gimpel, 2016). We follow the BERT notation conventions and denote the vocabulary embedding size as $E,$ the number of encoder layers as $L,$ and the hidden size as $H .$ Following Devlin et al. $(2019),$ we set the feed-forward/filter size to be $4 H$ and the number of attention heads to be $H / 64$.
@@ -104,7 +103,39 @@ Similar strategies have been explored by Dehghani et al. (2018) (Universal Trans
 
 ![](figs/albert_1.png)
 
+>Figure 2 shows the $L 2$ distances and cosine similarity of the input and output embeddings for each layer, using BERT-large and ALBERT-large configurations (see Table 2). We observe that the transitions from layer to layer are much smoother for ALBERT than for BERT. These results show that weight-sharing has an effect on stabilizing network parameters. Although there is a drop for both metrics compared to BERT, they nevertheless do not converge to 0 even after 24 layers. This shows that the solution space for ALBERT parameters is very different from the one found by DQE.
 
+图2展示了输入和输出层每一层到下一层的l2距离和余弦相似度，参数设置参考表格2，对比bert-large,albert-large.albert的的曲线是比bert更加平滑，表明权重共享对稳定的参数会产生影响。尽管与BERT相比，这两个指标都有所下降，但即使在24层之后，它们也不会收敛到0。这表明ALBERT参数的解空间与DQE发现的解空间有很大的不同。
+
+![](figs/albert_2.png)
+
+>Inter-sentence coherence loss. In addition to the masked language modeling (MLM) loss (Devlin et al., 2019), BERT uses an additional loss called next-sentence prediction (NSP). NSP is a binary classification loss for predicting whether two segments appear consecutively in the original text, as follows: positive examples are created by taking consecutive segments from the training corpus; negative examples are created by pairing segments from different documents; positive and negative examples are sampled with equal probability. The NSP objective was designed to improve performance on downstream tasks, such as natural language inference, that require reasoning about the relationship between sentence pairs. However, subsequent studies (Yang et al., 2019; Liu et al.,
+2019) found NSP's impact unreliable and decided to eliminate it, a decision supported by an improvement in downstream task performance across several tasks.
+
+BERT中除了mlm任务还有一个NSP，NSP是一种用于预测两个片段是否连续出现在原文中的二值分类损失，具体表现为:从训练语料库中选取连续的片段生成正例;反例是通过对来自不同文档的片段进行配对来创建的;正的和反的例子以相同的概率抽样。NSP的目标是为了提高下游任务的表现，如自然语言推理，需要对句子对之间的关系进行推理。然而，随后的研究(Yang et al.， 2019;Liu等人，2019)发现NSP的影响是不可靠的，并决定去掉它，这一决定得到了多个任务中下游任务性能改善的支持。我记得原文中的实验也并没有产生很有效的效果。
+
+>
+We conjecture that the main reason behind NSP's ineffectiveness is its lack of difficulty as a task, as compared to MLM. As formulated, NSP conflates topic prediction and coherence prediction in a single task $^{2}$. However, topic prediction is easier to learn compared to coherence prediction, and also overlaps more with what is learned using the MLM loss.
+
+本文推测NSP无效的主要原因它作为一个任务缺乏难度。如所述，NSP将主题预测和一致性预测合并到单个任务$^{2}$中。然而，与连贯性预测相比，主题预测更容易学习，而且与使用MLM损失学习的内容重叠更多。
+
+>
+We maintain that inter-sentence modeling is an important aspect of language understanding, but we propose a loss based primarily on coherence. That is, for ALBERT, we use a sentence-order prediction (SOP) loss, which avoids topic prediction and instead focuses on modeling inter-sentence coherence. The SOP loss uses as positive examples the same technique as BERT (two consecutive segments from the same document), and as negative examples the same two consecutive segments but with their order swapped. This forces the model to learn finer-grained distinctions about discourse-level coherence properties. As we show in Sec. 4.6 , it turns out that NSP cannot solve the SOP task at all (i.e., it ends up learning the easier topic-prediction signal, and performs at randombaseline level on the SOP task), while SOP can solve the NSP task to a reasonable degree, presumably based on analyzing misaligned coherence cues. As a result, ALBERT models consistently improve downstream task performance for multi-sentence encoding tasks.
+
+本文认为句子间建模是语言理解的一个重要方面，但提出主要基于连贯性的损失。也就是说，对于ALBERT，使用了句子顺序预测(SOP)损失，避免了主题预测，而是侧重于句子间连贯的建模。SOP丢弃使用与BERT相同的技术作为正例(来自同一文档的两个连续段)，而使用相同的两个连续段作为负例，但交换了顺序。这迫使模型学习关于语篇级别一致性特性的更细粒度的区别。事实证明,NSP根本无法解决SOP的任务(例如,它最终学习越容易topic-prediction信号,并执行在SOP randombaseline水平任务),而SOP可以解决该规划的任务在一个合理的程度上,大概是基于分析偏差一致性线索。因此，ALBERT模型能够持续改善多句子编码任务的下游任务性能。
+
+
+其余实验部分，略，针对每一个修改的策略，作者都给出了单策略的结果，个人认为，实验是比bert的实验充分很多的。
+
+
+总结一下，albert对比bert的瘦身之处在于
+
+- 对embedding参数矩阵进行了矩阵分解
+- 实现了跨层参数共享，包括attention层和FNN层
+
+对bert任务的修改是
+
+- 去掉了NSP任务，加上了SOP任务
 
 
 
