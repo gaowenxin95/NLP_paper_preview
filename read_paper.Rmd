@@ -971,9 +971,21 @@ emlo的本质是单向，单项训练完concat两个方向到一起，算是函�
 
 ## bertFlow
 
+文本表示的最新研究
+
+论文题目：On the Sentence Embeddings from Pre-trained Language Models
+下载地址：https://arxiv.org/pdf/2011.05864.pdf
+论文代码：https://github.com/bohanli/BERT-flow
+
 
 ```{r child='analysis/bertFlow.Rmd'}
 
 ```
 
+## T5
+
+
+```{r child='analysis/T5.Rmd'}
+
+```
 ## 参考文献

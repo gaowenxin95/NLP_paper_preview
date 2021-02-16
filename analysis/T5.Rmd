@@ -1,0 +1,39 @@
+> In this paper, we explore the landscape of transfer
+learning techniques for NLP by introducing a unified framework that converts all text-based
+language problems into a text-to-text format. Our systematic study compares pre-training
+objectives, architectures, unlabeled data sets, transfer approaches, and other factors on
+dozens of language understanding tasks. By combining the insights from our exploration
+with scale and our new “Colossal Clean Crawled Corpus”, we achieve state-of-the-art results
+on many benchmarks covering summarization, question answering, text classification, and
+more.[@2019Exploring]
+
+通过引入一个统一的框架将所有基于文本的语言问题转换为text-to-text格式，探索了NLP的迁移学习技术的前景。 本文系统研究比较了数十种语言理解任务中的预训练目标，体系结构，未标记的数据集，传输方法和其他因素。通过结合对规模的探索和新的“Colossal Clean Crawled Corpus语料库”，在许多基准上获得了sota，包括摘要，问题回答，文本分类等。 
+
+### introduction
+
+>
+The basic idea underlying our work is to treat every text processing problem as a "text-to-text" problem, i.e. taking text as input and producing new text as output. This approach is inspired by previous unifying frameworks for NLP tasks, including casting all text problems as question answering (McCann et al., 2018), language modeling (Radford et al.,
+2019), or span extraction Keskar et al. (2019b) tasks. Crucially, the text-to-text framework allows us to directly apply the same model, objective, training procedure, and decoding process to every task we consider. We leverage this flexibility by evaluating performance on a wide variety of English-based NLP problems, including question answering, document summarization, and sentiment classification, to name a few. With this unified approach, we can compare the effectiveness of different transfer learning objectives, unlabeled data sets, and other factors, while exploring the limits of transfer learning for NLP by scaling up models and data sets beyond what has previously been considered.
+
+文本的idea主要是将文本处理任务变成text-to-text问题。文本输入到文本输出，该方法的灵感来自于之前的NLP任务统一框架，包括将所有文本问题转换为问题回答(McCann et al.， 2018)、语言建模(Radford et al.， 2019)或跨度提取Keskar et al. (2019b)任务。至关重要的是，文本到文本框架允许直接将相同的模型、目标、训练程序和解码过程应用到考虑的每一项任务中。利用这种灵活性，通过评估各种英文中的自然语言处理问题的性能，包括问题回答、文档摘要和情感分类，举几个例子。通过这种text-to-text统一的方法，可以比较不同迁移学习目标、未标记数据集和其他因素的有效性，同时通过扩展模型和数据集来探索NLP迁移学习的局限性。
+
+>
+We emphasize that our goal is not to propose new methods but instead to provide a comprehensive perspective on where the field stands. As such, our work primarily comprises a survey, exploration, and empirical comparison of existing techniques. We also explore the limits of current approaches by scaling up the insights from our systematic study (training models up to 11 billion parameters) to obtain state-of-the-art results in many of the tasks we consider. In order to perform experiments at this scale, we introduce the "Colossal Clean Crawled Corpus" (C4), a data set consisting of hundreds of gigabytes of clean English text scraped from the web. Recognizing that the main utility of transfer learning is the possibility of leveraging pre-trained models in data-scarce settings, we release our code, data sets, and pre-trained models.
+
+本文的目标不是提出新的方法，而是对该领域的现状提供一个全面的观点。因此，本文的工作主要包括对现有技术的调查、探索和实证比较。本文还探索了当前方法的局限性，通过扩大我们的系统研究(训练模型多达110亿个参数)，在我们考虑的许多任务中获得最先进的结果。为了在这个规模上进行实验，我们引入了"Colossal Clean Crawled Corpus" 也叫(C4)，这是一个数据集，由数百gb的干净的英文文本从网络上刮取。认识到迁移学习的主要用途是在数据稀缺的环境中利用预训练模型的可能性，本文发布了代码、数据集和预训练模型。
+
+### MODEL
+
+>Overall, our encoder-decoder Transformer implementation closely follows its originally proposed form (Vaswani et al., 2017). First, an input sequence of tokens is mapped to a sequence of embeddings, which is then passed into the encoder. The encoder consists of a stack of "blocks", each of which comprises two subcomponents: a self-attention layer followed by a small feed-forward network. Layer normalization (Ba et al., 2016 ) is applied to the input of each subcomponent. We use a simplified version of layer normalization where the activations are only rescaled and no additive bias is applied. After layer normalization, a residual skip connection (He et al., 2016 ) adds each subcomponent's input to its output. Dropout (Srivastava et al., 2014 ) is applied within the feed-forward network, on the skip connection, on the attention weights, and at the input and output of the entire stack. The decoder is similar in structure to the encoder except that it includes a standard attention mechanism after each self-attention layer that attends to the output of the encoder. The self-attention mechanism in the decoder also uses a form of autoregressive or causal selfattention, which only allows the model to attend to past outputs. The output of the final decoder block is fed into a dense layer with a softmax output, whose weights are shared with the input embedding matrix. All attention mechanisms in the Transformer are split up into independent "heads" whose outputs are concatenated before being further processed.
+
+本文中ECODER-DECODER结构和基本的transformer中的结构相似，首先，将token的输入序列映射到embedding序列，然后将embedding序列传递给编码器。编码器由一堆“块”组成，每个块由两个子组件组成:一个self-att层，后面跟着一个小的FNN网络。对每个子组件的输入进行层归一化(Ba et al.， 2016)。使用一种简化版的层归一化，其中激活只是重新缩放，没有附加偏置应用。在层归一化之后，一个剩余的skip连接(He et al.， 2016)将每个子组件的输入添加到其输出中。Dropout (Srivastava et al.， 2014)应用于前馈网络、SKIP连接、注意力权重以及整个堆栈的输入和输出。解码器在结构上与编码器相似，除了它在处理编码器输出的每个自我注意层之后包含一个标准注意机制。解码器中的自我注意机制也使用了一种自回归或因果自我注意的形式，这只允许模型关注过去的输出。最终解码器块的输出被送入具有softmax输出的密集层，其权值与输入的嵌入矩阵共享。transformer中的所有注意机制被分割成独立的“头”，它们的输出在进一步处理之前 
+
+Since self-attention is order-independent (i.e. it is an operation on sets), it is common to provide an explicit position signal to the Transformer. While the original Transformer used a sinusoidal position signal or learned position embeddings, it has recently become more common to use relative position embeddings (Shaw et al., 2018 ; Huang et al., $2018 \mathrm{a}$ ). **Instead of using a fixed embedding for each position, relative position embeddings produce a different learned embedding according to the offset between the "key" and "query" being compared in the self-attention mechanism. We use a simplified form of position embeddings where each "embedding" is simply a scalar that is added to the corresponding logit used for computing the attention weights. For efficiency, we also share the position embedding parameters across all layers in our model, though within a given layer each attention head uses a different learned position embedding. Typically, a fixed number of embeddings are learned, each corresponding to a range of possible key-query offsets. In this work, we use 32 embeddings for all of our models with ranges that increase in size logarithmically up to an offset of 128 beyond which we assign all relative positions to the same embedding. Note that a given layer is insensitive to relative position beyond 128 tokens, but subsequent layers can build a sensitivity to larger offsets by combining local information from previous layers. **To summarize, our model is roughly equivalent to the original Transformer proposed by Vaswani et al. (2017) with the exception of removing the Layer Norm bias, placing the layer normalization outside the residual path, and using a different position embedding scheme. Since these architectural changes are orthogonal to the experimental factors we consider in our empirical survey of transfer learning, we leave the ablation of their impact for future work.
+
+基本的Transformer中使用的是绝对位置编码，而本文中的模型使用的是相对位置编码，为了提高效率，本文中共享位置编码层的参数，所有模型一共使用32个嵌入，范围增量步长以对数方式，直到偏移量
+超过128，对于超出128的则将所有的相对位置赋予相同的嵌入。主要特别注意，给定层对128个标记之外的相对位置是不敏感的！但是，后续的层可以通过结合前一层的局部信息来建立对较大偏移量的敏感性。
+
+text-to-text结构如图一所示
+
+![](figs/T5.png)
+
