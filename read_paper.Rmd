@@ -988,4 +988,16 @@ emlo的本质是单向，单项训练完concat两个方向到一起，算是函�
 ```{r child='analysis/T5.Rmd'}
 
 ```
+
+# 模型蒸馏
+
+从WORD2VEC到T5,参数量级增加上亿倍，这种装备向来是资深玩家才买得起的装备。因此出现了模型蒸馏，尽量减少模型效果降低的前提下，对模型进行蒸馏，降低模型的参数。对于上面的albert实现了transformer各个block的参数共享，也算是蒸馏中的一种。
+
+
+## fastbert
+
+```{r child='analysis/fastbert.Rmd'}
+
+```
+
 ## 参考文献
