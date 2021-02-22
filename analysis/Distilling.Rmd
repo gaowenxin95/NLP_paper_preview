@@ -1,0 +1,19 @@
+---
+title: NLP相关paper阅读
+author: 高文欣
+date: "`r Sys.Date()`"
+output: 
+  bookdown::gitbook:
+bibliography: refs/add.bib
+---
+
+
+
+
+
+## Distilling the Knowledge in a Neural Network
+
+
+```{r child='analysis/distilling.Rmd'}
+
+```

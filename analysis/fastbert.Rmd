@@ -1,0 +1,56 @@
+### introduction
+
+>It is generally accepted that the objective function used for training should reflect the true objective of the user as closely as possible. Despite this, models are usually trained to optimize performance on the training data when the real objective is to generalize well to new data. It would clearly be better to train models to generalize well, but this requires information about the correct way to generalize and this information is not normally available. When we are distilling the knowledge from a large model into a small one, however, we can train the small model to generalize in the same way as the large model. If the cumbersome model generalizes well because, for example, it is the average of a large ensemble of different models, a small model trained to generalize in the same way will typically do much better on test data than a small model that is trained in the normal way on the same training set as was used to train the ensemble.
+
+一般认为，用于训练的目标函数应该尽可能地反映用户的真实目标。训练模型通常是为了提高模型的泛化能力，能应用到更多的新的数据上面。显然，训练模型来很好地泛化会更好，但这需要关于正确泛化方式的信息，而这些信息通常是不可用的。然而，当将知识从一个大模型提炼成一个小模型时，可以训练小模型以与大模型相同的方式进行归纳。这句话简单来说就是不让小模型去学习数据的分布，而是让小模型去学习大模型的性能。
+
+例如,对于一个复杂的大模型来说,用同样的方法训练一般化的小模型在测试数据上的表现通常要比在用于训练集成的相同训练集上以正常方式训练的小模型好得多。
+
+- 大模型一般直参数量级非常大：bert，xlnet,T5等这种。
+
+>An obvious way to transfer the generalization ability of the cumbersome model to a small model is to use the class probabilities produced by the cumbersome model as "soft targets" for training the small model. For this transfer stage, we could use the same training set or a separate "transfer" set. When the cumbersome model is a large ensemble of simpler models, we can use an arithmetic or geometric mean of their individual predictive distributions as the soft targets. When the soft targets have high entropy, they provide much more information per training case than hard targets and much less variance in the gradient between training cases, so the small model can often be trained on much less data than the original cumbersome model and using a much higher learning rate.
+
+将大模型的泛化能力转移到小模型的一种明显的方法是用大模型产生的类概率作为小模型的“soft targets”进行训练。对于这个转移阶段，可以使用相同的训练集或单独的“转移”集。当大的模型是简单模型的大集合时，可以使用它们各自预测分布的算术或几何均值作为soft targets。当soft targets有很高的熵,能提供更多的信息/train情况比hard targets和更少的方差之间的梯度训练情况,所以小模型通常可以训练更少的数据比原来繁琐的模型和使用更高的学习速率。
+
+hard target：以二分类为例：样本预测为0/1，只属于0/1其中一个。
+soft targets:样本预测为0/1的概率，是0-1范围内的一个概率数值。
+
+因此可以简单的概况下蒸馏：
+
+也是迁移学习的范畴，但是这里的迁移不是把训练好的预训练模型去做下游任务的fine-tune,而是利用小模型去学习大模型的性能。把大模型的学习性能蒸馏给了小模型。
+
+参考李rumor的一个总结就是：
+
+>蒸馏这个概念之所以work，核心思想是因为好模型的目标不是拟合训练数据，而是学习如何泛化到新的数据。所以蒸馏的目标是让学生模型学习到教师模型的泛化能力，理论上得到的结果会比单纯拟合训练数据的学生模型要好。[李rumor](https://mp.weixin.qq.com/s/tKfHq49heakvjM0EVQPgHw)
+
+
+### Distillation
+
+蒸馏具体的做法
+
+Neural networks typically produce class probabilities by using a "softmax" output layer that converts the logit, $z_{i}$, computed for each class into a probability, $q_{i}$, by comparing $z_{i}$ with the other logits.
+
+下面是计算softmax概率值的公式。
+
+$$
+q_{i}=\frac{\exp \left(z_{i} / T\right)}{\sum_{j} \exp \left(z_{j} / T\right)}
+$$
+
+>where $T$ is a temperature that is normally set to $1 .$ Using a higher value for $T$ produces a softer probability distribution over classes.
+
+T是一个温度值，通常设置为1，当T取值较高的时候会得到一个“软”概率分布的值。
+
+>
+In the simplest form of distillation, knowledge is transferred to the distilled model by training it on a transfer set and using a soft target distribution for each case in the transfer set that is produced by using the cumbersome model with a high temperature in its softmax. The same high temperature is used when training the distilled model, but after it has been trained it uses a temperature of $1 .$
+
+
+
+在蒸馏的最简单形式中，知识转移到蒸馏模型，方法是在一个转移集上训练它，并对转移集中的每个情况使用软目标分布，这是使用softmax中带有较大T的大模型产生的。训练蒸馏模型时使用相同的T，但训练后使用T=1。
+
+- T就是一个小模型学习大模型的超参数
+
+>
+When the correct labels are known for all or some of the transfer set, this method can be significantly improved by also training the distilled model to produce the correct labels. One way to do this is to use the correct labels to modify the soft targets, but we found that a better way is to simply use a weighted average of two different objective functions. The first objective function is the cross entropy with the soft targets and this cross entropy is computed using the same high temperature in the softmax of the distilled model as was used for generating the soft targets from the cumbersome model. The second objective function is the cross entropy with the correct labels. This is computed using exactly the same logits in softmax of the distilled model but at a temperature of $1 .$ We found that the best results were generally obtained by using a condiderably lower weight on the second objective function. Since the magnitudes of the gradients produced by the soft targets scale as $1 / T^{2}$ it is important to multiply them by $T^{2}$ when using both hard and soft targets. This ensures that the relative contributions of the hard and soft targets remain roughly unchanged if the temperature used for distillation is changed while experimenting with meta-parameters.
+
+这种方式能够显著的提升蒸馏模型预测的准确性。
+
