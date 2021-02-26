@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>模型蒸馏笔记</title>
+  <meta name="description" content="模型蒸馏笔记" />
+  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="模型蒸馏笔记" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="模型蒸馏笔记" />
+  
+  
+  
+
+<meta name="author" content="高文欣" />
+
+
+<meta name="date" content="2021-02-26" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+
+<script src="libs/header-attrs-2.2/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="0.1" data-path=""><a href="#distilling-the-knowledge-in-a-neural-network"><i class="fa fa-check"></i><b>0.1</b> Distilling the Knowledge in a Neural Network</a>
+<ul>
+<li class="chapter" data-level="0.1.1" data-path=""><a href="#introduction"><i class="fa fa-check"></i><b>0.1.1</b> introduction</a></li>
+<li class="chapter" data-level="0.1.2" data-path=""><a href="#distillation"><i class="fa fa-check"></i><b>0.1.2</b> Distillation</a></li>
+<li class="chapter" data-level="0.1.3" data-path=""><a href="#matching-logits-is-a-special-case-of-distillation"><i class="fa fa-check"></i><b>0.1.3</b> Matching logits is a special case of distillation</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">模型蒸馏笔记</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">模型蒸馏笔记</h1>
+<p class="author"><em>高文欣</em></p>
+<p class="date"><em>2021-02-26</em></p>
+</div>
+<div id="distilling-the-knowledge-in-a-neural-network" class="section level2" number="0.1">
+<h2><span class="header-section-number">0.1</span> Distilling the Knowledge in a Neural Network</h2>
+<div id="introduction" class="section level3" number="0.1.1">
+<h3><span class="header-section-number">0.1.1</span> introduction</h3>
+<blockquote>
+<p>It is generally accepted that the objective function used for training should reflect the true objective of the user as closely as possible. Despite this, models are usually trained to optimize performance on the training data when the real objective is to generalize well to new data. It would clearly be better to train models to generalize well, but this requires information about the correct way to generalize and this information is not normally available. When we are distilling the knowledge from a large model into a small one, however, we can train the small model to generalize in the same way as the large model. If the cumbersome model generalizes well because, for example, it is the average of a large ensemble of different models, a small model trained to generalize in the same way will typically do much better on test data than a small model that is trained in the normal way on the same training set as was used to train the ensemble.<span class="citation">(Hinton, Vinyals, and Dean 2015)</span></p>
+</blockquote>
+<p>一般认为，用于训练的目标函数应该尽可能地反映用户的真实目标。训练模型通常是为了提高模型的泛化能力，能应用到更多的新的数据上面。显然，训练模型来很好地泛化会更好，但这需要关于正确泛化方式的信息，而这些信息通常是不可用的。然而，当将知识从一个大模型提炼成一个小模型时，可以训练小模型以与大模型相同的方式进行归纳。这句话简单来说就是不让小模型去学习数据的分布，而是让小模型去学习大模型的性能。</p>
+<p>例如,对于一个复杂的大模型来说,用同样的方法训练一般化的小模型在测试数据上的表现通常要比在用于训练集成的相同训练集上以正常方式训练的小模型好得多。</p>
+<ul>
+<li>大模型一般直参数量级非常大：bert，xlnet,T5等这种。</li>
+</ul>
+<blockquote>
+<p>An obvious way to transfer the generalization ability of the cumbersome model to a small model is to use the class probabilities produced by the cumbersome model as “soft targets” for training the small model. For this transfer stage, we could use the same training set or a separate “transfer” set. When the cumbersome model is a large ensemble of simpler models, we can use an arithmetic or geometric mean of their individual predictive distributions as the soft targets. When the soft targets have high entropy, they provide much more information per training case than hard targets and much less variance in the gradient between training cases, so the small model can often be trained on much less data than the original cumbersome model and using a much higher learning rate.</p>
+</blockquote>
+<p>将大模型的泛化能力迁移到小模型的一种明显的方法是用大模型产生的类概率作为小模型的“soft targets”进行训练。对于这个转移阶段，可以使用相同的训练集或单独的“转移”集。当大的模型是简单模型的大集合时，可以使用它们各自预测分布的算术或几何均值作为soft targets。当soft targets有很高的熵,能提供更多的信息train情况比hard targets和更少的方差之间的梯度训练情况,所以小模型通常可以训练更少的数据比原来繁琐的模型和使用更高的学习速率。</p>
+<p>hard target：以二分类为例：样本预测为0/1，只属于0/1其中一个。
+soft targets:样本预测为0/1的概率，是0-1范围内的一个概率数值。</p>
+<p>因此可以简单的概况下蒸馏：</p>
+<p>也是迁移学习的范畴，但是这里的迁移不是把训练好的预训练模型去做下游任务的fine-tune,而是利用小模型去学习大模型的性能。把大模型的学习性能蒸馏给了小模型。利用小模型学习大模型得到的soft-target的分布。</p>
+<p>参考李rumor的一个总结就是：</p>
+<blockquote>
+<p>蒸馏这个概念之所以work，核心思想是因为好模型的目标不是拟合训练数据，而是学习如何泛化到新的数据。所以蒸馏的目标是让学生模型学习到教师模型的泛化能力，理论上得到的结果会比单纯拟合训练数据的学生模型要好。<a href="https://mp.weixin.qq.com/s/tKfHq49heakvjM0EVQPgHw">李rumor</a></p>
+</blockquote>
+</div>
+<div id="distillation" class="section level3" number="0.1.2">
+<h3><span class="header-section-number">0.1.2</span> Distillation</h3>
+<p>蒸馏具体的做法</p>
+<p>Neural networks typically produce class probabilities by using a “softmax” output layer that converts the logit, <span class="math inline">\(z_{i}\)</span>, computed for each class into a probability, <span class="math inline">\(q_{i}\)</span>, by comparing <span class="math inline">\(z_{i}\)</span> with the other logits.</p>
+<p>下面是计算softmax概率值的公式。</p>
+<p><span class="math display">\[
+q_{i}=\frac{\exp \left(z_{i} / T\right)}{\sum_{j} \exp \left(z_{j} / T\right)}
+\]</span></p>
+<blockquote>
+<p>where <span class="math inline">\(T\)</span> is a temperature that is normally set to <span class="math inline">\(1 .\)</span> Using a higher value for <span class="math inline">\(T\)</span> produces a softer probability distribution over classes.</p>
+</blockquote>
+<p>T是一个温度值，通常设置为1，当T取值较高的时候会得到一个“软”概率分布的值。</p>
+<blockquote>
+<p>In the simplest form of distillation, knowledge is transferred to the distilled model by training it on a transfer set and using a soft target distribution for each case in the transfer set that is produced by using the cumbersome model with a high temperature in its softmax. The same high temperature is used when training the distilled model, but after it has been trained it uses a temperature of <span class="math inline">\(1 .\)</span></p>
+</blockquote>
+<p>在蒸馏的最简单形式中，知识转移到蒸馏模型，方法是在一个转移集上训练它，并对转移集中的每个情况使用软目标分布，这是使用softmax中带有较大T的大模型产生的。训练蒸馏模型时使用相同的T，但训练后使用T=1。</p>
+<ul>
+<li>T就是一个小模型学习大模型的超参数</li>
+</ul>
+<blockquote>
+<p>When the correct labels are known for all or some of the transfer set, this method can be significantly improved by also training the distilled model to produce the correct labels. One way to do this is to use the correct labels to modify the soft targets, but we found that a better way is to simply use a weighted average of two different objective functions. The first objective function is the cross entropy with the soft targets and this cross entropy is computed using the same high temperature in the softmax of the distilled model as was used for generating the soft targets from the cumbersome model. The second objective function is the cross entropy with the correct labels. This is computed using exactly the same logits in softmax of the distilled model but at a temperature of <span class="math inline">\(1 .\)</span> We found that the best results were generally obtained by using a condiderably lower weight on the second objective function. Since the magnitudes of the gradients produced by the soft targets scale as <span class="math inline">\(1 / T^{2}\)</span> it is important to multiply them by <span class="math inline">\(T^{2}\)</span> when using both hard and soft targets. This ensures that the relative contributions of the hard and soft targets remain roughly unchanged if the temperature used for distillation is changed while experimenting with meta-parameters.</p>
+</blockquote>
+<p>当所有或部分传输集都知道正确的标签时，通过训练蒸馏模型产生正确的标签，可以显著改进这种方法。一种方法是使用正确的标签来修改软目标，一个更好的方法是简单地使用两个不同目标函数的加权平均值。</p>
+<ul>
+<li><p>第1种目标函数是与软目标的交叉熵，该交叉熵的计算使用的是蒸馏模型的softmax中的high temperature，与从繁琐的模型生成软目标时使用的T相同。</p></li>
+<li><p>第2种目标函数于正确标签的交叉熵,此时T取值为1。</p></li>
+</ul>
+<p><span class="math inline">\(L=(1-\alpha) C E(y, p)+\alpha C E(q, p) \cdot T^{2}\)</span></p>
+<p>最终效果较好的实验是给第二个目标函数赋予一个较低的权重。因为梯度的范围是通过软目标产生的，会变为原来的<span class="math inline">\(1 / T^{2}\)</span>，当同时使用hard and soft targets时候需要乘上<span class="math inline">\(T^{2}\)</span>。这就保证了在使用meta-parameters进行实验时，如果用于蒸馏的温度发生变化，硬目标和软目标的相对贡献大致保持不变。</p>
+</div>
+<div id="matching-logits-is-a-special-case-of-distillation" class="section level3" number="0.1.3">
+<h3><span class="header-section-number">0.1.3</span> Matching logits is a special case of distillation</h3>
+<p>Each case in the transfer set contributes a cross-entropy gradient, <span class="math inline">\(d C / d z_{i},\)</span> with respect to each logit, <span class="math inline">\(z_{i}\)</span> of the distilled model. If the cumbersome model has logits <span class="math inline">\(v_{i}\)</span> which produce soft target probabilities <span class="math inline">\(p_{i}\)</span> and the transfer training is done at a temperature of <span class="math inline">\(T,\)</span> this gradient is given by:</p>
+<p><span class="math display">\[
+\frac{\partial C}{\partial z_{i}}=\frac{1}{T}\left(q_{i}-p_{i}\right)=\frac{1}{T}\left(\frac{e^{z_{i} / T}}{\sum_{j} e^{z_{j} / T}}-\frac{e^{v_{i} / T}}{\sum_{j} e^{v_{j} / T}}\right)
+\]</span></p>
+<p>If the temperature is high compared with the magnitude of the logits, we can approximate:</p>
+<p><span class="math display">\[
+\frac{\partial C}{\partial z_{i}} \approx \frac{1}{T}\left(\frac{1+z_{i} / T}{N+\sum_{j} z_{j} / T}-\frac{1+v_{i} / T}{N+\sum_{j} v_{j} / T}\right)
+\]</span>
+If we now assume that the logits have been zero-meaned separately for each transfer case so that <span class="math inline">\(\sum_{j} z_{j}=\sum_{j} v_{j}=0\)</span> Eq. 3 simplifies to:</p>
+<p><span class="math display">\[
+\frac{\partial C}{\partial z_{i}} \approx \frac{1}{N T^{2}}\left(z_{i}-v_{i}\right)
+\]</span></p>
+<blockquote>
+<p>So in the high temperature limit, distillation is equivalent to minimizing <span class="math inline">\(1 / 2\left(z_{i}-v_{i}\right)^{2},\)</span> provided the logits are zero-meaned separately for each transfer case. At lower temperatures, distillation pays much less attention to matching logits that are much more negative than the average. This is potentially advantageous because these logits are almost completely unconstrained by the cost function used for training the cumbersome model so they could be very noisy. On the other hand, the very negative logits may convey useful information about the knowledge acquired by the cumbersome model. Which of these effects dominates is an empirical question. We show that when the distilled model is much too small to capture all of the knowledege in the cumbersome model, intermediate temperatures work best which strongly suggests that ignoring the large negative logits can be helpful.</p>
+</blockquote>
+<p>若T很大，且logits分布的均值为0时，优化概率交叉熵和logits的平方差是等价的，因此学习软目标的交叉概率和学习logits在此时是等价的。</p>
+<p>hinton这篇主要是介绍模型蒸馏的一个思路，蒸馏模型学习的是什么。也是后面研究的基础。</p>
+<div id="refs" class="references hanging-indent">
+<div>
+<p>Hinton, Geoffrey, Oriol Vinyals, and Jeff Dean. 2015. “Distilling the Knowledge in a Neural Network,” March.</p>
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"search": false
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
