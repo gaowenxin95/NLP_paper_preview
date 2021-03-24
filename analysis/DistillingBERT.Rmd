@@ -1,0 +1,149 @@
+### 文章知识点总览
+
+**模型**：使用单层的bilstm对bert进行蒸馏
+
+**目标函数**：教师网络和学生网络logits的mse
+
+**模型结构**：
+
+![](figs/distillingbert_2.png)
+
+模型效果对比：
+
+![](figs/distillingbert_3.png)
+
+
+下面对每部分要点进行详细解读~
+
+### abstract
+ 
+ > We propose to distill knowledge from BERT, a state-ofthe-art language representation model, into a single-layer BiLSTM, as well as its siamese counterpart for sentence-pair tasks. [@2019Distilling]
+ 
+这篇文章是对bert蒸馏蒸馏到单层的BiLSTM。也就是之前提到的其中一种蒸馏方式用小的模型对复杂的大模型进行蒸馏。
+
+### Introduction
+
+>Our motivation is twofold: we question whether a simple architecture actually lacks representation power for text modeling, and we wish to study effective approaches to transfer knowledge from BERT to a BiLSTM. Concretely, we leverage the knowledge distillation approach (Ba and Caruana, 2014; Hinton et al.,
+2015)$,$ where a larger model serves as a teacher and a small model learns to mimic the teacher as a student. This approach is model agnostic, making knowledge transfer possible between BERT and a different neural architecture, such as a single-layer BiLSTM, in our case.
+
+本文是使用的单层的BiLSTM对bert进行蒸馏，原因有2：作者质疑一个简单的架构是否真的缺乏文本建模的表示能力并且希望能够让BiLSTM更好的学习到bert的性能。具体来说就是hinton提出的模型蒸馏的方式，大的模型作为teacher小模型学着模仿老师当学生。这种方法是模型不可知的，使知识在BERT和不同的神经结构之间转移成为可能，比如本文的单层的BiLSTM。
+
+>To facilitate effective knowledge transfer, however, we often require a large, unlabeled dataset. The teacher model provides the probability logits and estimated labels for these unannotated samples, and the student network learns from the teacher's outputs. In computer vision, unlabeled images are usually easy to obtain through augmenting the data using rotation, additive noise,and other distortions. However, obtaining additional, even unlabeled samples for a specific task can be difficult in NLP. Traditional data augmentation in NLP is typically task-specific (Wang and Eisner, 2016; Serban et al., 2016) and difficult to extend to other NLP tasks. To this end, we further propose a novel, rule-based textual data augmentation approach for constructing the knowledge transfer set. 
+
+迁移学习一般时在一个非常大的无label的数据集上面。教师模型为这些未标注的样本提供了probability logits和估计标签，学生网络从教师网络的输出中学习。
+
+在cv中，通过使用旋转、加性噪声和其他畸变来进行数据增强是比较容易的。
+然而，在NLP任务中做数据增强是相对困难的。传统的NLP数据增强是典型的任务特定的(Wang and Eisner, 2016;Serban等人，2016)，难以扩展到其他NLP任务。为此，本文进一步提出了一种新的基于规则的文本数据增强方法来构建知识转移集。
+
+> 
+We evaluate our approach on three tasks in sentence classification and sentence matching. Experiments show that our knowledge distillation procedure significantly outperforms training the original simpler network alone. 
+
+在三个文本分类任务和文本匹配上评估本文的方法。实验表明本文的知识蒸馏过程明显优于单独训练原始的简单网络。
+
+>
+With our approach, a shallow BiLSTMbased model achieves results comparable to Embeddings from Language Models (ELMo; Peters et al., 2018 ), but uses around 100 times fewer parameters and performs inference 15 times faster. Therefore, our model becomes a state-of-the-art "small" model for neural NLP.
+
+本文的基于bilstm的浅层模型可以达到语言模型(ELMo)的效果，但使用的参数约少100倍，推理速度快15倍。因此，本文的模型成为最先进的“小”模型的神经自然语言处理。
+
+
+### Approach
+
+>First, we choose the desired teacher and student models for the knowledge distillation approach. Then, we describe our distillation procedure, which comprises two major components: first, the addition of a logits-regression objective, and second, the construction of a transfer dataset, which augments the training set for more effective knowledge transfer.
+
+首先，我们选择所需的教师和学生模型的知识提炼方法。然后，我们描述了我们的蒸馏过程，这包括两个主要组成部分:
+- 添加一个logits-回归 作为目标函数。
+
+- 构建一个迁移数据集，以增强训练集，以实现更有效的知识迁移。
+
+
+
+每一层的含义解释的还是非常清楚的
+
+### Model Architecture
+
+模型结果详细描述
+>For the teacher network, we use the pretrained, fine-tuned BERT (Devlin et al., 2018) model,
+
+教师模型使用的是预训练的bert
+
+>In contrast, our student model is a single-layer BiLSTM with a non-linear classifier. After feeding the input word embeddings into the BiLSTM, the hidden states of the last step in each direction are concatenated and fed to a fully connected layer with rectified linear units (ReLUs), whose output is then passed to a softmax layer for classification (Figure 1). For sentence-pair tasks, we share BiLSTM encoder weights in a siamese architecture between the two sentence encoders, producing sentence vectors $\boldsymbol{h}_{s 1}$ and $\boldsymbol{h}_{s 2}$ (Figure 2). We then apply a standard concatenate-compare operation (Wang et al., 2018) between the two sentence vectors: $f\left(\boldsymbol{h}_{s 1}, \boldsymbol{h}_{s 2}\right)=\left[\boldsymbol{h}_{s 1}, \boldsymbol{h}_{s 2}, \boldsymbol{h}_{s 1} \odot\right.$
+$\left.\boldsymbol{h}_{s 2},\left|\boldsymbol{h}_{s 1}-\boldsymbol{h}_{s 2}\right|\right],$ where $\odot$ denotes elementwise
+multiplication. We feed this output to a ReLU-activated classifier.
+
+
+学生模型是具有非线性分类器的单层的BiLSTM。输入词嵌入到BiLSTM后，最后一步在每个方向上的隐藏状态被连接并馈送到带有整流线性单元(ReLUs)的全连接层，其输出随后被传递到softmax层进行分类(图1)。
+
+![](figs/distillingbert.png)
+
+
+对于句子对的任务，本文是在一个句子对的encoder中共享孪生BiLSTM encoder的权重，处理成句子两个句子向量 $\boldsymbol{h}_{s 1}$ and $\boldsymbol{h}_{s 2}$，具体如图2所示
+
+![](figs/distillingbert_2.png)
+孪生的bilstm对句子匹配问题共享encoder 的权重，其余每个符号看具体的解释。
+
+>
+It should be emphasized that we restrict the architecture engineering to a minimum to revisit the representation power of BiLSTM itself. We avoid any additional tricks, such as attention and layer normalization.
+
+严格的使用bilstm结构，没有多余的attention和layernorm
+
+### Distillation Objective
+
+本文的目标函数
+
+>The distillation objective is to penalize the mean-squared-error (MSE) loss between the student network's logits against the teacher's logits:
+
+蒸馏模型的目标函数是教师网络logits和学生网络logits的mse，公示如下：
+
+$$
+\mathcal{L}_{\text {distill }}=\left\|\boldsymbol{z}^{(B)}-\boldsymbol{z}^{(S)}\right\|_{2}^{2}
+$$
+- [ ] 这里为什么用mse，而不是kl散度，kl三度不是更能衡量两个网络的相似性嘛？
+
+>
+where $z^{(B)}$ and $z^{(S)}$ are the teacher's and student's
+logits, respectively. 
+
+$z^{(B)}$ 和 $z^{(S)}$ 分别是教师网络和学生网络的logits值
+
+
+
+Other measures such as cross entropy with soft targets are viable as well (Hinton et al., 2015 ); however, in our preliminary experiments, we found MSE to perform slightly better. At training time, the distilling objective can be used in conjunction with a traditional crossentropy loss against a one-hot label $t,$ given by
+
+其他的测量方法，如带有软目标的交叉熵也是可行的(Hinton等人，2015);然而，本文的初步实验中发现MSE的表现稍好一些。在训练时，可以将蒸馏目标与传统的交叉熵损失结合使用，对一个热标签$t，$给定
+
+$$
+\begin{array}{l}
+\mathcal{L}=\alpha \cdot \mathcal{L}_{\mathrm{CE}}+(1-\alpha) \cdot \mathcal{L}_{\text {distill }} \\
+=-\alpha \sum_{i} t_{i} \log y_{i}^{(S)}-(1-\alpha)\left\|\boldsymbol{z}^{(B)}-\boldsymbol{z}^{(S)}\right\|_{2}^{2}
+\end{array}
+$$
+
+When distilling with a labeled dataset, the one-hot target $t$ is simply the ground-truth label. When distilling with an unlabeled dataset, we use the predicted label by the teacher, i.e., $t_{i}=1$ if $i=\operatorname{argmax} \boldsymbol{y}^{(B)}$ and 0 otherwise.
+
+当使用有标签的数据集进行蒸馏的时候，one-hot的标签值就是真实的标签，当使用没有标签的数据集进行蒸馏会用教师网络进行标签预测。
+
+
+### Data Augmentation for Distillation
+
+蒸馏过程中的数据增强方法
+
+原因是解决标注样本过少的问题，教师网络进行蒸馏的数据量不够
+
+- Masking 使用bert的随机mask进行数据增强（nlpcda那个包中有这个）
+
+- POS-guided word replacement. 新词替换（可能会是语义发生变化）
+
+- n-gram sampling.采样（这个感觉中文不适用啊）
+
+### 对照实验部分
+
+4个数据集都是常见的文本分类数据集
+
+
+>We present the results of our models as well as baselines in Table $1 .$ For $\mathrm{QQP},$ we report both $\mathrm{F}_{1}$ and accuracy, since the dataset is slightly unbalanced. Following GLUE, we report the average score of each model on the datasets.
+
+对比的是F1 和accuracy值，因为样本稍微有些不平衡，从四个数据集上面看，蒸馏模型的效果确实不错，都达到了sota
+
+![](figs/distillingbert_3.png)
+
+其他的似乎什么重点了

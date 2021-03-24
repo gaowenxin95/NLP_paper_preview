@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2021-02-26" />
+<meta name="date" content="2021-03-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -71,6 +71,19 @@
 <li class="chapter" data-level="0.1.1" data-path=""><a href="#introduction"><i class="fa fa-check"></i><b>0.1.1</b> introduction</a></li>
 <li class="chapter" data-level="0.1.2" data-path=""><a href="#distillation"><i class="fa fa-check"></i><b>0.1.2</b> Distillation</a></li>
 <li class="chapter" data-level="0.1.3" data-path=""><a href="#matching-logits-is-a-special-case-of-distillation"><i class="fa fa-check"></i><b>0.1.3</b> Matching logits is a special case of distillation</a></li>
+<li class="chapter" data-level="0.1.4" data-path=""><a href="#experiment"><i class="fa fa-check"></i><b>0.1.4</b> Experiment</a></li>
+<li class="chapter" data-level="0.1.5" data-path=""><a href="#结论"><i class="fa fa-check"></i><b>0.1.5</b> 结论</a></li>
+</ul></li>
+<li class="chapter" data-level="0.2" data-path=""><a href="#distillingbert"><i class="fa fa-check"></i><b>0.2</b> DistillingBERT</a>
+<ul>
+<li class="chapter" data-level="0.2.1" data-path=""><a href="#文章知识点总览"><i class="fa fa-check"></i><b>0.2.1</b> 文章知识点总览</a></li>
+<li class="chapter" data-level="0.2.2" data-path=""><a href="#abstract"><i class="fa fa-check"></i><b>0.2.2</b> abstract</a></li>
+<li class="chapter" data-level="0.2.3" data-path=""><a href="#introduction-1"><i class="fa fa-check"></i><b>0.2.3</b> Introduction</a></li>
+<li class="chapter" data-level="0.2.4" data-path=""><a href="#approach"><i class="fa fa-check"></i><b>0.2.4</b> Approach</a></li>
+<li class="chapter" data-level="0.2.5" data-path=""><a href="#model-architecture"><i class="fa fa-check"></i><b>0.2.5</b> Model Architecture</a></li>
+<li class="chapter" data-level="0.2.6" data-path=""><a href="#distillation-objective"><i class="fa fa-check"></i><b>0.2.6</b> Distillation Objective</a></li>
+<li class="chapter" data-level="0.2.7" data-path=""><a href="#data-augmentation-for-distillation"><i class="fa fa-check"></i><b>0.2.7</b> Data Augmentation for Distillation</a></li>
+<li class="chapter" data-level="0.2.8" data-path=""><a href="#对照实验部分"><i class="fa fa-check"></i><b>0.2.8</b> 对照实验部分</a></li>
 </ul></li>
 </ul>
 
@@ -92,10 +105,11 @@
 <div id="header">
 <h1 class="title">模型蒸馏笔记</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2021-02-26</em></p>
+<p class="date"><em>2021-03-24</em></p>
 </div>
 <div id="distilling-the-knowledge-in-a-neural-network" class="section level2" number="0.1">
 <h2><span class="header-section-number">0.1</span> Distilling the Knowledge in a Neural Network</h2>
+<p>原文<a href="https://arxiv.org/pdf/1503.02531.pdf">Distilling the Knowledge in a Neural Network</a></p>
 <div id="introduction" class="section level3" number="0.1.1">
 <h3><span class="header-section-number">0.1.1</span> introduction</h3>
 <blockquote>
@@ -109,8 +123,14 @@
 <blockquote>
 <p>An obvious way to transfer the generalization ability of the cumbersome model to a small model is to use the class probabilities produced by the cumbersome model as “soft targets” for training the small model. For this transfer stage, we could use the same training set or a separate “transfer” set. When the cumbersome model is a large ensemble of simpler models, we can use an arithmetic or geometric mean of their individual predictive distributions as the soft targets. When the soft targets have high entropy, they provide much more information per training case than hard targets and much less variance in the gradient between training cases, so the small model can often be trained on much less data than the original cumbersome model and using a much higher learning rate.</p>
 </blockquote>
-<p>将大模型的泛化能力迁移到小模型的一种明显的方法是用大模型产生的类概率作为小模型的“soft targets”进行训练。对于这个转移阶段，可以使用相同的训练集或单独的“转移”集。当大的模型是简单模型的大集合时，可以使用它们各自预测分布的算术或几何均值作为soft targets。当soft targets有很高的熵,能提供更多的信息train情况比hard targets和更少的方差之间的梯度训练情况,所以小模型通常可以训练更少的数据比原来繁琐的模型和使用更高的学习速率。</p>
-<p>hard target：以二分类为例：样本预测为0/1，只属于0/1其中一个。
+<p>将大模型的泛化能力迁移到小模型的一种明显的方法是用大网络模型产生的类概率作为小模型的“soft targets”进行训练。对于这个转移阶段，可以使用相同的训练集或单独的“transfer” set
+。当大的网络模型是简单模型的大集合时(也就是集成模型)，可以使用它们各自预测分布的算术或几何均值作为soft targets。当soft targets有很高的熵,它们为每个训练案例提供了比硬目标更多的信息，并且训练案例之间梯度的方差也更小，因此小模型通常可以在比原始复杂模型少得多的数据上进行训练，并且使用更高的学习率。</p>
+<p>梯度方差更小，说明蒸馏得到的小模型是比较平稳的更加容易收敛的。</p>
+<blockquote>
+<p>For tasks like MNIST in which the cumbersome model almost always produces the correct answer with very high confidence, much of the information about the learned function resides in the ratios of very small probabilities in the soft targets. For example, one version of a 2 may be given a probability of <span class="math inline">\(10^{-6}\)</span> of being a 3 and <span class="math inline">\(10^{-9}\)</span> of being a 7 whereas for another version it may be the other way around. This is valuable information that defines a rich similarity structure over the data (i. e. it says which 2 ’s look like 3 ’s and which look like 7 ’s) but it has very little influence on the cross-entropy cost function during the transfer stage because the probabilities are so close to zero. Caruana and his collaborators circumvent this problem by using the logits (the inputs to the final softmax) rather than the probabilities produced by the softmax as the targets for learning the small model and they minimize the squared difference between the logits produced by the cumbersome model and the logits produced by the small model. Our more general solution, called “distillation”, is to raise the temperature of the final softmax until the cumbersome model produces a suitably soft set of targets. We then use the same high temperature when training the small model to match these soft targets. We show later that matching the logits of the cumbersome model is actually a special case of distillation.</p>
+</blockquote>
+<p>对于像MNIST这样的任务，复杂的大模型几乎总是以很高的置信度得出正确分类，关于学习函数的大部分信息都存在于软目标中非常小的概率比率中。例如，在MNIST数据中，对于某个2的输入，对于2 的预测概率会很高, 而对于2类似的数字，例如3和7的预测概率为 <span class="math inline">\(10^{-6}\)</span> 和 <span class="math inline">\(10^{-9}\)</span> 。这样的话, teacher网络学到数据的相似信息（例如数字2和3，7很类似) 很难传达给student网络。由于它们 的概率值接近0。因此，Caruana等人通过使用logits解决了这个问题，而不是softmax产生的概率作为学习小模型的目标，它们最小化了复杂大模型产生的对数和小模型产生的对数之间的差的平方。于是有了soft target.后文有详细的介绍。</p>
+<p>hard target：以二分类为例：样本预测为0/1，只属于0/1其中一个，也就是样本原有的标签。
 soft targets:样本预测为0/1的概率，是0-1范围内的一个概率数值。</p>
 <p>因此可以简单的概况下蒸馏：</p>
 <p>也是迁移学习的范畴，但是这里的迁移不是把训练好的预训练模型去做下游任务的fine-tune,而是利用小模型去学习大模型的性能。把大模型的学习性能蒸馏给了小模型。利用小模型学习大模型得到的soft-target的分布。</p>
@@ -123,31 +143,38 @@ soft targets:样本预测为0/1的概率，是0-1范围内的一个概率数值�
 <h3><span class="header-section-number">0.1.2</span> Distillation</h3>
 <p>蒸馏具体的做法</p>
 <p>Neural networks typically produce class probabilities by using a “softmax” output layer that converts the logit, <span class="math inline">\(z_{i}\)</span>, computed for each class into a probability, <span class="math inline">\(q_{i}\)</span>, by comparing <span class="math inline">\(z_{i}\)</span> with the other logits.</p>
-<p>下面是计算softmax概率值的公式。</p>
+<p>下面是计算soft softmax概率值的公式。于基本的softmax不同的地方在于引入了一个参数T</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" />
+softmax做二分类和sigmoid做二分类谁的效果更好一些？并给出原因</li>
+</ul>
 <p><span class="math display">\[
 q_{i}=\frac{\exp \left(z_{i} / T\right)}{\sum_{j} \exp \left(z_{j} / T\right)}
 \]</span></p>
 <blockquote>
 <p>where <span class="math inline">\(T\)</span> is a temperature that is normally set to <span class="math inline">\(1 .\)</span> Using a higher value for <span class="math inline">\(T\)</span> produces a softer probability distribution over classes.</p>
 </blockquote>
-<p>T是一个温度值，通常设置为1，当T取值较高的时候会得到一个“软”概率分布的值。</p>
+<p>T是一个温度值，通常设置为1，当T取值较高的时候会得到一个“soft”概率分布的值。</p>
 <blockquote>
 <p>In the simplest form of distillation, knowledge is transferred to the distilled model by training it on a transfer set and using a soft target distribution for each case in the transfer set that is produced by using the cumbersome model with a high temperature in its softmax. The same high temperature is used when training the distilled model, but after it has been trained it uses a temperature of <span class="math inline">\(1 .\)</span></p>
 </blockquote>
-<p>在蒸馏的最简单形式中，知识转移到蒸馏模型，方法是在一个转移集上训练它，并对转移集中的每个情况使用软目标分布，这是使用softmax中带有较大T的大模型产生的。训练蒸馏模型时使用相同的T，但训练后使用T=1。</p>
+<p><strong>简单的蒸馏方式，从模型迁移的角度去理解</strong></p>
+<p>在蒸馏的最简单形式中，知识转移到蒸馏模型，方法是在一个转移集上训练它，并对转移集中的每个情况使用软目标分布，这是使用softmax中带有较大T的大模型产生的。训练蒸馏模型时使用相同的T，但训练后使用T=1。简单来说就是蒸馏模型和原模型使用相同的T。</p>
+<p>简单的来说其中的一种蒸馏方式是根据“迁移模型”的方式，大模型和蒸馏模型使用的是相同的T，将</p>
 <ul>
-<li>T就是一个小模型学习大模型的超参数</li>
+<li>T一个小模型学习大模型的超参数，温度函数</li>
 </ul>
 <blockquote>
 <p>When the correct labels are known for all or some of the transfer set, this method can be significantly improved by also training the distilled model to produce the correct labels. One way to do this is to use the correct labels to modify the soft targets, but we found that a better way is to simply use a weighted average of two different objective functions. The first objective function is the cross entropy with the soft targets and this cross entropy is computed using the same high temperature in the softmax of the distilled model as was used for generating the soft targets from the cumbersome model. The second objective function is the cross entropy with the correct labels. This is computed using exactly the same logits in softmax of the distilled model but at a temperature of <span class="math inline">\(1 .\)</span> We found that the best results were generally obtained by using a condiderably lower weight on the second objective function. Since the magnitudes of the gradients produced by the soft targets scale as <span class="math inline">\(1 / T^{2}\)</span> it is important to multiply them by <span class="math inline">\(T^{2}\)</span> when using both hard and soft targets. This ensures that the relative contributions of the hard and soft targets remain roughly unchanged if the temperature used for distillation is changed while experimenting with meta-parameters.</p>
 </blockquote>
-<p>当所有或部分传输集都知道正确的标签时，通过训练蒸馏模型产生正确的标签，可以显著改进这种方法。一种方法是使用正确的标签来修改软目标，一个更好的方法是简单地使用两个不同目标函数的加权平均值。</p>
+<p>第二种目标函数：
+当所有或部分传输集都知道正确的标签时，通过训练蒸馏模型产生正确的标签，可以显著改进这种方法。一种方法是使用正确的标签来修改软目标，一个更好的方法是简单地使用两个不同目标函数的加权平均值。</p>
 <ul>
 <li><p>第1种目标函数是与软目标的交叉熵，该交叉熵的计算使用的是蒸馏模型的softmax中的high temperature，与从繁琐的模型生成软目标时使用的T相同。</p></li>
 <li><p>第2种目标函数于正确标签的交叉熵,此时T取值为1。</p></li>
 </ul>
 <p><span class="math inline">\(L=(1-\alpha) C E(y, p)+\alpha C E(q, p) \cdot T^{2}\)</span></p>
-<p>最终效果较好的实验是给第二个目标函数赋予一个较低的权重。因为梯度的范围是通过软目标产生的，会变为原来的<span class="math inline">\(1 / T^{2}\)</span>，当同时使用hard and soft targets时候需要乘上<span class="math inline">\(T^{2}\)</span>。这就保证了在使用meta-parameters进行实验时，如果用于蒸馏的温度发生变化，硬目标和软目标的相对贡献大致保持不变。</p>
+<p>最终效果较好的实验是给第二个目标函数赋予一个较低的权重。因为梯度的范围是通过软目标产生的，会变为原来的<span class="math inline">\(1 / T^{2}\)</span>，当同时使用hard and soft targets时候,软目标函数需要乘上<span class="math inline">\(T^{2}\)</span>。这就保证了在使用meta-parameters进行实验时，如果用于蒸馏的温度发生变化,，硬目标和软目标的相对贡献大致保持不变。</p>
 </div>
 <div id="matching-logits-is-a-special-case-of-distillation" class="section level3" number="0.1.3">
 <h3><span class="header-section-number">0.1.3</span> Matching logits is a special case of distillation</h3>
@@ -167,10 +194,157 @@ If we now assume that the logits have been zero-meaned separately for each trans
 <p>So in the high temperature limit, distillation is equivalent to minimizing <span class="math inline">\(1 / 2\left(z_{i}-v_{i}\right)^{2},\)</span> provided the logits are zero-meaned separately for each transfer case. At lower temperatures, distillation pays much less attention to matching logits that are much more negative than the average. This is potentially advantageous because these logits are almost completely unconstrained by the cost function used for training the cumbersome model so they could be very noisy. On the other hand, the very negative logits may convey useful information about the knowledge acquired by the cumbersome model. Which of these effects dominates is an empirical question. We show that when the distilled model is much too small to capture all of the knowledege in the cumbersome model, intermediate temperatures work best which strongly suggests that ignoring the large negative logits can be helpful.</p>
 </blockquote>
 <p>若T很大，且logits分布的均值为0时，优化概率交叉熵和logits的平方差是等价的，因此学习软目标的交叉概率和学习logits在此时是等价的。</p>
-<p>hinton这篇主要是介绍模型蒸馏的一个思路，蒸馏模型学习的是什么。也是后面研究的基础。</p>
+<p>hinton这篇主要是介绍模型蒸馏的一个思路，蒸馏模型学习的是什么。也是后面研究的基础。
+把多个模型的知识提炼给单个的模型，教师模型教学生模型。</p>
+</div>
+<div id="experiment" class="section level3" number="0.1.4">
+<h3><span class="header-section-number">0.1.4</span> Experiment</h3>
+<p>这篇文章的实验部分如下</p>
+<blockquote>
+<p>This net achieved 67 test errors whereas a smaller net with two hidden layers of 800 rectified linear hidden units and no regularization achieved 146 errors. But if the smaller net was regularized solely by adding the additional task of matching the soft targets produced by the large net at a temperature of 20 , it achieved 74 test errors. This shows that soft targets can transfer a great deal of knowledge to the distilled model, including the knowledge about how to generalize that is learned from translated training data even though the transfer set does not contain any translations.</p>
+</blockquote>
+<p>在MNIST这个数据集上，先使用大的网络进行训练测试集错误67个，使用小网络训练测试集错误146个。加入soft targets到目标函数中相当于加入了正则项，测试集的错误的的个数降低到了74个。模型蒸馏确实是使模型的结果变好了</p>
+<blockquote>
+<p>Table 1 shows that, indeed, our distillation approach is able to extract more useful information from the training set than simply using the hard labels to train a single model. More than <span class="math inline">\(80 \%\)</span> of the improvement in frame classification accuracy achieved by using an ensemble of 10 models is transferred to the distilled model which is similar to the improvement we observed in our preliminary experiments on MNIST. The ensemble gives a smaller improvement on the ultimate objective of WER (on a 23K-word test set) due to the mismatch in the objective function, but again, the improvement in WER achieved by the ensemble is transferred to the distilled model.</p>
+</blockquote>
+<p>在speech recognition领域中
+根据表1的实验结果来看，minst测试集在模型蒸馏的结果上面比baseline的效果是提升的，比10个模型做emsemble的结果略低，说明蒸馏模型确实可以学习到大模型的参数。</p>
+<p><img src="figs/distilling_1.png" /></p>
+</div>
+<div id="结论" class="section level3" number="0.1.5">
+<h3><span class="header-section-number">0.1.5</span> 结论</h3>
+<blockquote>
+<p>We have shown that distilling works very well for transferring knowledge from an ensemble or from a large highly regularized model into a smaller, distilled model.</p>
+</blockquote>
+<p>本文展示了蒸馏的方式包括，从ensemble学习中进行知识蒸馏,让蒸馏模型能够无线接近于集成模型的结果和将大的正则化的模型转移到小模型上面。</p>
+</div>
+</div>
+<div id="distillingbert" class="section level2" number="0.2">
+<h2><span class="header-section-number">0.2</span> DistillingBERT</h2>
+<p>原文：<a href="https://arxiv.org/abs/1903.12136">Distilling Task-Speciﬁc Knowledge from BERT into Simple Neural Networks</a></p>
+<div id="文章知识点总览" class="section level3" number="0.2.1">
+<h3><span class="header-section-number">0.2.1</span> 文章知识点总览</h3>
+<p><strong>模型</strong>：使用单层的bilstm对bert进行蒸馏</p>
+<p><strong>目标函数</strong>：教师网络和学生网络logits的mse</p>
+<p><strong>模型结构</strong>：</p>
+<p><img src="figs/distillingbert_2.png" /></p>
+<p>模型效果对比：</p>
+<p><img src="figs/distillingbert_3.png" /></p>
+<p>下面对每部分要点进行详细解读~</p>
+</div>
+<div id="abstract" class="section level3" number="0.2.2">
+<h3><span class="header-section-number">0.2.2</span> abstract</h3>
+<blockquote>
+<p>We propose to distill knowledge from BERT, a state-ofthe-art language representation model, into a single-layer BiLSTM, as well as its siamese counterpart for sentence-pair tasks. <span class="citation">(Tang et al. 2019)</span></p>
+</blockquote>
+<p>这篇文章是对bert蒸馏蒸馏到单层的BiLSTM。也就是之前提到的其中一种蒸馏方式用小的模型对复杂的大模型进行蒸馏。</p>
+</div>
+<div id="introduction-1" class="section level3" number="0.2.3">
+<h3><span class="header-section-number">0.2.3</span> Introduction</h3>
+<blockquote>
+<p>Our motivation is twofold: we question whether a simple architecture actually lacks representation power for text modeling, and we wish to study effective approaches to transfer knowledge from BERT to a BiLSTM. Concretely, we leverage the knowledge distillation approach (Ba and Caruana, 2014; Hinton et al.,
+2015)<span class="math inline">\(,\)</span> where a larger model serves as a teacher and a small model learns to mimic the teacher as a student. This approach is model agnostic, making knowledge transfer possible between BERT and a different neural architecture, such as a single-layer BiLSTM, in our case.</p>
+</blockquote>
+<p>本文是使用的单层的BiLSTM对bert进行蒸馏，原因有2：作者质疑一个简单的架构是否真的缺乏文本建模的表示能力并且希望能够让BiLSTM更好的学习到bert的性能。具体来说就是hinton提出的模型蒸馏的方式，大的模型作为teacher小模型学着模仿老师当学生。这种方法是模型不可知的，使知识在BERT和不同的神经结构之间转移成为可能，比如本文的单层的BiLSTM。</p>
+<blockquote>
+<p>To facilitate effective knowledge transfer, however, we often require a large, unlabeled dataset. The teacher model provides the probability logits and estimated labels for these unannotated samples, and the student network learns from the teacher’s outputs. In computer vision, unlabeled images are usually easy to obtain through augmenting the data using rotation, additive noise,and other distortions. However, obtaining additional, even unlabeled samples for a specific task can be difficult in NLP. Traditional data augmentation in NLP is typically task-specific (Wang and Eisner, 2016; Serban et al., 2016) and difficult to extend to other NLP tasks. To this end, we further propose a novel, rule-based textual data augmentation approach for constructing the knowledge transfer set.</p>
+</blockquote>
+<p>迁移学习一般时在一个非常大的无label的数据集上面。教师模型为这些未标注的样本提供了probability logits和估计标签，学生网络从教师网络的输出中学习。</p>
+<p>在cv中，通过使用旋转、加性噪声和其他畸变来进行数据增强是比较容易的。
+然而，在NLP任务中做数据增强是相对困难的。传统的NLP数据增强是典型的任务特定的(Wang and Eisner, 2016;Serban等人，2016)，难以扩展到其他NLP任务。为此，本文进一步提出了一种新的基于规则的文本数据增强方法来构建知识转移集。</p>
+<blockquote>
+<p>We evaluate our approach on three tasks in sentence classification and sentence matching. Experiments show that our knowledge distillation procedure significantly outperforms training the original simpler network alone.</p>
+</blockquote>
+<p>在三个文本分类任务和文本匹配上评估本文的方法。实验表明本文的知识蒸馏过程明显优于单独训练原始的简单网络。</p>
+<blockquote>
+<p>With our approach, a shallow BiLSTMbased model achieves results comparable to Embeddings from Language Models (ELMo; Peters et al., 2018 ), but uses around 100 times fewer parameters and performs inference 15 times faster. Therefore, our model becomes a state-of-the-art “small” model for neural NLP.</p>
+</blockquote>
+<p>本文的基于bilstm的浅层模型可以达到语言模型(ELMo)的效果，但使用的参数约少100倍，推理速度快15倍。因此，本文的模型成为最先进的“小”模型的神经自然语言处理。</p>
+</div>
+<div id="approach" class="section level3" number="0.2.4">
+<h3><span class="header-section-number">0.2.4</span> Approach</h3>
+<blockquote>
+<p>First, we choose the desired teacher and student models for the knowledge distillation approach. Then, we describe our distillation procedure, which comprises two major components: first, the addition of a logits-regression objective, and second, the construction of a transfer dataset, which augments the training set for more effective knowledge transfer.</p>
+</blockquote>
+<p>首先，我们选择所需的教师和学生模型的知识提炼方法。然后，我们描述了我们的蒸馏过程，这包括两个主要组成部分:
+- 添加一个logits-回归 作为目标函数。</p>
+<ul>
+<li>构建一个迁移数据集，以增强训练集，以实现更有效的知识迁移。</li>
+</ul>
+<p>每一层的含义解释的还是非常清楚的</p>
+</div>
+<div id="model-architecture" class="section level3" number="0.2.5">
+<h3><span class="header-section-number">0.2.5</span> Model Architecture</h3>
+<p>模型结果详细描述
+&gt;For the teacher network, we use the pretrained, fine-tuned BERT (Devlin et al., 2018) model,</p>
+<p>教师模型使用的是预训练的bert</p>
+<blockquote>
+<p>In contrast, our student model is a single-layer BiLSTM with a non-linear classifier. After feeding the input word embeddings into the BiLSTM, the hidden states of the last step in each direction are concatenated and fed to a fully connected layer with rectified linear units (ReLUs), whose output is then passed to a softmax layer for classification (Figure 1). For sentence-pair tasks, we share BiLSTM encoder weights in a siamese architecture between the two sentence encoders, producing sentence vectors <span class="math inline">\(\boldsymbol{h}_{s 1}\)</span> and <span class="math inline">\(\boldsymbol{h}_{s 2}\)</span> (Figure 2). We then apply a standard concatenate-compare operation (Wang et al., 2018) between the two sentence vectors: <span class="math inline">\(f\left(\boldsymbol{h}_{s 1}, \boldsymbol{h}_{s 2}\right)=\left[\boldsymbol{h}_{s 1}, \boldsymbol{h}_{s 2}, \boldsymbol{h}_{s 1} \odot\right.\)</span>
+<span class="math inline">\(\left.\boldsymbol{h}_{s 2},\left|\boldsymbol{h}_{s 1}-\boldsymbol{h}_{s 2}\right|\right],\)</span> where <span class="math inline">\(\odot\)</span> denotes elementwise
+multiplication. We feed this output to a ReLU-activated classifier.</p>
+</blockquote>
+<p>学生模型是具有非线性分类器的单层的BiLSTM。输入词嵌入到BiLSTM后，最后一步在每个方向上的隐藏状态被连接并馈送到带有整流线性单元(ReLUs)的全连接层，其输出随后被传递到softmax层进行分类(图1)。</p>
+<p><img src="figs/distillingbert.png" /></p>
+<p>对于句子对的任务，本文是在一个句子对的encoder中共享孪生BiLSTM encoder的权重，处理成句子两个句子向量 <span class="math inline">\(\boldsymbol{h}_{s 1}\)</span> and <span class="math inline">\(\boldsymbol{h}_{s 2}\)</span>，具体如图2所示</p>
+<p><img src="figs/distillingbert_2.png" />
+孪生的bilstm对句子匹配问题共享encoder 的权重，其余每个符号看具体的解释。</p>
+<blockquote>
+<p>It should be emphasized that we restrict the architecture engineering to a minimum to revisit the representation power of BiLSTM itself. We avoid any additional tricks, such as attention and layer normalization.</p>
+</blockquote>
+<p>严格的使用bilstm结构，没有多余的attention和layernorm</p>
+</div>
+<div id="distillation-objective" class="section level3" number="0.2.6">
+<h3><span class="header-section-number">0.2.6</span> Distillation Objective</h3>
+<p>本文的目标函数</p>
+<blockquote>
+<p>The distillation objective is to penalize the mean-squared-error (MSE) loss between the student network’s logits against the teacher’s logits:</p>
+</blockquote>
+<p>蒸馏模型的目标函数是教师网络logits和学生网络logits的mse，公示如下：</p>
+<p><span class="math display">\[
+\mathcal{L}_{\text {distill }}=\left\|\boldsymbol{z}^{(B)}-\boldsymbol{z}^{(S)}\right\|_{2}^{2}
+\]</span>
+- [ ] 这里为什么用mse，而不是kl散度，kl三度不是更能衡量两个网络的相似性嘛？</p>
+<blockquote>
+<p>where <span class="math inline">\(z^{(B)}\)</span> and <span class="math inline">\(z^{(S)}\)</span> are the teacher’s and student’s
+logits, respectively.</p>
+</blockquote>
+<p><span class="math inline">\(z^{(B)}\)</span> 和 <span class="math inline">\(z^{(S)}\)</span> 分别是教师网络和学生网络的logits值</p>
+<p>Other measures such as cross entropy with soft targets are viable as well (Hinton et al., 2015 ); however, in our preliminary experiments, we found MSE to perform slightly better. At training time, the distilling objective can be used in conjunction with a traditional crossentropy loss against a one-hot label <span class="math inline">\(t,\)</span> given by</p>
+<p>其他的测量方法，如带有软目标的交叉熵也是可行的(Hinton等人，2015);然而，本文的初步实验中发现MSE的表现稍好一些。在训练时，可以将蒸馏目标与传统的交叉熵损失结合使用，对一个热标签<span class="math inline">\(t，\)</span>给定</p>
+<p><span class="math display">\[
+\begin{array}{l}
+\mathcal{L}=\alpha \cdot \mathcal{L}_{\mathrm{CE}}+(1-\alpha) \cdot \mathcal{L}_{\text {distill }} \\
+=-\alpha \sum_{i} t_{i} \log y_{i}^{(S)}-(1-\alpha)\left\|\boldsymbol{z}^{(B)}-\boldsymbol{z}^{(S)}\right\|_{2}^{2}
+\end{array}
+\]</span></p>
+<p>When distilling with a labeled dataset, the one-hot target <span class="math inline">\(t\)</span> is simply the ground-truth label. When distilling with an unlabeled dataset, we use the predicted label by the teacher, i.e., <span class="math inline">\(t_{i}=1\)</span> if <span class="math inline">\(i=\operatorname{argmax} \boldsymbol{y}^{(B)}\)</span> and 0 otherwise.</p>
+<p>当使用有标签的数据集进行蒸馏的时候，one-hot的标签值就是真实的标签，当使用没有标签的数据集进行蒸馏会用教师网络进行标签预测。</p>
+</div>
+<div id="data-augmentation-for-distillation" class="section level3" number="0.2.7">
+<h3><span class="header-section-number">0.2.7</span> Data Augmentation for Distillation</h3>
+<p>蒸馏过程中的数据增强方法</p>
+<p>原因是解决标注样本过少的问题，教师网络进行蒸馏的数据量不够</p>
+<ul>
+<li><p>Masking 使用bert的随机mask进行数据增强（nlpcda那个包中有这个）</p></li>
+<li><p>POS-guided word replacement. 新词替换（可能会是语义发生变化）</p></li>
+<li><p>n-gram sampling.采样（这个感觉中文不适用啊）</p></li>
+</ul>
+</div>
+<div id="对照实验部分" class="section level3" number="0.2.8">
+<h3><span class="header-section-number">0.2.8</span> 对照实验部分</h3>
+<p>4个数据集都是常见的文本分类数据集</p>
+<blockquote>
+<p>We present the results of our models as well as baselines in Table <span class="math inline">\(1 .\)</span> For <span class="math inline">\(\mathrm{QQP},\)</span> we report both <span class="math inline">\(\mathrm{F}_{1}\)</span> and accuracy, since the dataset is slightly unbalanced. Following GLUE, we report the average score of each model on the datasets.</p>
+</blockquote>
+<p>对比的是F1 和accuracy值，因为样本稍微有些不平衡，从四个数据集上面看，蒸馏模型的效果确实不错，都达到了sota</p>
+<p><img src="figs/distillingbert_3.png" /></p>
+<p>其他的似乎什么重点了</p>
 <div id="refs" class="references hanging-indent">
 <div>
 <p>Hinton, Geoffrey, Oriol Vinyals, and Jeff Dean. 2015. “Distilling the Knowledge in a Neural Network,” March.</p>
+</div>
+<div>
+<p>Tang, R., Y. Lu, L. Liu, L. Mou, O. Vechtomova, and J. Lin. 2019. “Distilling Task-Specific Knowledge from Bert into Simple Neural Networks.”</p>
 </div>
 </div>
 </div>

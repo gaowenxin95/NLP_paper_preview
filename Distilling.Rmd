@@ -13,7 +13,16 @@ bibliography: refs/add.bib
 
 ## Distilling the Knowledge in a Neural Network
 
+原文[Distilling the Knowledge in a Neural Network](https://arxiv.org/pdf/1503.02531.pdf)
 
 ```{r child='analysis/distilling_hinton.Rmd'}
+
+```
+
+## DistillingBERT
+
+原文：[Distilling Task-Speciﬁc Knowledge from BERT into Simple Neural Networks](https://arxiv.org/abs/1903.12136)
+
+```{r child='analysis/DistillingBERT.Rmd'}
 
 ```
