@@ -41,4 +41,15 @@ KD一个比较[靠谱的解释是Naiyan的这篇]( Wanghttps://www.zhihu.com/que
 
 ```
 
+## DistilBERT a distilled version of BERT smaller faster cheaper and lighter
+
+原文：[DistilBERT, a distilled version of BERT: smaller,
+faster, cheaper and lighter](https://arxiv.org/pdf/1908.09355.pdf)
+
+```{r child='analysis/DistilBERT_victor.Rmd'}
+
+```
+
+
+
 ## 参考文献

@@ -1,0 +1,53 @@
+
+### 文章知识点总览
+
+文章很短，直接往下看吧
+
+
+### abstract
+
+>
+While most prior work investigated the use of distillation for building task-specific models, we leverage knowledge distillation during the pre-training phase and show that it is possible to reduce the size of a BERT model by $40 \%,$ while retaining $97 \%$ of its language understanding capabilities and being $60 \%$ faster. [@2019DistilBERT]
+
+之前的蒸馏模型往往使用在特定的任务上面，本文在预训练阶段进行模型蒸馏，能使bert模型缩小40%，保留模型的97%的能力，速度提高了60%。（看上去不错！）
+
+>To leverage the inductive biases learned by larger models during pre-training, we introduce a triple loss combining language modeling, distillation and cosine-distance losses. 
+
+为了利用大模型在训练前学到的归纳偏差，本文引入了结合语言建模、蒸馏和余弦距离损失的三重损失。（响起了trible kill）
+
+### introdiction
+
+![](figs/DistilBERT_victor_1.png)
+
+这个图表示一些预训练模型的参数量级，可以看到DistilBERT这个量级对比其他预训练模型还是非常低的
+
+> We also show that our compressed models are small enough to run on the edge, e.g. on mobile devices.
+
+模型居然还能在一定设备上面跑
+
+
+### DistilBERT a distilled version of BERT
+
+bert的蒸馏版本
+
+>Student architecture In the present work, the student - DistilBERT - has the same general architecture as BERT. The token-type embeddings and the pooler are removed while the number of layers is reduced by a factor of $2 .$ Most of the operations used in the Transformer architecture (linear layer and layer normalisation) are highly optimized in modern linear algebra frameworks and our investigations showed that variations on the last dimension of the tensor (hidden size dimension) have a smaller impact on computation efficiency (for a fixed parameters budget) than variations on other factors like the number of layers. Thus we focus on reducing the number of layers.
+
+student model 具有和Bert相同的结构，当模型层数减少1/2时，移除了Token type embedding 和pooler. Transformer 架构中线性层和LN层，可以充分地优化模型结构，本文研究表明最后一层张量维度的变化对计算效率影响 比层数变化要小，所以作者关注于减少模型层数。在初始化方面，作者从teacher model中每两层选择一层做初始化，蒸馏应用了Liu et al. [2019] 提出的 BERT 模型训练最佳实践。语料和 Bert 使用的一致。
+
+本文的重点放在了减少网络层数上面，也是每两层
+
+>
+Student initialization In addition to the previously described optimization and architectural choices, an important element in our training procedure is to find the right initialization for the sub-network to converge. Taking advantage of the common dimensionality between teacher and student networks, we initialize the student from the teacher by taking one layer out of two.
+
+除了前面描述的优化和架构选择之外，本文训练过程中是为子网络寻找正确的初始化方法以使其收敛。利用教师网络和学生网络的共同维度，从教师网络中每两层抽取一层进行初始化，和上一篇中间层蒸馏是一样的。
+
+每隔两层抽一层进行蒸馏，可以有效的减少模型的层数
+
+![](figs/DistilBERT_victor_2.png)
+
+表1的结果蒸馏效果确实还不错
+表2的结果在下游任务上面也还可以，符合说的效果达到97%
+表3是参数量级，差不多减少了40%吧比bert-base
+
+- 个人感觉这篇文章是上一篇的一部分，好像没什么创新，实验做的还算充分
+

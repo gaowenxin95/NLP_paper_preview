@@ -94,6 +94,13 @@
 <li class="chapter" data-level="0.3.4" data-path=""><a href="#patient-knowledge-distillation"><i class="fa fa-check"></i><b>0.3.4</b> Patient Knowledge Distillation</a></li>
 <li class="chapter" data-level="0.3.5" data-path=""><a href="#实验部分"><i class="fa fa-check"></i><b>0.3.5</b> 实验部分</a></li>
 </ul></li>
+<li class="chapter" data-level="0.4" data-path=""><a href="#distilbert-a-distilled-version-of-bert-smaller-faster-cheaper-and-lighter"><i class="fa fa-check"></i><b>0.4</b> DistilBERT a distilled version of BERT smaller faster cheaper and lighter</a>
+<ul>
+<li class="chapter" data-level="0.4.1" data-path=""><a href="#文章知识点总览-3"><i class="fa fa-check"></i><b>0.4.1</b> 文章知识点总览</a></li>
+<li class="chapter" data-level="0.4.2" data-path=""><a href="#abstract-2"><i class="fa fa-check"></i><b>0.4.2</b> abstract</a></li>
+<li class="chapter" data-level="0.4.3" data-path=""><a href="#introdiction"><i class="fa fa-check"></i><b>0.4.3</b> introdiction</a></li>
+<li class="chapter" data-level="0.4.4" data-path=""><a href="#distilbert-a-distilled-version-of-bert"><i class="fa fa-check"></i><b>0.4.4</b> DistilBERT a distilled version of BERT</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path=""><a href="#参考文献"><i class="fa fa-check"></i>参考文献</a></li>
 </ul>
 
@@ -559,11 +566,64 @@ L_{P K D}=(1-\alpha) L_{C E}^{s}+\alpha L_{D S}+\beta L_{P T}
 <p>为什么？</p>
 </div>
 </div>
+<div id="distilbert-a-distilled-version-of-bert-smaller-faster-cheaper-and-lighter" class="section level2" number="0.4">
+<h2><span class="header-section-number">0.4</span> DistilBERT a distilled version of BERT smaller faster cheaper and lighter</h2>
+<p>原文：<a href="https://arxiv.org/pdf/1908.09355.pdf">DistilBERT, a distilled version of BERT: smaller,
+faster, cheaper and lighter</a></p>
+<div id="文章知识点总览-3" class="section level3" number="0.4.1">
+<h3><span class="header-section-number">0.4.1</span> 文章知识点总览</h3>
+<p>文章很短，直接往下看吧</p>
+</div>
+<div id="abstract-2" class="section level3" number="0.4.2">
+<h3><span class="header-section-number">0.4.2</span> abstract</h3>
+<blockquote>
+<p>While most prior work investigated the use of distillation for building task-specific models, we leverage knowledge distillation during the pre-training phase and show that it is possible to reduce the size of a BERT model by <span class="math inline">\(40 \%,\)</span> while retaining <span class="math inline">\(97 \%\)</span> of its language understanding capabilities and being <span class="math inline">\(60 \%\)</span> faster. <span class="citation">(Sanh et al. 2019)</span></p>
+</blockquote>
+<p>之前的蒸馏模型往往使用在特定的任务上面，本文在预训练阶段进行模型蒸馏，能使bert模型缩小40%，保留模型的97%的能力，速度提高了60%。（看上去不错！）</p>
+<blockquote>
+<p>To leverage the inductive biases learned by larger models during pre-training, we introduce a triple loss combining language modeling, distillation and cosine-distance losses.</p>
+</blockquote>
+<p>为了利用大模型在训练前学到的归纳偏差，本文引入了结合语言建模、蒸馏和余弦距离损失的三重损失。（响起了trible kill）</p>
+</div>
+<div id="introdiction" class="section level3" number="0.4.3">
+<h3><span class="header-section-number">0.4.3</span> introdiction</h3>
+<p><img src="figs/DistilBERT_victor_1.png" /></p>
+<p>这个图表示一些预训练模型的参数量级，可以看到DistilBERT这个量级对比其他预训练模型还是非常低的</p>
+<blockquote>
+<p>We also show that our compressed models are small enough to run on the edge, e.g. on mobile devices.</p>
+</blockquote>
+<p>模型居然还能在一定设备上面跑</p>
+</div>
+<div id="distilbert-a-distilled-version-of-bert" class="section level3" number="0.4.4">
+<h3><span class="header-section-number">0.4.4</span> DistilBERT a distilled version of BERT</h3>
+<p>bert的蒸馏版本</p>
+<blockquote>
+<p>Student architecture In the present work, the student - DistilBERT - has the same general architecture as BERT. The token-type embeddings and the pooler are removed while the number of layers is reduced by a factor of <span class="math inline">\(2 .\)</span> Most of the operations used in the Transformer architecture (linear layer and layer normalisation) are highly optimized in modern linear algebra frameworks and our investigations showed that variations on the last dimension of the tensor (hidden size dimension) have a smaller impact on computation efficiency (for a fixed parameters budget) than variations on other factors like the number of layers. Thus we focus on reducing the number of layers.</p>
+</blockquote>
+<p>student model 具有和Bert相同的结构，当模型层数减少1/2时，移除了Token type embedding 和pooler. Transformer 架构中线性层和LN层，可以充分地优化模型结构，本文研究表明最后一层张量维度的变化对计算效率影响 比层数变化要小，所以作者关注于减少模型层数。在初始化方面，作者从teacher model中每两层选择一层做初始化，蒸馏应用了Liu et al. [2019] 提出的 BERT 模型训练最佳实践。语料和 Bert 使用的一致。</p>
+<p>本文的重点放在了减少网络层数上面，也是每两层</p>
+<blockquote>
+<p>Student initialization In addition to the previously described optimization and architectural choices, an important element in our training procedure is to find the right initialization for the sub-network to converge. Taking advantage of the common dimensionality between teacher and student networks, we initialize the student from the teacher by taking one layer out of two.</p>
+</blockquote>
+<p>除了前面描述的优化和架构选择之外，本文训练过程中是为子网络寻找正确的初始化方法以使其收敛。利用教师网络和学生网络的共同维度，从教师网络中每两层抽取一层进行初始化，和上一篇中间层蒸馏是一样的。</p>
+<p>每隔两层抽一层进行蒸馏，可以有效的减少模型的层数</p>
+<p><img src="figs/DistilBERT_victor_2.png" /></p>
+<p>表1的结果蒸馏效果确实还不错
+表2的结果在下游任务上面也还可以，符合说的效果达到97%
+表3是参数量级，差不多减少了40%吧比bert-base</p>
+<ul>
+<li>个人感觉这篇文章是上一篇的一部分，好像没什么创新，实验做的还算充分</li>
+</ul>
+</div>
+</div>
 <div id="参考文献" class="section level2 unnumbered" number="">
 <h2>参考文献</h2>
 <div id="refs" class="references hanging-indent">
 <div>
 <p>Hinton, Geoffrey, Oriol Vinyals, and Jeff Dean. 2015. “Distilling the Knowledge in a Neural Network,” March.</p>
+</div>
+<div>
+<p>Sanh, V., L. Debut, J. Chaumond, and T. Wolf. 2019. “DistilBERT, a Distilled Version of Bert: Smaller, Faster, Cheaper and Lighter.”</p>
 </div>
 <div>
 <p>Sun, S., Y. Cheng, Z. Gan, and J. Liu. 2019. “Patient Knowledge Distillation for Bert Model Compression.”</p>
