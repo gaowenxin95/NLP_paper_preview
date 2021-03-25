@@ -1,3 +1,21 @@
+### 文章知识点总览
+
+主要内容
+
+介绍模型蒸馏的概念
+模型蒸馏一共有两种方式
+
+- 蒸馏集成模型
+
+- 蒸馏复杂的大的网络模型（一般指参数过亿的）
+
+新概念
+
+- 提出了soft softmax prob 
+
+- 为了平滑soft softmax prob 的结果指定一个高温数T，没什么特别的含义，一个超参数
+
+
 ### introduction
 
 >It is generally accepted that the objective function used for training should reflect the true objective of the user as closely as possible. Despite this, models are usually trained to optimize performance on the training data when the real objective is to generalize well to new data. It would clearly be better to train models to generalize well, but this requires information about the correct way to generalize and this information is not normally available. When we are distilling the knowledge from a large model into a small one, however, we can train the small model to generalize in the same way as the large model. If the cumbersome model generalizes well because, for example, it is the average of a large ensemble of different models, a small model trained to generalize in the same way will typically do much better on test data than a small model that is trained in the normal way on the same training set as was used to train the ensemble.[@article]
@@ -17,12 +35,16 @@
 
 >For tasks like MNIST in which the cumbersome model almost always produces the correct answer with very high confidence, much of the information about the learned function resides in the ratios of very small probabilities in the soft targets. For example, one version of a 2 may be given a probability of $10^{-6}$ of being a 3 and $10^{-9}$ of being a 7 whereas for another version it may be the other way around. This is valuable information that defines a rich similarity structure over the data (i. e. it says which 2 's look like 3 's and which look like 7 's) but it has very little influence on the cross-entropy cost function during the transfer stage because the probabilities are so close to zero. Caruana and his collaborators circumvent this problem by using the logits (the inputs to the final softmax) rather than the probabilities produced by the softmax as the targets for learning the small model and they minimize the squared difference between the logits produced by the cumbersome model and the logits produced by the small model. Our more general solution, called "distillation", is to raise the temperature of the final softmax until the cumbersome model produces a suitably soft set of targets. We then use the same high temperature when training the small model to match these soft targets. We show later that matching the logits of the cumbersome model is actually a special case of distillation.
 
-对于像MNIST这样的任务，复杂的大模型几乎总是以很高的置信度得出正确分类，关于学习函数的大部分信息都存在于软目标中非常小的概率比率中。例如，在MNIST数据中，对于某个2的输入，对于2 的预测概率会很高, 而对于2类似的数字，例如3和7的预测概率为 $10^{-6}$ 和 $10^{-9}$ 。这样的话, teacher网络学到数据的相似信息（例如数字2和3，7很类似) 很难传达给student网络。由于它们 的概率值接近0。因此，Caruana等人通过使用logits解决了这个问题，而不是softmax产生的概率作为学习小模型的目标，它们最小化了复杂大模型产生的对数和小模型产生的对数之间的差的平方。于是有了soft target.后文有详细的介绍。
+对于像MNIST这样的任务，复杂的大模型几乎总是以很高的置信度得出正确分类，关于学习函数的大部分信息都存在于软目标中非常小的概率比率中。例如，在MNIST数据中，对于某个2的输入，对于2 的预测概率会很高, 而对于2类似的数字，例如3和7的预测概率为 $10^{-6}$ 和 $10^{-9}$ 。这样的话, teacher网络学到数据的相似信息（例如数字2和3，7很类似) 很难传达给student网络。由于它们 的概率值接近0。因此，Caruana等人通过使用logits作为目标解决了这个问题，而不是softmax产生的概率作为学习小模型的目标，它们最小化了复杂大模型产生的对数和小模型产生的对数之间的差的平方。于是有了soft target.后文有详细的介绍。
 
 hard target：以二分类为例：样本预测为0/1，只属于0/1其中一个，也就是样本原有的标签。
 soft targets:样本预测为0/1的概率，是0-1范围内的一个概率数值。
 
-因此可以简单的概况下蒸馏：
+- [ ] soft targets 和label smoothing什么关系？
+
+个人感觉label smoothing是soft targets的特殊情况，权重分别取0和1时候是等价的
+
+因此可以给出蒸馏的定义：
 
 也是迁移学习的范畴，但是这里的迁移不是把训练好的预训练模型去做下游任务的fine-tune,而是利用小模型去学习大模型的性能。把大模型的学习性能蒸馏给了小模型。利用小模型学习大模型得到的soft-target的分布。
 
@@ -50,6 +72,9 @@ $$
 
 T是一个温度值，通常设置为1，当T取值较高的时候会得到一个“soft”概率分布的值。
 
+对Teacher网络的logit如此处理，得到的就是soft target。相比于one-hot的ground truth或softmax的prob输出，这个软化之后的target能够提供更多的类别间和类内信息。
+可以对待训练的Student网络也如此处理，这样就得到了另外一个“交叉熵”损失：
+
 >
 In the simplest form of distillation, knowledge is transferred to the distilled model by training it on a transfer set and using a soft target distribution for each case in the transfer set that is produced by using the cumbersome model with a high temperature in its softmax. The same high temperature is used when training the distilled model, but after it has been trained it uses a temperature of $1 .$
 
@@ -74,18 +99,26 @@ When the correct labels are known for all or some of the transfer set, this meth
 
 $L=(1-\alpha) C E(y, p)+\alpha C E(q, p) \cdot T^{2}$
 
-最终效果较好的实验是给第二个目标函数赋予一个较低的权重。因为梯度的范围是通过软目标产生的，会变为原来的$1 / T^{2}$，当同时使用hard and soft targets时候,软目标函数需要乘上$T^{2}$。这就保证了在使用meta-parameters进行实验时，如果用于蒸馏的温度发生变化,，硬目标和软目标的相对贡献大致保持不变。
+最终效果较好的实验是给第二个目标函数赋予一个较低的权重。因为梯度的范围是通过软目标产生的，会变为原来的$1 / T^{2}$，当同时使用hard and soft targets时候,软目标函数需要乘上$T^{2}$。这就保证了在使用meta-parameters进行实验时，如果用于蒸馏的温度发生变化,硬目标和软目标的相对贡献大致保持不变。
 
 ### Matching logits is a special case of distillation
 
 
-Each case in the transfer set contributes a cross-entropy gradient, $d C / d z_{i},$ with respect to each logit, $z_{i}$ of the distilled model. If the cumbersome model has logits $v_{i}$ which produce soft target probabilities $p_{i}$ and the transfer training is done at a temperature of $T,$ this gradient is given by:
+Each case in the transfer set contributes a cross-entropy gradient, $d C / d z_{i}$ with respect to each logit, $z_{i}$ of the distilled model. If the cumbersome model has logits $v_{i}$ which produce soft target probabilities $p_{i}$ and the transfer training is done at a temperature of $T,$ this gradient is given by:
+
+每个样本会得到一个交叉熵的梯度，$d C / d z_{i}$表示低i个logit，$z_{i}$表示蒸馏模型。复杂模型在某个温度T下得到梯度计算公式如下
 
 $$
 \frac{\partial C}{\partial z_{i}}=\frac{1}{T}\left(q_{i}-p_{i}\right)=\frac{1}{T}\left(\frac{e^{z_{i} / T}}{\sum_{j} e^{z_{j} / T}}-\frac{e^{v_{i} / T}}{\sum_{j} e^{v_{j} / T}}\right)
 $$
 
+
+
+
+>
 If the temperature is high compared with the magnitude of the logits, we can approximate:
+
+温度比对数的大小高，可以近似得到
 
 
 $$

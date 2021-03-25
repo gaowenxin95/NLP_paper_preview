@@ -120,7 +120,9 @@ $$
 
 When distilling with a labeled dataset, the one-hot target $t$ is simply the ground-truth label. When distilling with an unlabeled dataset, we use the predicted label by the teacher, i.e., $t_{i}=1$ if $i=\operatorname{argmax} \boldsymbol{y}^{(B)}$ and 0 otherwise.
 
-当使用有标签的数据集进行蒸馏的时候，one-hot的标签值就是真实的标签，当使用没有标签的数据集进行蒸馏会用教师网络进行标签预测。
+对Teacher网络的logit如此处理，得到的就是soft target。相比于one-hot的ground truth或softmax的prob输出，这个软化之后的target能够提供更多的类别间和类内信息。
+可以对待训练的Student网络也如此处理
+
 
 
 ### Data Augmentation for Distillation
@@ -146,4 +148,4 @@ When distilling with a labeled dataset, the one-hot target $t$ is simply the gro
 
 ![](figs/distillingbert_3.png)
 
-其他的似乎什么重点了
+其他的似乎什么重点了,也不知道数据增强之前和之后的对比实验。只给了增强之后的实验。

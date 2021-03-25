@@ -8,21 +8,37 @@ bibliography: refs/add.bib
 ---
 
 
+KD一个比较[靠谱的解释是Naiyan的这篇]( Wanghttps://www.zhihu.com/question/50519680/answer/136363665)
+
+这里我直接粘过来
+
+>Knowledge Distill是一种简单弥补分类问题监督信号不足的办法。传统的分类问题，模型的目标是将输入的特征映射到输出空间的一个点上，例如在著名的Imagenet比赛中，就是要将所有可能的输入图片映射到输出空间的1000个点上。这么做的话这1000个点中的每一个点是一个one hot编码的类别信息。这样一个label能提供的监督信息只有log(class)这么多bit。然而在KD中，我们可以使用teacher model对于每个样本输出一个连续的label分布（soft softmax prob)，这样可以利用的监督信息就远比one hot的多了。另外一个角度的理解，大家可以想象如果只有label这样的一个目标的话，那么这个模型的目标就是把训练样本中每一类的样本强制映射到同一个点上，这样其实对于训练很有帮助的类内variance和类间distance就损失掉了。然而使用teacher model的输出可以恢复出这方面的信息。具体的举例就像是paper中讲的， 猫和狗的距离比猫和桌子要近，同时如果一个动物确实长得像猫又像狗，那么它是可以给两类都提供监督。综上所述，KD的核心思想在于”打散”原来压缩到了一个点的监督信息，让student模型的输出尽量match teacher模型的输出分布。其实要达到这个目标其实不一定使用teacher model，在数据标注或者采集的时候本身保留的不确定信息也可以帮助模型的训练。
+
 
 
 
 ## Distilling the Knowledge in a Neural Network
 
-原文[Distilling the Knowledge in a Neural Network](https://arxiv.org/pdf/1503.02531.pdf)
+原文：[Distilling the Knowledge in a Neural Network](https://arxiv.org/pdf/1503.02531.pdf)
 
 ```{r child='analysis/distilling_hinton.Rmd'}
 
 ```
 
-## DistillingBERT
+## Distilling Task-Speciﬁc Knowledge from BERT into Simple Neural Networks
 
 原文：[Distilling Task-Speciﬁc Knowledge from BERT into Simple Neural Networks](https://arxiv.org/abs/1903.12136)
 
 ```{r child='analysis/DistillingBERT.Rmd'}
 
 ```
+
+## Patient Knowledge Distillation for BERT Model Compression
+
+原文：[Patient Knowledge Distillation for BERT Model Compression](https://arxiv.org/pdf/1908.09355.pdf)
+
+```{r child='analysis/DistillingBERT_PK.Rmd'}
+
+```
+
+## 参考文献

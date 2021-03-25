@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2021-03-24" />
+<meta name="date" content="2021-03-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -68,15 +68,16 @@
 <ul class="summary">
 <li class="chapter" data-level="0.1" data-path=""><a href="#distilling-the-knowledge-in-a-neural-network"><i class="fa fa-check"></i><b>0.1</b> Distilling the Knowledge in a Neural Network</a>
 <ul>
-<li class="chapter" data-level="0.1.1" data-path=""><a href="#introduction"><i class="fa fa-check"></i><b>0.1.1</b> introduction</a></li>
-<li class="chapter" data-level="0.1.2" data-path=""><a href="#distillation"><i class="fa fa-check"></i><b>0.1.2</b> Distillation</a></li>
-<li class="chapter" data-level="0.1.3" data-path=""><a href="#matching-logits-is-a-special-case-of-distillation"><i class="fa fa-check"></i><b>0.1.3</b> Matching logits is a special case of distillation</a></li>
-<li class="chapter" data-level="0.1.4" data-path=""><a href="#experiment"><i class="fa fa-check"></i><b>0.1.4</b> Experiment</a></li>
-<li class="chapter" data-level="0.1.5" data-path=""><a href="#结论"><i class="fa fa-check"></i><b>0.1.5</b> 结论</a></li>
+<li class="chapter" data-level="0.1.1" data-path=""><a href="#文章知识点总览"><i class="fa fa-check"></i><b>0.1.1</b> 文章知识点总览</a></li>
+<li class="chapter" data-level="0.1.2" data-path=""><a href="#introduction"><i class="fa fa-check"></i><b>0.1.2</b> introduction</a></li>
+<li class="chapter" data-level="0.1.3" data-path=""><a href="#distillation"><i class="fa fa-check"></i><b>0.1.3</b> Distillation</a></li>
+<li class="chapter" data-level="0.1.4" data-path=""><a href="#matching-logits-is-a-special-case-of-distillation"><i class="fa fa-check"></i><b>0.1.4</b> Matching logits is a special case of distillation</a></li>
+<li class="chapter" data-level="0.1.5" data-path=""><a href="#experiment"><i class="fa fa-check"></i><b>0.1.5</b> Experiment</a></li>
+<li class="chapter" data-level="0.1.6" data-path=""><a href="#结论"><i class="fa fa-check"></i><b>0.1.6</b> 结论</a></li>
 </ul></li>
-<li class="chapter" data-level="0.2" data-path=""><a href="#distillingbert"><i class="fa fa-check"></i><b>0.2</b> DistillingBERT</a>
+<li class="chapter" data-level="0.2" data-path=""><a href="#distilling-task-speciﬁc-knowledge-from-bert-into-simple-neural-networks"><i class="fa fa-check"></i><b>0.2</b> Distilling Task-Speciﬁc Knowledge from BERT into Simple Neural Networks</a>
 <ul>
-<li class="chapter" data-level="0.2.1" data-path=""><a href="#文章知识点总览"><i class="fa fa-check"></i><b>0.2.1</b> 文章知识点总览</a></li>
+<li class="chapter" data-level="0.2.1" data-path=""><a href="#文章知识点总览-1"><i class="fa fa-check"></i><b>0.2.1</b> 文章知识点总览</a></li>
 <li class="chapter" data-level="0.2.2" data-path=""><a href="#abstract"><i class="fa fa-check"></i><b>0.2.2</b> abstract</a></li>
 <li class="chapter" data-level="0.2.3" data-path=""><a href="#introduction-1"><i class="fa fa-check"></i><b>0.2.3</b> Introduction</a></li>
 <li class="chapter" data-level="0.2.4" data-path=""><a href="#approach"><i class="fa fa-check"></i><b>0.2.4</b> Approach</a></li>
@@ -85,6 +86,15 @@
 <li class="chapter" data-level="0.2.7" data-path=""><a href="#data-augmentation-for-distillation"><i class="fa fa-check"></i><b>0.2.7</b> Data Augmentation for Distillation</a></li>
 <li class="chapter" data-level="0.2.8" data-path=""><a href="#对照实验部分"><i class="fa fa-check"></i><b>0.2.8</b> 对照实验部分</a></li>
 </ul></li>
+<li class="chapter" data-level="0.3" data-path=""><a href="#patient-knowledge-distillation-for-bert-model-compression"><i class="fa fa-check"></i><b>0.3</b> Patient Knowledge Distillation for BERT Model Compression</a>
+<ul>
+<li class="chapter" data-level="0.3.1" data-path=""><a href="#文章知识点总览-2"><i class="fa fa-check"></i><b>0.3.1</b> 文章知识点总览</a></li>
+<li class="chapter" data-level="0.3.2" data-path=""><a href="#abstract-1"><i class="fa fa-check"></i><b>0.3.2</b> abstract</a></li>
+<li class="chapter" data-level="0.3.3" data-path=""><a href="#introduction-2"><i class="fa fa-check"></i><b>0.3.3</b> Introduction</a></li>
+<li class="chapter" data-level="0.3.4" data-path=""><a href="#patient-knowledge-distillation"><i class="fa fa-check"></i><b>0.3.4</b> Patient Knowledge Distillation</a></li>
+<li class="chapter" data-level="0.3.5" data-path=""><a href="#实验部分"><i class="fa fa-check"></i><b>0.3.5</b> 实验部分</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path=""><a href="#参考文献"><i class="fa fa-check"></i>参考文献</a></li>
 </ul>
 
       </nav>
@@ -105,13 +115,33 @@
 <div id="header">
 <h1 class="title">模型蒸馏笔记</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2021-03-24</em></p>
+<p class="date"><em>2021-03-25</em></p>
 </div>
+<p>KD一个比较<a href="Wanghttps://www.zhihu.com/question/50519680/answer/136363665">靠谱的解释是Naiyan的这篇</a></p>
+<p>这里我直接粘过来</p>
+<blockquote>
+<p>Knowledge Distill是一种简单弥补分类问题监督信号不足的办法。传统的分类问题，模型的目标是将输入的特征映射到输出空间的一个点上，例如在著名的Imagenet比赛中，就是要将所有可能的输入图片映射到输出空间的1000个点上。这么做的话这1000个点中的每一个点是一个one hot编码的类别信息。这样一个label能提供的监督信息只有log(class)这么多bit。然而在KD中，我们可以使用teacher model对于每个样本输出一个连续的label分布（soft softmax prob)，这样可以利用的监督信息就远比one hot的多了。另外一个角度的理解，大家可以想象如果只有label这样的一个目标的话，那么这个模型的目标就是把训练样本中每一类的样本强制映射到同一个点上，这样其实对于训练很有帮助的类内variance和类间distance就损失掉了。然而使用teacher model的输出可以恢复出这方面的信息。具体的举例就像是paper中讲的， 猫和狗的距离比猫和桌子要近，同时如果一个动物确实长得像猫又像狗，那么它是可以给两类都提供监督。综上所述，KD的核心思想在于”打散”原来压缩到了一个点的监督信息，让student模型的输出尽量match teacher模型的输出分布。其实要达到这个目标其实不一定使用teacher model，在数据标注或者采集的时候本身保留的不确定信息也可以帮助模型的训练。</p>
+</blockquote>
 <div id="distilling-the-knowledge-in-a-neural-network" class="section level2" number="0.1">
 <h2><span class="header-section-number">0.1</span> Distilling the Knowledge in a Neural Network</h2>
-<p>原文<a href="https://arxiv.org/pdf/1503.02531.pdf">Distilling the Knowledge in a Neural Network</a></p>
-<div id="introduction" class="section level3" number="0.1.1">
-<h3><span class="header-section-number">0.1.1</span> introduction</h3>
+<p>原文：<a href="https://arxiv.org/pdf/1503.02531.pdf">Distilling the Knowledge in a Neural Network</a></p>
+<div id="文章知识点总览" class="section level3" number="0.1.1">
+<h3><span class="header-section-number">0.1.1</span> 文章知识点总览</h3>
+<p>主要内容</p>
+<p>介绍模型蒸馏的概念
+模型蒸馏一共有两种方式</p>
+<ul>
+<li><p>蒸馏集成模型</p></li>
+<li><p>蒸馏复杂的大的网络模型（一般指参数过亿的）</p></li>
+</ul>
+<p>新概念</p>
+<ul>
+<li><p>提出了soft softmax prob</p></li>
+<li><p>为了平滑soft softmax prob 的结果指定一个高温数T，没什么特别的含义，一个超参数</p></li>
+</ul>
+</div>
+<div id="introduction" class="section level3" number="0.1.2">
+<h3><span class="header-section-number">0.1.2</span> introduction</h3>
 <blockquote>
 <p>It is generally accepted that the objective function used for training should reflect the true objective of the user as closely as possible. Despite this, models are usually trained to optimize performance on the training data when the real objective is to generalize well to new data. It would clearly be better to train models to generalize well, but this requires information about the correct way to generalize and this information is not normally available. When we are distilling the knowledge from a large model into a small one, however, we can train the small model to generalize in the same way as the large model. If the cumbersome model generalizes well because, for example, it is the average of a large ensemble of different models, a small model trained to generalize in the same way will typically do much better on test data than a small model that is trained in the normal way on the same training set as was used to train the ensemble.<span class="citation">(Hinton, Vinyals, and Dean 2015)</span></p>
 </blockquote>
@@ -129,18 +159,23 @@
 <blockquote>
 <p>For tasks like MNIST in which the cumbersome model almost always produces the correct answer with very high confidence, much of the information about the learned function resides in the ratios of very small probabilities in the soft targets. For example, one version of a 2 may be given a probability of <span class="math inline">\(10^{-6}\)</span> of being a 3 and <span class="math inline">\(10^{-9}\)</span> of being a 7 whereas for another version it may be the other way around. This is valuable information that defines a rich similarity structure over the data (i. e. it says which 2 ’s look like 3 ’s and which look like 7 ’s) but it has very little influence on the cross-entropy cost function during the transfer stage because the probabilities are so close to zero. Caruana and his collaborators circumvent this problem by using the logits (the inputs to the final softmax) rather than the probabilities produced by the softmax as the targets for learning the small model and they minimize the squared difference between the logits produced by the cumbersome model and the logits produced by the small model. Our more general solution, called “distillation”, is to raise the temperature of the final softmax until the cumbersome model produces a suitably soft set of targets. We then use the same high temperature when training the small model to match these soft targets. We show later that matching the logits of the cumbersome model is actually a special case of distillation.</p>
 </blockquote>
-<p>对于像MNIST这样的任务，复杂的大模型几乎总是以很高的置信度得出正确分类，关于学习函数的大部分信息都存在于软目标中非常小的概率比率中。例如，在MNIST数据中，对于某个2的输入，对于2 的预测概率会很高, 而对于2类似的数字，例如3和7的预测概率为 <span class="math inline">\(10^{-6}\)</span> 和 <span class="math inline">\(10^{-9}\)</span> 。这样的话, teacher网络学到数据的相似信息（例如数字2和3，7很类似) 很难传达给student网络。由于它们 的概率值接近0。因此，Caruana等人通过使用logits解决了这个问题，而不是softmax产生的概率作为学习小模型的目标，它们最小化了复杂大模型产生的对数和小模型产生的对数之间的差的平方。于是有了soft target.后文有详细的介绍。</p>
+<p>对于像MNIST这样的任务，复杂的大模型几乎总是以很高的置信度得出正确分类，关于学习函数的大部分信息都存在于软目标中非常小的概率比率中。例如，在MNIST数据中，对于某个2的输入，对于2 的预测概率会很高, 而对于2类似的数字，例如3和7的预测概率为 <span class="math inline">\(10^{-6}\)</span> 和 <span class="math inline">\(10^{-9}\)</span> 。这样的话, teacher网络学到数据的相似信息（例如数字2和3，7很类似) 很难传达给student网络。由于它们 的概率值接近0。因此，Caruana等人通过使用logits作为目标解决了这个问题，而不是softmax产生的概率作为学习小模型的目标，它们最小化了复杂大模型产生的对数和小模型产生的对数之间的差的平方。于是有了soft target.后文有详细的介绍。</p>
 <p>hard target：以二分类为例：样本预测为0/1，只属于0/1其中一个，也就是样本原有的标签。
 soft targets:样本预测为0/1的概率，是0-1范围内的一个概率数值。</p>
-<p>因此可以简单的概况下蒸馏：</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" />
+soft targets 和label smoothing什么关系？</li>
+</ul>
+<p>个人感觉label smoothing是soft targets的特殊情况，权重分别取0和1时候是等价的</p>
+<p>因此可以给出蒸馏的定义：</p>
 <p>也是迁移学习的范畴，但是这里的迁移不是把训练好的预训练模型去做下游任务的fine-tune,而是利用小模型去学习大模型的性能。把大模型的学习性能蒸馏给了小模型。利用小模型学习大模型得到的soft-target的分布。</p>
 <p>参考李rumor的一个总结就是：</p>
 <blockquote>
 <p>蒸馏这个概念之所以work，核心思想是因为好模型的目标不是拟合训练数据，而是学习如何泛化到新的数据。所以蒸馏的目标是让学生模型学习到教师模型的泛化能力，理论上得到的结果会比单纯拟合训练数据的学生模型要好。<a href="https://mp.weixin.qq.com/s/tKfHq49heakvjM0EVQPgHw">李rumor</a></p>
 </blockquote>
 </div>
-<div id="distillation" class="section level3" number="0.1.2">
-<h3><span class="header-section-number">0.1.2</span> Distillation</h3>
+<div id="distillation" class="section level3" number="0.1.3">
+<h3><span class="header-section-number">0.1.3</span> Distillation</h3>
 <p>蒸馏具体的做法</p>
 <p>Neural networks typically produce class probabilities by using a “softmax” output layer that converts the logit, <span class="math inline">\(z_{i}\)</span>, computed for each class into a probability, <span class="math inline">\(q_{i}\)</span>, by comparing <span class="math inline">\(z_{i}\)</span> with the other logits.</p>
 <p>下面是计算soft softmax概率值的公式。于基本的softmax不同的地方在于引入了一个参数T</p>
@@ -155,6 +190,8 @@ q_{i}=\frac{\exp \left(z_{i} / T\right)}{\sum_{j} \exp \left(z_{j} / T\right)}
 <p>where <span class="math inline">\(T\)</span> is a temperature that is normally set to <span class="math inline">\(1 .\)</span> Using a higher value for <span class="math inline">\(T\)</span> produces a softer probability distribution over classes.</p>
 </blockquote>
 <p>T是一个温度值，通常设置为1，当T取值较高的时候会得到一个“soft”概率分布的值。</p>
+<p>对Teacher网络的logit如此处理，得到的就是soft target。相比于one-hot的ground truth或softmax的prob输出，这个软化之后的target能够提供更多的类别间和类内信息。
+可以对待训练的Student网络也如此处理，这样就得到了另外一个“交叉熵”损失：</p>
 <blockquote>
 <p>In the simplest form of distillation, knowledge is transferred to the distilled model by training it on a transfer set and using a soft target distribution for each case in the transfer set that is produced by using the cumbersome model with a high temperature in its softmax. The same high temperature is used when training the distilled model, but after it has been trained it uses a temperature of <span class="math inline">\(1 .\)</span></p>
 </blockquote>
@@ -174,15 +211,19 @@ q_{i}=\frac{\exp \left(z_{i} / T\right)}{\sum_{j} \exp \left(z_{j} / T\right)}
 <li><p>第2种目标函数于正确标签的交叉熵,此时T取值为1。</p></li>
 </ul>
 <p><span class="math inline">\(L=(1-\alpha) C E(y, p)+\alpha C E(q, p) \cdot T^{2}\)</span></p>
-<p>最终效果较好的实验是给第二个目标函数赋予一个较低的权重。因为梯度的范围是通过软目标产生的，会变为原来的<span class="math inline">\(1 / T^{2}\)</span>，当同时使用hard and soft targets时候,软目标函数需要乘上<span class="math inline">\(T^{2}\)</span>。这就保证了在使用meta-parameters进行实验时，如果用于蒸馏的温度发生变化,，硬目标和软目标的相对贡献大致保持不变。</p>
+<p>最终效果较好的实验是给第二个目标函数赋予一个较低的权重。因为梯度的范围是通过软目标产生的，会变为原来的<span class="math inline">\(1 / T^{2}\)</span>，当同时使用hard and soft targets时候,软目标函数需要乘上<span class="math inline">\(T^{2}\)</span>。这就保证了在使用meta-parameters进行实验时，如果用于蒸馏的温度发生变化,硬目标和软目标的相对贡献大致保持不变。</p>
 </div>
-<div id="matching-logits-is-a-special-case-of-distillation" class="section level3" number="0.1.3">
-<h3><span class="header-section-number">0.1.3</span> Matching logits is a special case of distillation</h3>
-<p>Each case in the transfer set contributes a cross-entropy gradient, <span class="math inline">\(d C / d z_{i},\)</span> with respect to each logit, <span class="math inline">\(z_{i}\)</span> of the distilled model. If the cumbersome model has logits <span class="math inline">\(v_{i}\)</span> which produce soft target probabilities <span class="math inline">\(p_{i}\)</span> and the transfer training is done at a temperature of <span class="math inline">\(T,\)</span> this gradient is given by:</p>
+<div id="matching-logits-is-a-special-case-of-distillation" class="section level3" number="0.1.4">
+<h3><span class="header-section-number">0.1.4</span> Matching logits is a special case of distillation</h3>
+<p>Each case in the transfer set contributes a cross-entropy gradient, <span class="math inline">\(d C / d z_{i}\)</span> with respect to each logit, <span class="math inline">\(z_{i}\)</span> of the distilled model. If the cumbersome model has logits <span class="math inline">\(v_{i}\)</span> which produce soft target probabilities <span class="math inline">\(p_{i}\)</span> and the transfer training is done at a temperature of <span class="math inline">\(T,\)</span> this gradient is given by:</p>
+<p>每个样本会得到一个交叉熵的梯度，<span class="math inline">\(d C / d z_{i}\)</span>表示低i个logit，<span class="math inline">\(z_{i}\)</span>表示蒸馏模型。复杂模型在某个温度T下得到梯度计算公式如下</p>
 <p><span class="math display">\[
 \frac{\partial C}{\partial z_{i}}=\frac{1}{T}\left(q_{i}-p_{i}\right)=\frac{1}{T}\left(\frac{e^{z_{i} / T}}{\sum_{j} e^{z_{j} / T}}-\frac{e^{v_{i} / T}}{\sum_{j} e^{v_{j} / T}}\right)
 \]</span></p>
+<blockquote>
 <p>If the temperature is high compared with the magnitude of the logits, we can approximate:</p>
+</blockquote>
+<p>温度比对数的大小高，可以近似得到</p>
 <p><span class="math display">\[
 \frac{\partial C}{\partial z_{i}} \approx \frac{1}{T}\left(\frac{1+z_{i} / T}{N+\sum_{j} z_{j} / T}-\frac{1+v_{i} / T}{N+\sum_{j} v_{j} / T}\right)
 \]</span>
@@ -197,8 +238,8 @@ If we now assume that the logits have been zero-meaned separately for each trans
 <p>hinton这篇主要是介绍模型蒸馏的一个思路，蒸馏模型学习的是什么。也是后面研究的基础。
 把多个模型的知识提炼给单个的模型，教师模型教学生模型。</p>
 </div>
-<div id="experiment" class="section level3" number="0.1.4">
-<h3><span class="header-section-number">0.1.4</span> Experiment</h3>
+<div id="experiment" class="section level3" number="0.1.5">
+<h3><span class="header-section-number">0.1.5</span> Experiment</h3>
 <p>这篇文章的实验部分如下</p>
 <blockquote>
 <p>This net achieved 67 test errors whereas a smaller net with two hidden layers of 800 rectified linear hidden units and no regularization achieved 146 errors. But if the smaller net was regularized solely by adding the additional task of matching the soft targets produced by the large net at a temperature of 20 , it achieved 74 test errors. This shows that soft targets can transfer a great deal of knowledge to the distilled model, including the knowledge about how to generalize that is learned from translated training data even though the transfer set does not contain any translations.</p>
@@ -211,18 +252,18 @@ If we now assume that the logits have been zero-meaned separately for each trans
 根据表1的实验结果来看，minst测试集在模型蒸馏的结果上面比baseline的效果是提升的，比10个模型做emsemble的结果略低，说明蒸馏模型确实可以学习到大模型的参数。</p>
 <p><img src="figs/distilling_1.png" /></p>
 </div>
-<div id="结论" class="section level3" number="0.1.5">
-<h3><span class="header-section-number">0.1.5</span> 结论</h3>
+<div id="结论" class="section level3" number="0.1.6">
+<h3><span class="header-section-number">0.1.6</span> 结论</h3>
 <blockquote>
 <p>We have shown that distilling works very well for transferring knowledge from an ensemble or from a large highly regularized model into a smaller, distilled model.</p>
 </blockquote>
 <p>本文展示了蒸馏的方式包括，从ensemble学习中进行知识蒸馏,让蒸馏模型能够无线接近于集成模型的结果和将大的正则化的模型转移到小模型上面。</p>
 </div>
 </div>
-<div id="distillingbert" class="section level2" number="0.2">
-<h2><span class="header-section-number">0.2</span> DistillingBERT</h2>
+<div id="distilling-task-speciﬁc-knowledge-from-bert-into-simple-neural-networks" class="section level2" number="0.2">
+<h2><span class="header-section-number">0.2</span> Distilling Task-Speciﬁc Knowledge from BERT into Simple Neural Networks</h2>
 <p>原文：<a href="https://arxiv.org/abs/1903.12136">Distilling Task-Speciﬁc Knowledge from BERT into Simple Neural Networks</a></p>
-<div id="文章知识点总览" class="section level3" number="0.2.1">
+<div id="文章知识点总览-1" class="section level3" number="0.2.1">
 <h3><span class="header-section-number">0.2.1</span> 文章知识点总览</h3>
 <p><strong>模型</strong>：使用单层的bilstm对bert进行蒸馏</p>
 <p><strong>目标函数</strong>：教师网络和学生网络logits的mse</p>
@@ -318,7 +359,8 @@ logits, respectively.</p>
 \end{array}
 \]</span></p>
 <p>When distilling with a labeled dataset, the one-hot target <span class="math inline">\(t\)</span> is simply the ground-truth label. When distilling with an unlabeled dataset, we use the predicted label by the teacher, i.e., <span class="math inline">\(t_{i}=1\)</span> if <span class="math inline">\(i=\operatorname{argmax} \boldsymbol{y}^{(B)}\)</span> and 0 otherwise.</p>
-<p>当使用有标签的数据集进行蒸馏的时候，one-hot的标签值就是真实的标签，当使用没有标签的数据集进行蒸馏会用教师网络进行标签预测。</p>
+<p>对Teacher网络的logit如此处理，得到的就是soft target。相比于one-hot的ground truth或softmax的prob输出，这个软化之后的target能够提供更多的类别间和类内信息。
+可以对待训练的Student网络也如此处理</p>
 </div>
 <div id="data-augmentation-for-distillation" class="section level3" number="0.2.7">
 <h3><span class="header-section-number">0.2.7</span> Data Augmentation for Distillation</h3>
@@ -338,14 +380,196 @@ logits, respectively.</p>
 </blockquote>
 <p>对比的是F1 和accuracy值，因为样本稍微有些不平衡，从四个数据集上面看，蒸馏模型的效果确实不错，都达到了sota</p>
 <p><img src="figs/distillingbert_3.png" /></p>
-<p>其他的似乎什么重点了</p>
+<p>其他的似乎什么重点了,也不知道数据增强之前和之后的对比实验。只给了增强之后的实验。</p>
+</div>
+</div>
+<div id="patient-knowledge-distillation-for-bert-model-compression" class="section level2" number="0.3">
+<h2><span class="header-section-number">0.3</span> Patient Knowledge Distillation for BERT Model Compression</h2>
+<p>原文：<a href="https://arxiv.org/pdf/1908.09355.pdf">Patient Knowledge Distillation for BERT Model Compression</a></p>
+<div id="文章知识点总览-2" class="section level3" number="0.3.1">
+<h3><span class="header-section-number">0.3.1</span> 文章知识点总览</h3>
+<p>提出一种Patient Knowledge Distillation方式</p>
+<p>训练了一个非常有“耐心” 的学生网络模型，能够学习教师网络的多层知识，不只是最后几层或者前几层，学习的足够充分。</p>
+<p><strong>模型结构</strong>：Patient student，蒸馏bert网络的中间层以及最后的输出层，多层蒸馏</p>
+<p><img src="figs/distillbert-pk_1.png" /></p>
+<p><strong>目标函数</strong>：</p>
+<p><span class="math display">\[
+L_{P K D}=(1-\alpha) L_{C E}^{s}+\alpha L_{D S}+\beta L_{P T}
+\]</span></p>
+<p>是向教师网络学习与向正确样本学习以及教师网络的而外的训练损失的加权和，由三部分组成</p>
+<ul>
+<li><p><span class="math inline">\(L_{C E}\)</span>是学习标注样本的交叉熵</p></li>
+<li><p><span class="math inline">\(L_{D S}\)</span>是学习教师网路的交叉熵</p></li>
+<li><p><span class="math inline">\(L_{P T}\)</span>教师网络额外的训练损失</p></li>
+</ul>
+<p><strong>模型结果对比</strong></p>
+<p>对中间层进行蒸馏的效果是要好于只对教师网络输出层蒸馏的效果的</p>
+<p>直接看下面的实验分析</p>
+</div>
+<div id="abstract-1" class="section level3" number="0.3.2">
+<h3><span class="header-section-number">0.3.2</span> abstract</h3>
+<blockquote>
+<p>In order to alleviate this resource hunger in large-scale model training,we propose a Patient Knowledge Distillation approach to compress an original large model (teacher) into an equally-effective lightweight shallow network (student). <span class="citation">(Sun et al. 2019)</span></p>
+</blockquote>
+<p>例如像bert这种重量级的模型是非常吃算力的，因此本文提出了Patient知识蒸馏的方法来压缩原始的原始的庞大的教师网络模型变成一个轻量级的学生模型。</p>
+<blockquote>
+<p>Different from previous knowledge distillation methods, which only use the output from the last layer of the teacher network for distillation, our student model patiently learns from multiple intermediate layers of the teacher model for incremental knowledge extraction, following two strategies:</p>
+</blockquote>
+<p>本文的方法和之前的蒸馏模型的不同之处在于，之前的蒸馏模型（比如hinton的）只对教师网络的输出层进行蒸馏，本文的学生网络会还会耐心的学习教师网络的中间层进行知识的提取。主要方法如下：</p>
+<blockquote>
+<ol style="list-style-type: lower-roman">
+<li>PKD-Last: learning from the last k layers; and (ii) PKD-Skip: learning from every k layers.</li>
+</ol>
+</blockquote>
+<p>PKD-Last：学习最后K层的知识，PKD-Skip：对中间层每隔k层学习一次</p>
+<blockquote>
+<p>These two patient distillation schemes enable the exploitation of rich information in the teacher’s hidden layers, and encourage the student model to patiently learn from and imitate the teacher through a multi-layer distillation process.</p>
+</blockquote>
+<p>这两种蒸馏的方式能够充分的学习到教师网络的隐藏层信息，并且能过够通过多层蒸馏的方式模拟出教师网络，从而激发学生网络的“耐心”（个人感觉就是增加学生网络的参数）</p>
+<ul>
+<li>所有标注数据都叫做ground truth</li>
+</ul>
+</div>
+<div id="introduction-2" class="section level3" number="0.3.3">
+<h3><span class="header-section-number">0.3.3</span> Introduction</h3>
+<blockquote>
+<p>In our approach,the teacher model outputs probability logits and predicts labels for the training samples (extendable to additional unannotated samples), and the student model learns from the teacher network to mimic the teacher’s prediction.</p>
+</blockquote>
+<p>本文教师网络输出的是probability logits，并且对训练样本进行标签预测(应该用来做数据增强的)，学生模型用来模拟老师的预测标签。</p>
+<blockquote>
+<p>we adopt a patient learning mechanism: instead of learning parameters from only the last layer of the teacher,we encourage the student model to extract knowledge also from previous layers of the teacher network. We call this ‘Patient Knowledge Distillation’. This patient learner has the advantage of distilling rich information through the deep structure of the teacher network for multi-layer knowledge distillation.</p>
+</blockquote>
+<p>本文采用了一种patient学习机制，激励学生模型从教师网络模型的多层提取知识而不只是最后一层。</p>
+</div>
+<div id="patient-knowledge-distillation" class="section level3" number="0.3.4">
+<h3><span class="header-section-number">0.3.4</span> Patient Knowledge Distillation</h3>
+<blockquote>
+<p><strong>Problem Definition</strong> The original large teacher network is represented by a function <span class="math inline">\(f(\mathbf{x} ; \theta)\)</span>, where <span class="math inline">\(\mathrm{x}\)</span> is the input to the network, and <span class="math inline">\(\theta\)</span> denotes the model parameters. The goal of knowledge distillation is to learn a new set of parameters <span class="math inline">\(\theta^{\prime}\)</span> for a shallower student network <span class="math inline">\(g\left(\mathbf{x} ; \theta^{\prime}\right),\)</span> such that the student network achieves similar performance to the teacher, with much lower computational cost. Our strategy is to force the student model to imitate outputs from the teacher model on the training dataset with a defined objective <span class="math inline">\(L_{K D}\)</span>.</p>
+</blockquote>
+<p><span class="math inline">\(f(\mathbf{x} ; \theta)\)</span>表示大的教师模型，<span class="math inline">\(\mathrm{x}\)</span> 是模型的输入，<span class="math inline">\(\theta\)</span> 表示模型参数。知识蒸馏的目标是让浅层的学生网络<span class="math inline">\(g\left(\mathbf{x} ; \theta^{\prime}\right)\)</span>学习到一组新的参数<span class="math inline">\(\theta^{\prime}\)</span>
+学生网络消耗的算力是非常的低的。<span class="math inline">\(L_{K D}\)</span>是本文的目标函数。</p>
+<p><strong>目标函数</strong></p>
+<blockquote>
+<p>Assume <span class="math inline">\(\left\{\mathbf{x}_{i}, \mathbf{y}_{i}\right\}_{i=1}^{N}\)</span> are <span class="math inline">\(N\)</span> training samples, where <span class="math inline">\(\mathbf{x}_{i}\)</span> is the <span class="math inline">\(i\)</span> -th input instance for BERT, and <span class="math inline">\(\mathbf{y}_{i}\)</span> is the corresponding ground-truth label. BERT first computes a contextualized embedding <span class="math inline">\(\mathbf{h}_{i}=\operatorname{BERT}\left(\mathbf{x}_{i}\right) \in \mathbb{R}^{d} .\)</span> Then, a softmax layer <span class="math inline">\(\hat{\mathbf{y}}_{i}=P\left(\mathbf{y}_{i} \mid \mathbf{x}_{i}\right)=\operatorname{softmax}\left(\mathbf{W h}_{i}\right)\)</span> for classifica-
+tion is applied to the embedding of BERT output, where <span class="math inline">\(\mathbf{W}\)</span> is a weight matrix to be learned.</p>
+</blockquote>
+<p>假设<span class="math inline">\(\left\{\mathbf{x}_{i},\mathbf{y}_{i}\right\}_{i=1}^{N}\)</span>是N个训练样本，<span class="math inline">\(\mathbf{x}_{i}\)</span>是bert的低i个输入，<span class="math inline">\(\mathbf{y}_{i}\)</span>是第i个ground-truth label，bert首先计算上下文的词向量
+<span class="math inline">\(\mathbf{h}_{i}=\operatorname{BERT}\left(\mathbf{x}_{i}\right) \in \mathbb{R}^{d}\)</span> ，<span class="math inline">\(\hat{\mathbf{y}}_{i}=P\left(\mathbf{y}_{i} \mid \mathbf{x}_{i}\right)=\operatorname{softmax}\left(\mathbf{W h}_{i}\right)\)</span>是softmax层得到的分类输出。<span class="math inline">\(\mathbf{W}\)</span>是学到的参数</p>
+<p>To apply knowledge distillation, first we need to train a teacher network. For example, to train a 12-layer BERT-Base as the teacher model, the learned parameters are denoted as:</p>
+<p>首先是对12层的BERT-Base进行训练，得到的参数定义如下。</p>
+<p><span class="math display">\[
+\hat{\theta}^{t}=\arg \min _{\theta} \sum_{i \in[N]} L_{C E}^{t}\left(\mathbf{x}_{i}, \mathbf{y}_{i} ;\left[\theta_{\mathrm{BERT}_{12}}, \mathbf{W}\right]\right)
+\]</span></p>
+<blockquote>
+<p>where the superscript <span class="math inline">\(t\)</span> denotes parameters in the teacher model, <span class="math inline">\([N]\)</span> denotes set <span class="math inline">\(\{1,2, \ldots, N\}\)</span> <span class="math inline">\(L_{C E}^{t}\)</span> denotes the cross-entropy loss for the teacher training, and <span class="math inline">\(\theta_{\mathrm{BERT}_{12}}\)</span> denotes parameters of <span class="math inline">\(\mathrm{BERT}_{12}\)</span></p>
+</blockquote>
+<p><span class="math inline">\(t\)</span> 是教师网络的参数，<span class="math inline">\(\{1,2, \ldots, N\}\)</span> <span class="math inline">\(L_{C E}^{t}\)</span> 教师网络训练的交叉熵损失函数，<span class="math inline">\(\theta_{\mathrm{BERT}_{12}}\)</span>表示 <span class="math inline">\(\mathrm{BERT}_{12}\)</span>的参数</p>
+<p>The output probability for any given input <span class="math inline">\(\mathbf{x}_{i}\)</span> can be formulated as:</p>
+<p>对于每个输入的输出概率公式如下</p>
+<p><span class="math display">\[
+\begin{aligned}
+\hat{\mathbf{y}}_{i} &amp;=P^{t}\left(\mathbf{y}_{i} \mid \mathbf{x}_{i}\right)=\operatorname{softmax}\left(\frac{\mathbf{W h}_{i}}{T}\right) \\
+&amp;=\operatorname{softmax}\left(\frac{\mathbf{W} \cdot \operatorname{BERT}_{12}\left(\mathbf{x}_{i} ; \hat{\theta}^{t}\right)}{T}\right)
+\end{aligned}
+\]</span></p>
+<blockquote>
+<p>where <span class="math inline">\(P^{t}(\cdot \mid \cdot)\)</span> denotes the probability output from the teacher. <span class="math inline">\(\hat{\mathbf{y}}_{i}\)</span> is fixed as soft labels, and <span class="math inline">\(T\)</span> is the temperature used in KD, which controls how much to rely on the teacher’s soft predictions. A higher temperature produces a more diverse probability distribution over classes (Hinton et al., 2015). Similarly, let <span class="math inline">\(\theta^{s}\)</span> denote parameters to be learned for the student model, and <span class="math inline">\(P^{s}(\cdot \mid \cdot)\)</span> denote the corresponding probability output from the student model. Thus, the distance between the teacher’s prediction and the student’s prediction can be defined as:</p>
+</blockquote>
+<p><span class="math inline">\(P^{t}(\cdot \mid \cdot)\)</span>表示教师网络的输出概率，<span class="math inline">\(\hat{\mathbf{y}}_{i}\)</span> 是软label，T是KD的温度参数，决定了在多大程度上依赖于老师网络的软预测。温度越高，分类的概率分布就越多样化，<span class="math inline">\(\theta^{s}\)</span>是学生模型学习的参数，<span class="math inline">\(P^{s}(\cdot \mid \cdot)\)</span>是学生模型的输出概率，因此：教师的预测与学生的预测之间的距离可以定义为:</p>
+<p><span class="math display">\[
+\begin{array}{r}
+L_{D S}=-\sum_{i \in[N]} \sum_{c \in C}\left[P^{t}\left(\mathbf{y}_{i}=c \mid \mathbf{x}_{i} ; \hat{\theta}^{t}\right)\right. \\
+\left.\log P^{s}\left(\mathbf{y}_{i}=c \mid \mathbf{x}_{i} ; \theta^{s}\right)\right]
+\end{array}
+\]</span></p>
+<p>这个是学生网络像教师网络学习损失函数</p>
+<blockquote>
+<p>where <span class="math inline">\(c\)</span> is a class label and <span class="math inline">\(C\)</span> denotes the set of class labels.</p>
+</blockquote>
+<p><span class="math inline">\(c\)</span>是一个分类标签，<span class="math inline">\(C\)</span>是一个类别的标签</p>
+<blockquote>
+<p>Besides encouraging the student model to imitate the teacher’s behavior, we can also fine-tune the student model on target tasks, where taskspecific cross-entropy loss is included for model training:</p>
+</blockquote>
+<p>学生网络除了向教师网络学习之外，还想要像正确的标注数据学习，模型训练中包含了特定任务的交叉熵损失:</p>
+<p><span class="math display">\[
+\begin{aligned}
+L_{C E}^{s}=-\sum_{i \in[N]} &amp; \sum_{c \in C}\left[\mathbb{1}\left[\mathbf{y}_{i}=c\right]\right.\\
+&amp;\left.\log P^{s}\left(\mathbf{y}_{i}=c \mid \mathbf{x}_{i} ; \theta^{s}\right)\right]
+\end{aligned}
+\]</span></p>
+<p>Thus, the final objective function for knowledge distillation can be formulated as:</p>
+<p>最终本文的目标函数如下，是教师网络和学生网络的距离损失和与真实数据交叉熵的加权和</p>
+<p><span class="math display">\[
+L_{K D}=(1-\alpha) L_{C E}^{s}+\alpha L_{D S}
+\]</span></p>
+<p>模型结构如图</p>
+<p><img src="figs/distillbert-pk_1.png" /></p>
+<p>a图是每两层学习教师模型的一次输出叫PKD-Skip,b图是学生网络学习教师模型最后6层,也叫PKD-last，Trm：transformer。</p>
+<blockquote>
+<p>Learning from the hidden states of all the tokens is computationally expensive, and may introduce noise. In the original BERT implementation (Devlin et al., 2018), prediction is performed by only using the output from the last layer’s [CLS ] token. In some variants of BERT, like SDNet (Zhu et al., 2018 ), a weighted average of all layers’ [CLS ] embeddings is applied.</p>
+</blockquote>
+<p>因为从隐藏层学习表征非常的消耗算力，而且有可能会产生噪音。在最初的BERT实现中，预测仅通过使用最后一层的[CLS]的token输出来执行。在BERT的一些变体中，如SDNet，应用了所有层[CLS]嵌入的加权平均。</p>
+<blockquote>
+<p>In general, the final logit can be computed based on <span class="math inline">\(\mathbf{h}_{\text {final }}=\)</span> <span class="math inline">\(\sum_{j \in[k]} w_{j} \mathbf{h}_{j},\)</span> where <span class="math inline">\(w_{j}\)</span> could be either learned parameters or a pre-defined hyper-parameter, <span class="math inline">\(\mathbf{h}_{j}\)</span> is the embedding of [CLS] from the hidden layer <span class="math inline">\(j,\)</span> and <span class="math inline">\(k\)</span> is the number of hidden layers.</p>
+</blockquote>
+<p>通常最后几层的logit能够根据<span class="math inline">\(\mathbf{h}_{\text {final }}=\)</span> <span class="math inline">\(\sum_{j \in[k]} w_{j} \mathbf{h}_{j}\)</span>， <span class="math inline">\(w_{j}\)</span> 是可以被学习到的， <span class="math inline">\(\mathbf{h}_{j}\)</span>是[CLS]隐藏层的参数，k表示隐藏层的数量。</p>
+<blockquote>
+<p>Derived from this, if the compressed model can learn from the representation of [ <span class="math inline">\(\mathrm{CLS}\)</span> ] in the teacher’s intermediate layers for any given input, it has the potential of gaining a generalization ability similar to the teacher model.</p>
+</blockquote>
+<p>由此可知，对于任何给定的输入，如果压缩模型能够从教师中间层[<span class="math inline">\(\mathrm{CLS}\)</span>]的表示中学习，那么它就有可能获得类似于教师模型的泛化能力。</p>
+<blockquote>
+<p>Motivated by this, in our Patient-KD framework, the student is cultivated to imitate the representations only for the [CLS] token in the intermediate layers, following the intuition aforementioned that the [CLS] token is important in predicting the final labels. For an input <span class="math inline">\(\mathbf{x}_{i},\)</span> the outputs of the [CLS ] tokens for all the layers are denoted
+as:</p>
+</blockquote>
+<p>基于此，本文的Patient-KD框架中，学生网络是仅模仿中间层中的[CLS]标记的表征，遵循前面提到的[CLS]标记在预测最终标签中很重要的直觉。对于输入<span class="math inline">\(\mathbf{x}_{i}，\)</span>所有层的[CLS]令牌的输出表示为:</p>
+<p><span class="math display">\[
+\mathbf{h}_{i}=\left[\mathbf{h}_{i, 1}, \mathbf{h}_{i, 2}, \ldots, \mathbf{h}_{i, k}\right]=\operatorname{BERT}_{k}\left(\mathbf{x}_{i}\right) \in \mathbb{R}^{k \times d}
+\]</span></p>
+<blockquote>
+<p>We denote the set of intermediate layers to distill knowledge from as <span class="math inline">\(I_{p t}\)</span>.Take distilling from BERT <span class="math inline">\(_{12}\)</span> to <span class="math inline">\(\operatorname{BERT}_{6}\)</span> as an example. For the PKDSkip strategy, <span class="math inline">\(I_{p t}=\{2,4,6,8,10\} ;\)</span> and for the PKD-Last strategy, <span class="math inline">\(I_{p t}=\{7,8,9,10,11\} .\)</span> Note that <span class="math inline">\(k=5\)</span> for both cases, because the output from the last layer (e.g., Layer 12 for BERT-Base) is omitted since its hidden states are connected to the
+softmax layer, which is already included in the KD loss defined in Eqn. (5). In general, for BERT student with <span class="math inline">\(n\)</span> layers, <span class="math inline">\(k\)</span> always equals to <span class="math inline">\(n-1\)</span>. The additional training loss introduced by the patient teacher is defined as the mean-square loss between the normalized hidden states:</p>
+</blockquote>
+<p>将进行知识蒸馏的中间层表示为 <span class="math inline">\(I_{p t}\)</span>，以将12层bert蒸馏为6层为例。对于中间层的蒸馏策略PKDSkip有<span class="math inline">\(I_{p t}=\{2,4,6,8,10\}\)</span>,对于最后几层的蒸馏策略<span class="math inline">\(I_{p t}=\{7,8,9,10,11\}\)</span>。隐藏层的个数是5，适用于两种情况。因为最后一层的输出(例如，BERT-Base的第12层)被省略，因为它的隐藏状态连接到softmax层，它已经包含在公式（5）中定义的KD损失中。一般来说，对于有<span class="math inline">\(n\)</span>层的BERT学生，<span class="math inline">\(k\)</span>总是等于<span class="math inline">\(n-1\)</span>。由有“耐心”的老师引入的额外训练损失定义为归一化隐藏状态之间的均方损失:</p>
+<p><span class="math display">\[
+L_{P T}=\sum_{i=1}^{N} \sum_{j=1}^{M}\left\|\frac{\mathbf{h}_{i, j}^{s}}{\left\|\mathbf{h}_{i, j}^{s}\right\|_{2}}-\frac{\mathbf{h}_{i, I_{p t}(j)}^{t}}{\left\|\mathbf{h}_{i, I_{p t}(j)}^{t}\right\|_{2}}\right\|_{2}^{2}
+\]</span></p>
+<p>where <span class="math inline">\(M\)</span> denotes the number of layers in the student network, <span class="math inline">\(N\)</span> is the number of training samples, and the superscripts <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span> in <span class="math inline">\(\mathbf{h}\)</span> indicate the student and the teacher model, respectively. Combined with the KD loss introduced in Section 3.1 the final objective function can be formulated as:</p>
+<p><span class="math inline">\(M\)</span>表示学生网络的层数，<span class="math inline">\(N\)</span>是训练样本数，<span class="math inline">\(\mathbf{h}\)</span>中的上标<span class="math inline">\(s\)</span>和<span class="math inline">\(t\)</span>分别表示学生模型和教师模型。结合上面介绍的KD损失，最终目标函数可表示为:</p>
+<p><span class="math display">\[
+L_{P K D}=(1-\alpha) L_{C E}^{s}+\alpha L_{D S}+\beta L_{P T}
+\]</span></p>
+<p>where <span class="math inline">\(\beta\)</span> is another hyper-parameter that weights the importance of the features for distillation in the intermediate layers.</p>
+</div>
+<div id="实验部分" class="section level3" number="0.3.5">
+<h3><span class="header-section-number">0.3.5</span> 实验部分</h3>
+<p>数据集包含情感分类任务，自然语言推理任务,相似度匹配，问答任务，文本识别任务等</p>
+<blockquote>
+<p>For Sentiment Classification, we test on Stanford Sentiment Treebank (SST-2) (Socher et al., 2013). For Paraphrase Similarity Matching, we use Microsoft Research Paraphrase Corpus (MRPC) (Dolan and Brockett, 2005 ) and Quora Question Pairs (QQP) <span class="math inline">\(^{2}\)</span> datasets. For Natural Language Inference, we evaluate on Multi-Genre Natural Language Inference (MNLI) (Williams et al., 2017), QNLI <span class="math inline">\(^{3}\)</span> (Rajpurkar et al., 2016 ), and Recognizing Textual Entailment (RTE).</p>
+</blockquote>
+<p><img src="figs/distillbert-pk_2.png" /></p>
+<p>从表1的结果中能够看出多层的方法在除了MRPC之外的任务上都能达到比较最好的效果</p>
+<p><img src="figs/distillbert-pk_3.png" /></p>
+<p>从图2的效果上来看，pkd的效果是好于kd的效果的，也就是说加上了对中间层的蒸馏效果更好。</p>
+<p><img src="figs/distillbert-pk_4.png" /></p>
+<p>PKD-SKIP的效果是好于PKD-LAST的</p>
+<p><img src="figs/distillbert-pk_5.png" /></p>
+<p>在RACE数据集上，多层的PKD-skip效果也是最接近于teacher的</p>
+<p><img src="figs/distillbert-pk_6.png" /></p>
+<p>从表5上看，增加bert到bert-large作为teacher进行蒸馏， 得到的学生模型的效果并没有很大的提升。</p>
+<p>为什么？</p>
+</div>
+</div>
+<div id="参考文献" class="section level2 unnumbered" number="">
+<h2>参考文献</h2>
 <div id="refs" class="references hanging-indent">
 <div>
 <p>Hinton, Geoffrey, Oriol Vinyals, and Jeff Dean. 2015. “Distilling the Knowledge in a Neural Network,” March.</p>
 </div>
 <div>
-<p>Tang, R., Y. Lu, L. Liu, L. Mou, O. Vechtomova, and J. Lin. 2019. “Distilling Task-Specific Knowledge from Bert into Simple Neural Networks.”</p>
+<p>Sun, S., Y. Cheng, Z. Gan, and J. Liu. 2019. “Patient Knowledge Distillation for Bert Model Compression.”</p>
 </div>
+<div>
+<p>Tang, R., Y. Lu, L. Liu, L. Mou, O. Vechtomova, and J. Lin. 2019. “Distilling Task-Specific Knowledge from Bert into Simple Neural Networks.”</p>
 </div>
 </div>
 </div>

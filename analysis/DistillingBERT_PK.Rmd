@@ -1,0 +1,238 @@
+### 文章知识点总览
+
+提出一种Patient Knowledge Distillation方式
+
+训练了一个非常有“耐心” 的学生网络模型，能够学习教师网络的多层知识，不只是最后几层或者前几层，学习的足够充分。
+
+**模型结构**：Patient student，蒸馏bert网络的中间层以及最后的输出层，多层蒸馏
+
+![](figs/distillbert-pk_1.png)
+
+**目标函数**：
+
+$$
+L_{P K D}=(1-\alpha) L_{C E}^{s}+\alpha L_{D S}+\beta L_{P T}
+$$
+
+
+是向教师网络学习与向正确样本学习以及教师网络的而外的训练损失的加权和，由三部分组成
+
+- $L_{C E}$是学习标注样本的交叉熵
+
+- $L_{D S}$是学习教师网路的交叉熵
+
+- $L_{P T}$教师网络额外的训练损失
+
+
+
+
+**模型结果对比**
+
+对中间层进行蒸馏的效果是要好于只对教师网络输出层蒸馏的效果的
+
+直接看下面的实验分析
+
+### abstract
+
+>
+In order to alleviate this resource hunger in large-scale model training,we propose a Patient Knowledge Distillation approach to compress an original large model (teacher) into an equally-effective lightweight shallow network (student). [@2019Patient]
+
+例如像bert这种重量级的模型是非常吃算力的，因此本文提出了Patient知识蒸馏的方法来压缩原始的原始的庞大的教师网络模型变成一个轻量级的学生模型。
+
+>Different from previous knowledge distillation methods, which only use the output from the last layer of the teacher network for distillation, our student model patiently learns from multiple intermediate layers of the teacher model for incremental knowledge extraction, following two strategies: 
+
+本文的方法和之前的蒸馏模型的不同之处在于，之前的蒸馏模型（比如hinton的）只对教师网络的输出层进行蒸馏，本文的学生网络会还会耐心的学习教师网络的中间层进行知识的提取。主要方法如下：
+
+>
+(i) PKD-Last: learning from the last k layers; and (ii) PKD-Skip: learning from every k layers. 
+
+PKD-Last：学习最后K层的知识，PKD-Skip：对中间层每隔k层学习一次
+
+
+>
+These two patient distillation schemes enable the exploitation of rich information in the teacher’s hidden layers, and encourage the student model to patiently learn from and imitate the teacher through a multi-layer distillation process. 
+
+这两种蒸馏的方式能够充分的学习到教师网络的隐藏层信息，并且能过够通过多层蒸馏的方式模拟出教师网络，从而激发学生网络的"耐心"（个人感觉就是增加学生网络的参数）
+
+- 所有标注数据都叫做ground truth
+
+### Introduction
+
+>In our approach,the teacher model outputs probability logits and predicts labels for the training samples (extendable to additional unannotated samples), and the student model learns from the teacher network to mimic the teacher’s prediction.
+
+本文教师网络输出的是probability logits，并且对训练样本进行标签预测(应该用来做数据增强的)，学生模型用来模拟老师的预测标签。
+
+> we adopt a patient learning mechanism: instead of learning parameters from only the last layer of the teacher,we encourage the student model to extract knowledge also from previous layers of the teacher network. We call this ‘Patient Knowledge Distillation’. This patient learner has the advantage of distilling rich information through the deep structure of the teacher network for multi-layer knowledge distillation.
+
+本文采用了一种patient学习机制，激励学生模型从教师网络模型的多层提取知识而不只是最后一层。
+
+
+### Patient Knowledge Distillation
+
+>**Problem Definition** The original large teacher network is represented by a function $f(\mathbf{x} ; \theta)$, where $\mathrm{x}$ is the input to the network, and $\theta$ denotes the model parameters. The goal of knowledge distillation is to learn a new set of parameters $\theta^{\prime}$ for a shallower student network $g\left(\mathbf{x} ; \theta^{\prime}\right),$ such that the student network achieves similar performance to the teacher, with much lower computational cost. Our strategy is to force the student model to imitate outputs from the teacher model on the training dataset with a defined objective $L_{K D}$.
+
+$f(\mathbf{x} ; \theta)$表示大的教师模型，$\mathrm{x}$ 是模型的输入，$\theta$ 表示模型参数。知识蒸馏的目标是让浅层的学生网络$g\left(\mathbf{x} ; \theta^{\prime}\right)$学习到一组新的参数$\theta^{\prime}$
+学生网络消耗的算力是非常的低的。$L_{K D}$是本文的目标函数。
+
+**目标函数**
+
+>Assume $\left\{\mathbf{x}_{i}, \mathbf{y}_{i}\right\}_{i=1}^{N}$ are $N$ training samples, where $\mathbf{x}_{i}$ is the $i$ -th input instance for BERT, and $\mathbf{y}_{i}$ is the corresponding ground-truth label. BERT first computes a contextualized embedding $\mathbf{h}_{i}=\operatorname{BERT}\left(\mathbf{x}_{i}\right) \in \mathbb{R}^{d} .$ Then, a softmax layer $\hat{\mathbf{y}}_{i}=P\left(\mathbf{y}_{i} \mid \mathbf{x}_{i}\right)=\operatorname{softmax}\left(\mathbf{W h}_{i}\right)$ for classifica-
+tion is applied to the embedding of BERT output, where $\mathbf{W}$ is a weight matrix to be learned.
+
+假设$\left\{\mathbf{x}_{i},\mathbf{y}_{i}\right\}_{i=1}^{N}$是N个训练样本，$\mathbf{x}_{i}$是bert的低i个输入，$\mathbf{y}_{i}$是第i个ground-truth label，bert首先计算上下文的词向量
+$\mathbf{h}_{i}=\operatorname{BERT}\left(\mathbf{x}_{i}\right) \in \mathbb{R}^{d}$ ，$\hat{\mathbf{y}}_{i}=P\left(\mathbf{y}_{i} \mid \mathbf{x}_{i}\right)=\operatorname{softmax}\left(\mathbf{W h}_{i}\right)$是softmax层得到的分类输出。$\mathbf{W}$是学到的参数
+
+To apply knowledge distillation, first we need to train a teacher network. For example, to train a 12-layer BERT-Base as the teacher model, the learned parameters are denoted as:
+
+首先是对12层的BERT-Base进行训练，得到的参数定义如下。
+
+$$
+\hat{\theta}^{t}=\arg \min _{\theta} \sum_{i \in[N]} L_{C E}^{t}\left(\mathbf{x}_{i}, \mathbf{y}_{i} ;\left[\theta_{\mathrm{BERT}_{12}}, \mathbf{W}\right]\right)
+$$
+
+>
+where the superscript $t$ denotes parameters in the teacher model, $[N]$ denotes set $\{1,2, \ldots, N\}$ $L_{C E}^{t}$ denotes the cross-entropy loss for the teacher training, and $\theta_{\mathrm{BERT}_{12}}$ denotes parameters of $\mathrm{BERT}_{12}$
+
+$t$ 是教师网络的参数，$\{1,2, \ldots, N\}$ $L_{C E}^{t}$ 教师网络训练的交叉熵损失函数，$\theta_{\mathrm{BERT}_{12}}$表示 $\mathrm{BERT}_{12}$的参数
+
+
+
+The output probability for any given input $\mathbf{x}_{i}$ can be formulated as:
+
+对于每个输入的输出概率公式如下
+
+$$
+\begin{aligned}
+\hat{\mathbf{y}}_{i} &=P^{t}\left(\mathbf{y}_{i} \mid \mathbf{x}_{i}\right)=\operatorname{softmax}\left(\frac{\mathbf{W h}_{i}}{T}\right) \\
+&=\operatorname{softmax}\left(\frac{\mathbf{W} \cdot \operatorname{BERT}_{12}\left(\mathbf{x}_{i} ; \hat{\theta}^{t}\right)}{T}\right)
+\end{aligned}
+$$
+
+>
+where $P^{t}(\cdot \mid \cdot)$ denotes the probability output from the teacher. $\hat{\mathbf{y}}_{i}$ is fixed as soft labels, and $T$ is the temperature used in KD, which controls how much to rely on the teacher's soft predictions. A higher temperature produces a more diverse probability distribution over classes (Hinton et al., 2015). Similarly, let $\theta^{s}$ denote parameters to be learned for the student model, and $P^{s}(\cdot \mid \cdot)$ denote the corresponding probability output from the student model. Thus, the distance between the teacher's prediction and the student's prediction can be defined as:
+
+$P^{t}(\cdot \mid \cdot)$表示教师网络的输出概率，$\hat{\mathbf{y}}_{i}$ 是软label，T是KD的温度参数，决定了在多大程度上依赖于老师网络的软预测。温度越高，分类的概率分布就越多样化，$\theta^{s}$是学生模型学习的参数，$P^{s}(\cdot \mid \cdot)$是学生模型的输出概率，因此：教师的预测与学生的预测之间的距离可以定义为:
+
+
+
+
+$$
+\begin{array}{r}
+L_{D S}=-\sum_{i \in[N]} \sum_{c \in C}\left[P^{t}\left(\mathbf{y}_{i}=c \mid \mathbf{x}_{i} ; \hat{\theta}^{t}\right)\right. \\
+\left.\log P^{s}\left(\mathbf{y}_{i}=c \mid \mathbf{x}_{i} ; \theta^{s}\right)\right]
+\end{array}
+$$
+
+这个是学生网络像教师网络学习损失函数
+
+>
+where $c$ is a class label and $C$ denotes the set of class labels.
+
+$c$是一个分类标签，$C$是一个类别的标签
+
+>
+Besides encouraging the student model to imitate the teacher's behavior, we can also fine-tune the student model on target tasks, where taskspecific cross-entropy loss is included for model training:
+
+学生网络除了向教师网络学习之外，还想要像正确的标注数据学习，模型训练中包含了特定任务的交叉熵损失:
+
+$$
+\begin{aligned}
+L_{C E}^{s}=-\sum_{i \in[N]} & \sum_{c \in C}\left[\mathbb{1}\left[\mathbf{y}_{i}=c\right]\right.\\
+&\left.\log P^{s}\left(\mathbf{y}_{i}=c \mid \mathbf{x}_{i} ; \theta^{s}\right)\right]
+\end{aligned}
+$$
+
+
+Thus, the final objective function for knowledge distillation can be formulated as:
+
+最终本文的目标函数如下，是教师网络和学生网络的距离损失和与真实数据交叉熵的加权和
+
+
+$$
+L_{K D}=(1-\alpha) L_{C E}^{s}+\alpha L_{D S}
+$$
+
+模型结构如图
+
+![](figs/distillbert-pk_1.png)
+
+a图是每两层学习教师模型的一次输出叫PKD-Skip,b图是学生网络学习教师模型最后6层,也叫PKD-last，Trm：transformer。
+
+
+>
+Learning from the hidden states of all the tokens is computationally expensive, and may introduce noise. In the original BERT implementation (Devlin et al., 2018), prediction is performed by only using the output from the last layer's [CLS ] token. In some variants of BERT, like SDNet (Zhu et al., 2018 ), a weighted average of all layers' [CLS ] embeddings is applied. 
+
+因为从隐藏层学习表征非常的消耗算力，而且有可能会产生噪音。在最初的BERT实现中，预测仅通过使用最后一层的[CLS]的token输出来执行。在BERT的一些变体中，如SDNet，应用了所有层[CLS]嵌入的加权平均。
+
+>In general, the final logit can be computed based on $\mathbf{h}_{\text {final }}=$ $\sum_{j \in[k]} w_{j} \mathbf{h}_{j},$ where $w_{j}$ could be either learned parameters or a pre-defined hyper-parameter, $\mathbf{h}_{j}$ is the embedding of [CLS] from the hidden layer $j,$ and $k$ is the number of hidden layers. 
+
+通常最后几层的logit能够根据$\mathbf{h}_{\text {final }}=$ $\sum_{j \in[k]} w_{j} \mathbf{h}_{j}$， $w_{j}$ 是可以被学习到的， $\mathbf{h}_{j}$是[CLS]隐藏层的参数，k表示隐藏层的数量。
+
+>Derived from this, if the compressed model can learn from the representation of [ $\mathrm{CLS}$ ] in the teacher's intermediate layers for any given input, it has the potential of gaining a generalization ability similar to the teacher model.
+
+
+由此可知，对于任何给定的输入，如果压缩模型能够从教师中间层[$\mathrm{CLS}$]的表示中学习，那么它就有可能获得类似于教师模型的泛化能力。
+
+>
+Motivated by this, in our Patient-KD framework, the student is cultivated to imitate the representations only for the [CLS] token in the intermediate layers, following the intuition aforementioned that the [CLS] token is important in predicting the final labels. For an input $\mathbf{x}_{i},$ the outputs of the [CLS ] tokens for all the layers are denoted
+as:
+
+基于此，本文的Patient-KD框架中，学生网络是仅模仿中间层中的[CLS]标记的表征，遵循前面提到的[CLS]标记在预测最终标签中很重要的直觉。对于输入$\mathbf{x}_{i}，$所有层的[CLS]令牌的输出表示为:
+
+$$
+\mathbf{h}_{i}=\left[\mathbf{h}_{i, 1}, \mathbf{h}_{i, 2}, \ldots, \mathbf{h}_{i, k}\right]=\operatorname{BERT}_{k}\left(\mathbf{x}_{i}\right) \in \mathbb{R}^{k \times d}
+$$
+
+>
+We denote the set of intermediate layers to distill knowledge from as $I_{p t}$.Take distilling from BERT $_{12}$ to $\operatorname{BERT}_{6}$ as an example. For the PKDSkip strategy, $I_{p t}=\{2,4,6,8,10\} ;$ and for the PKD-Last strategy, $I_{p t}=\{7,8,9,10,11\} .$ Note that $k=5$ for both cases, because the output from the last layer (e.g., Layer 12 for BERT-Base) is omitted since its hidden states are connected to the
+softmax layer, which is already included in the KD loss defined in Eqn. (5). In general, for BERT student with $n$ layers, $k$ always equals to $n-1$. The additional training loss introduced by the patient teacher is defined as the mean-square loss between the normalized hidden states:
+
+将进行知识蒸馏的中间层表示为 $I_{p t}$，以将12层bert蒸馏为6层为例。对于中间层的蒸馏策略PKDSkip有$I_{p t}=\{2,4,6,8,10\}$,对于最后几层的蒸馏策略$I_{p t}=\{7,8,9,10,11\}$。隐藏层的个数是5，适用于两种情况。因为最后一层的输出(例如，BERT-Base的第12层)被省略，因为它的隐藏状态连接到softmax层，它已经包含在公式（5）中定义的KD损失中。一般来说，对于有$n$层的BERT学生，$k$总是等于$n-1$。由有"耐心"的老师引入的额外训练损失定义为归一化隐藏状态之间的均方损失:
+
+
+$$
+L_{P T}=\sum_{i=1}^{N} \sum_{j=1}^{M}\left\|\frac{\mathbf{h}_{i, j}^{s}}{\left\|\mathbf{h}_{i, j}^{s}\right\|_{2}}-\frac{\mathbf{h}_{i, I_{p t}(j)}^{t}}{\left\|\mathbf{h}_{i, I_{p t}(j)}^{t}\right\|_{2}}\right\|_{2}^{2}
+$$
+
+where $M$ denotes the number of layers in the student network, $N$ is the number of training samples, and the superscripts $s$ and $t$ in $\mathbf{h}$ indicate the student and the teacher model, respectively. Combined with the KD loss introduced in Section 3.1 the final objective function can be formulated as:
+
+ $M$表示学生网络的层数，$N$是训练样本数，$\mathbf{h}$中的上标$s$和$t$分别表示学生模型和教师模型。结合上面介绍的KD损失，最终目标函数可表示为:
+
+$$
+L_{P K D}=(1-\alpha) L_{C E}^{s}+\alpha L_{D S}+\beta L_{P T}
+$$
+
+where $\beta$ is another hyper-parameter that weights the importance of the features for distillation in the intermediate layers.
+
+
+### 实验部分
+
+数据集包含情感分类任务，自然语言推理任务,相似度匹配，问答任务，文本识别任务等
+
+>For Sentiment Classification, we test on Stanford Sentiment Treebank (SST-2) (Socher et al., 2013). For Paraphrase Similarity Matching, we use Microsoft Research Paraphrase Corpus (MRPC) (Dolan and Brockett, 2005 ) and Quora Question Pairs (QQP) $^{2}$ datasets. For Natural Language Inference, we evaluate on Multi-Genre Natural Language Inference (MNLI) (Williams et al., 2017), QNLI $^{3}$ (Rajpurkar et al., 2016 ), and Recognizing Textual Entailment (RTE).
+
+![](figs/distillbert-pk_2.png)
+
+从表1的结果中能够看出多层的方法在除了MRPC之外的任务上都能达到比较最好的效果
+
+
+![](figs/distillbert-pk_3.png)
+
+从图2的效果上来看，pkd的效果是好于kd的效果的，也就是说加上了对中间层的蒸馏效果更好。
+
+![](figs/distillbert-pk_4.png)
+
+
+PKD-SKIP的效果是好于PKD-LAST的
+
+
+![](figs/distillbert-pk_5.png)
+
+在RACE数据集上，多层的PKD-skip效果也是最接近于teacher的
+
+![](figs/distillbert-pk_6.png)
+
+从表5上看，增加bert到bert-large作为teacher进行蒸馏， 得到的学生模型的效果并没有很大的提升。
+
+为什么？
+
