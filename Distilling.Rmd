@@ -50,6 +50,16 @@ faster, cheaper and lighter](https://arxiv.org/pdf/1908.09355.pdf)
 
 ```
 
+## TinyBERT
+
+原文：[TinyBERT: Distilling BERT for Natural Language Understanding](https://arxiv.org/pdf/1909.10351.pdf)
+
+```{r child='analysis/TinyBERT.Rmd'}
+
+```
+
+
+
 
 
 ## 参考文献

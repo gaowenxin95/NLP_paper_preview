@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2021-02-26" />
+<meta name="date" content="2021-05-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -256,7 +256,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">NLP相关paper阅读</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2021-02-26</em></p>
+<p class="date"><em>2021-05-01</em></p>
 </div>
 <div id="nlp-paper-preview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> NLP paper preview</h1>
@@ -1004,7 +1004,8 @@ QKV,有没有都存在的必要？</p></li>
 <div id="decoder-2" class="section level3" number="1.6.8">
 <h3><span class="header-section-number">1.6.8</span> decoder</h3>
 <p>TRM中的decoder部分一直没好好看，我一直以为里面的mask和bert中的一样，其实TRM中是存在两种bert的，一个的作用是padding 0的部分进行mask，还有事多头注意力机制中的mask</p>
-<p>逐个解释</p>
+<p>解码注意力层”工作方式基本就像多头自注意力层一样，只不过它是通过在它下面的层来创造查询矩阵</p>
+<p><a href="https://jalammar.github.io/illustrated-transformer/">jalammer</a>的一篇解读，对论文和自注意力机制都有非常好的解析，这里直接给出链接，可以多看几遍~</p>
 <p>tranformer这里最近看了一篇还不错的分享，等空了把重点内容，之前理解没到位的记录下 这里先放一个链接</p>
 <p><a href="https://mp.weixin.qq.com/s?__biz=MzI4MDYzNzg4Mw==&amp;mid=2247521353&amp;idx=6&amp;sn=5c1d369457feb0e85d2dc0ce15013551&amp;chksm=ebb7ac9ddcc0258b844f4c3e96e0a4e6092908eae6101582998d9023472fda4f853195d0483d&amp;mpshare=1&amp;scene=23&amp;srcid=0103cJP102hkdnRNQfXSAOuQ&amp;sharer_sharetime=1609723757487&amp;sharer_shareid=df15c342306c746b0423e3fd6ee52a86#rd">万能的transformer</a></p>
 <p>上面这个文章中回答了一些在看attention is all you need 论文中的没有讲清楚的几个问题</p>

@@ -1,0 +1,63 @@
+### 文章知识点总览 
+
+**模型结构**
+**目标函数**
+**效果评估**
+
+### abstract
+
+>we first propose a novel Transformer distillation method that is specially designed for knowledge distillation (KD) of the Transformer-based models. By leveraging this new KD method, the plenty of knowledge encoded in a large "teacher" BERT can be effectively transferred to a small "student" TinyBERT. Then, we introduce a new two-stage learning framework for TinyBERT, which performs Transformer distillation at both the pretraining and task-specific learning stages. This framework ensures that TinyBERT can capture the general-domain as well as the task-specific knowledge in BERT.
+
+本文提出了一种新的transformer蒸馏方法，该方法专为基于transformer的知识精馏(KD)而设计。通过利用这种新的KD方法，大量的知识编码在一个大的“teacher”bert可以有效地转移到一个小的“student”bert。然后，我们提出了一个新的TinyBERT两阶段学习框架，在训练前和任务特定学习阶段进行transformer蒸馏。本文框架确保TinyBERT可以捕获一般领域以及BERT中特定于任务的知识。
+
+
+>
+TinyBERT with 4 layers is empirically effective and achieves more than $96.8 \%$ the performance of its teacher BERT $_{\text {BASE }}$ on GLUE benchmark, while being $7.5 x$ smaller and $9.4 x$ faster on inference. TinyBERT $_{4}$ is also significantly better than 4-layer state-of-the-art baselines on BERT distillation, with only $\sim \mathbf{2 8 \%}$ parameters and $\sim \mathbf{3 1 \%}$ inference time of them. Moreover, TinyBERT $_{6}$ with 6 layers performs on-par with its teacher BERT $_{\text {BASE. }}$
+
+TinyBERT只有4层，但是模型的精度能到到教师bert-base的 $96.8 \%$ 在GLUE测试集上面。比bert-base减小7.5倍 速度提升了9.4倍inyBERT $_{4}$的效果是比4层蒸馏的bert的baseline好的，参数量级只有其28%，时间只有其31%。
+
+看上去效果不错，要是精度很高的话，加一些规则不是秒了bert嘛？也能有效防止温室气体排放~
+
+###  Introduction
+
+> we firstly propose a new Transformer distillation method to distill the knowledge embedded in teacher BERT. Specifically, we design three types of loss functions to fit different representations from BERT layers: 1) the output of the embedding layer; 2) the hidden states and attention matrices derived from the Transformer layer; 3 ) the logits output by the prediction layer. The attention based fitting is inspired by the recent findings (Clark et al., 2019$)$ that the attention weights learned by BERT can capture substantial linguistic knowledge, and it thus encourages the linguistic knowledge can be well transferred from teacher BERT to student TinyBERT. Then, we propose a novel two-stage learning framework including the general distillation and the task-specific distillation, as illustrated in Figure 1 . 
+
+本文首先提出了一种新的transformer蒸馏方法来提取BERT老师的知识。具体来说，本文设计了三种类型的损失函数来适应BERT层的不同表示:
+
+- 1)嵌入层的输出;
+- 2)由transformer层导出的隐藏状态和注意矩阵;
+- 3)预测层输出的logits。基于注意的拟合受到了最近的发现(Clark et al.， 2019$)$的启发，BERT学习的注意权重可以捕获大量的语言知识，从而鼓励语言知识可以很好地从BERT老师转移到学生TinyBERT。然后，本文提出了一个新的两阶段学习框架，包括一般蒸馏和特定任务蒸馏，如图1所示。
+
+![](figs/tinybert_1.png)
+
+>
+At general distillation stage, the original BERT without fine-tuning acts as the teacher model. The student TinyBERT mimics the teacher's behavior through the proposed Transformer distillation on general-domain corpus. After that, we obtain a general TinyBERT that is used as the initialization of student model for the further distillation. At the task-specific distillation stage, we first do the data augmentation, then perform the distillation on the augmented dataset using the fine-tuned BERT as the teacher model. It should be pointed out that both the two stages are essential to improve the performance and generalization capability of TinyBERT.
+
+在一般蒸馏阶段，原始bert没有微调直接作为教师模型。学生TinyBERT通过在一般领域语料库上提出的transformer蒸馏来模仿教师的行为。然后，得到了一个一般的TinyBERT，作为学生模型的初始化用于进一步的蒸馏。在特定任务的精馏阶段，本文首先进行数据增强，然后使用微调后的BERT作为教师模型对增强数据集进行蒸馏。需要指出的是，这两个阶段对于提高TinyBERT的性能和泛化能力都是至关重要的。
+
+**简单来说就是分为数据增强和蒸馏两个阶段**
+
+>We also show that a 6-layer TinyBERT $_{6}$ can perform on-par with the teacher BERT $_{\text {BASE }}$ on GLUE.
+
+也有一个6层TinyBERT的和bert-teacher有的一拼。
+
+
+### Method
+
+**Transformer Distillation**
+
+>The proposed Transformer distillation is a specially designed KD method for Transformer networks. In this work, both the student and teacher networks are built with Transformer layers. For a clear illustration, we formulate the problem before introducing our method.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

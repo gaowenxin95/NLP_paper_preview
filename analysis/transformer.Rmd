@@ -357,4 +357,6 @@ if __name__ == '__main__':
 
 TRM中的decoder部分一直没好好看，我一直以为里面的mask和bert中的一样，其实TRM中是存在两种bert的，一个的作用是padding 0的部分进行mask，还有事多头注意力机制中的mask
 
-逐个解释
+解码注意力层”工作方式基本就像多头自注意力层一样，只不过它是通过在它下面的层来创造查询矩阵
+
+[jalammer](https://jalammar.github.io/illustrated-transformer/)的一篇解读，对论文和自注意力机制都有非常好的解析，这里直接给出链接，可以多看几遍~
