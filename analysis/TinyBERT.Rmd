@@ -41,23 +41,84 @@ At general distillation stage, the original BERT without fine-tuning acts as the
 
 也有一个6层TinyBERT的和bert-teacher有的一拼。
 
+![](figs/tinybert-1.png)
+
 
 ### Method
 
 **Transformer Distillation**
 
->The proposed Transformer distillation is a specially designed KD method for Transformer networks. In this work, both the student and teacher networks are built with Transformer layers. For a clear illustration, we formulate the problem before introducing our method.
+>Problem Formulation. Assuming that the student model has $M$ Transformer layers and teacher model has $N$ Transformer layers, we start with choosing $M$ out of $N$ layers from the teacher model for the Transformer-layer distillation. Then a function $n=g(m)$ is defined as the mapping function between indices from student layers to teacher layers, which means that the $m$ -th layer of student model learns the information from the $g(m)$ -th layer of teacher model. To be precise, we set 0 to be the index of embedding layer and $M+1$ to be the index of prediction layer, and the corresponding layer mappings are defined as $0=g(0)$ and $N+1=g(M+1)$ respectively. The effect of the choice of different mapping functions on the performances is studied in the experiment section. Formally, the student can acquire knowledge from the teacher by minimizing the following objective:
+
+假设学生模型有$M$Transformer层，教师模型有$N$Transformer层，首先从教师模型的$N$层中选择$M$进行Transformer层蒸馏。然后定义函数$n=g(m)$为学生层到教师层指标之间的映射函数，即学生模型的第m层从教师模型的$g(m)$ -1层学习信息。设0为嵌入层的索引，$M+1$为预测层的索引，对应的层映射分别定义为$0=g(0)$和$N+1=g(M+1)$。在实验部分，研究了不同映射函数的选择对性能的影响。形式上，学生可以通过最小化以下目标从老师那里获得知识,下面的公式就是蒸馏模型的总目标函数。
+
+ 这一段应该主要是说明，蒸馏的从教师到学生的一个映射关系
+
+$\mathcal{L}_{\text {model }}=\sum_{x \in \mathcal{X}} \sum_{m=0}^{M+1} \lambda_{m} \mathcal{L}_{\text {layer }}\left(f_{m}^{S}(x), f_{g(m)}^{T}(x)\right)$
+
+
+### 蒸馏结构
+
+tinybert的蒸馏主要包括三个层的蒸馏,自然也包括三个损失函数
+
+**transformer层的蒸馏**包括隐藏层蒸馏和att层蒸馏
+
+>Transformer-layer Distillation. The proposed Transformer-layer distillation includes the attention based distillation and hidden states based distillation, which is shown in Figure $2 .$ 
+
+结构可以看上面的图2，对transformer中的att层进行蒸馏，目的是为了让学生模型学习到更多的语言信息，损失函数定义如下：
+
+$\mathcal{L}_{\mathrm{attn}}=\frac{1}{h} \sum_{i=1}^{h} \operatorname{MSE}\left(\boldsymbol{A}_{i}^{S}, \boldsymbol{A}_{i}^{T}\right)$
+
+求学生模型和教师模型的MSE
+
+
+*隐藏层的蒸馏*
+
+$$
+\mathcal{L}_{\text {hidn }}=\operatorname{MSE}\left(\boldsymbol{H}^{S} \boldsymbol{W}_{h}, \boldsymbol{H}^{T}\right)
+$$
+
+where the matrices $\boldsymbol{H}^{S} \in \mathbb{R}^{l \times d^{\prime}}$ and $\boldsymbol{H}^{T} \in \mathbb{R}^{l \times d}$
+refer to the hidden states of student and teacher net-works respectively, which are calculated by Equation $4 .$ The scalar values $d$ and $d^{\prime}$ denote the hidden
+sizes of teacher and student models, and $d^{\prime}$ is often smaller than $d$ to obtain a smaller student network. The matrix $\boldsymbol{W}_{h} \in \mathbb{R}^{d^{\prime} \times d}$ is a learnable linear transformation, which transforms the hidden states of student network into the same space as the teacher network's states.
+
+计算教师学生隐藏层的mse，标量值$d$和$d^{\prime}$表示教师模型和学生模型的隐藏大小，并且$d^{\prime}$通常小于$d$以获得更小的学生网络。矩阵$\boldsymbol{W}_{h} \in \mathbb{R}^{d^{\prime} \times d}$中是一个可学习的线性变换，它将学生网络的隐藏状态转换为与教师网络相同的空间状态。
 
 
 
 
+**embedding层的蒸馏**
+
+>Embedding-layer Distillation. Similar to the hidden states based distillation, we also perform embedding-layer distillation and the objective is:
+
+$$
+\mathcal{L}_{\mathrm{embd}}=\operatorname{MSE}\left(\boldsymbol{E}^{S} \boldsymbol{W}_{e}, \boldsymbol{E}^{T}\right)
+$$
+
+>where the matrices $\boldsymbol{E}^{S}$ and $\boldsymbol{H}^{T}$ refer to the embeddings of student and teacher networks, respectively. In this paper, they have the same shape as the hidden state matrices. The matrix $\boldsymbol{W}_{e}$ is a linear transformation playing a similar role as $\boldsymbol{W}_{h}$.
+
+这里的w和隐藏层w作用相似，都是提供一个线性变换
+
+**预测层的蒸馏**
 
 
+>Prediction-layer Distillation. In addition to imitating the behaviors of intermediate layers, we also use the knowledge distillation to fit the predictions of teacher model as in Hinton et al. (2015). Specifically, we penalize the soft cross-entropy loss between the student network's logits against the teacher's logits:
+$$
+\mathcal{L}_{\text {pred }}=\operatorname{CE}\left(\boldsymbol{z}^{T} / t, \boldsymbol{z}^{S} / t\right)
+$$
+where $\boldsymbol{z}^{S}$ and $\boldsymbol{z}^{T}$ are the logits vectors predicted by the student and teacher respectively, CE means the cross entropy loss, and $t$ means the temperature value. In our experiment, we find that $t=1$ performs well.
 
+与之前hinton的输出层蒸馏是一致的
 
+Using the above distillation objectives (i.e. Equations $7,8,9$ and 10 ), we can unify the distillation loss of the corresponding layers between the teacher and the student network:
 
+$$
+\mathcal{L}_{\text {layer }}=\left\{\begin{array}{ll}
+\mathcal{L}_{\mathrm{embd}}, & m=0 \\
+\mathcal{L}_{\mathrm{hidn}}+\mathcal{L}_{\mathrm{attn}}, & M \geq m>0 \\
+\mathcal{L}_{\text {pred }}, & m=M+1
+\end{array}\right.
+$$
+因此从教师到学生的蒸馏是由三个部分组成的。
 
-
-
-
-
+模型的具体效果可以看原文，这里略

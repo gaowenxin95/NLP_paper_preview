@@ -1,0 +1,210 @@
+### introduction
+
+> In this paper, we improve the fine-tuning based approaches by proposing BERT: Bidirectional $\begin{array}{ll}\text { Encoder } & \text { Representations } & \text { from } & \text { Transformers. }\end{array}$ BERT alleviates the previously mentioned unidirectionality constraint by using a "masked language model" (MLM) pre-training objective, inspired by the Cloze task (Taylor, 1953). The masked language model randomly masks some of the tokens from the input, and the objective is to predict the original vocabulary id of the masked word based only on its context. Unlike left-toright language model pre-training, the MLM objective enables the representation to fuse the left and the right context, which allows us to pretrain a deep bidirectional Transformer. In addition to the masked language model, we also use a "next sentence prediction" task that jointly pretrains text-pair representations. The contributions of our paper are as follows:
+
+-   We demonstrate the importance of bidirectional pre-training for language representations. Unlike Radford et al. (2018), which uses unidirectional language models for pre-training, BERT uses masked language models to enable pretrained deep bidirectional representations. This is also in contrast to Peters et al. $(2018 \mathrm{a}),$ which uses a shallow concatenation of independently trained left-to-right and right-to-left LMs.
+
+-   We show that pre-trained representations reduce the need for many heavily-engineered taskspecific architectures. BERT is the first finetuning based representation model that achieves state-of-the-art performance on a large suite of sentence-level and token-level tasks, outperforming many task-specific architectures.
+
+-   BERT advances the state of the art for eleven NLP tasks. The code and pre-trained models are available at https: / / github. com/ google-research/bert.
+
+在本文中，通过提出BERT：变换器的双向编码器表示来改进基于微调的方法。 BERT通过提出一个新的预训练目标来解决前面提到的单向约束："掩盖语言模型"（MLM），受到完形任务的启发（Taylor，1953）。MLM从输入中随机地掩盖一些标记，并且目标是仅基于其上下文来预测被掩盖的单词的原始词汇id。与从左到右的语言模型预训练不同，MLM目标允许表示融合左右上下文，预训练一个深度双向变换器。除了MLM，我们还引入了一个"下一句预测"任务，联合预训练文本对表示。
+
+bert是两部分组成的
+
+-   MLM :掩盖语言模型
+-   next sentence prediction：下一句预测
+
+本文的贡献如下：
+
+-   证明了双向预训练对语言表达的重要性。与Radford等人不同。 （2018），其使用单向语言模型进行预训练，BERT使用mask语言模型来实现预训练任务的的深度双向表示。这也与Peters等人(2018年)形成了鲜明对比，Peters等人使用的是一种由独立训练的从左到右和从右到左的LMs的浅层连接。
+
+-   展示了预先训练的表示消除了许多经过大量工程设计的特定于任务的体系结构的需求。BERT是第一个基于微调的表示模型，它在大量的句子级和token任务上实现了最先进的性能，优于许多具有任务特定体系结构的系统。预训练+微调
+
+-   BERT推进了11项NLP任务的最新技术。
+
+### bert结构
+
+> We introduce BERT and its detailed implementation in this section. There are two steps in our framcwork: pre-training and fine-tuning. During pre-training, the model is trained on unlabeled data over different pre-training tasks. For finetuning, the BERT model is first initialized with the pre-trained parameters, and all of the parameters are fine-tuned using labeled data from the downstream tasks. Each downstream task has separate fine-tuned models, even though they are initialized with the same pre-trained parameters. The question-answering example in Figure 1 will serve as a running example for this section.
+
+bert也是两阶段的任务预训练的任务+微调的任务
+
+> A distinctive feature of BERT is its unified architecture across different tasks. There is minimal difference between the pre-trained architecture and the final downstream architecture.
+
+针对不同的下游任务会有不同的预训练的模型
+
+Model Architecture BERT's model architecture is a multi-layer bidirectional Transformer encoder based on the original implementation described in Vaswani et al. (2017) and released in the tensor2tensor library. ${ }^{1}$ Because the use of Transformers has become common and our implementation is almost identical to the original, we will omit an exhaustive background description of the model architecture and refer readers to Vaswani et al. (2017) as well as excellent guides such as "The Annotated Transformer."
+
+BERT是多层双向Transformer编码器，基于Vaswani等人（2017）中描述的原始实现，并在tensor2tensor库中发布。
+
+> In this work, we denote the number of layers (i.c., Transformcr blocks) as $L,$ the hiddcn sizc as $H,$ and the number of self-attention heads as $A .^{3}$ We primarily report results on two model sizes: $\mathbf{B E R T}_{\mathbf{B A S E}}(\mathrm{L}=12, \mathrm{H}=768, \mathrm{~A}=12,$ Total Param- eters $=110 \mathrm{M}$ ) and $\mathbf{B E R T}_{\text {LARGE }}(\mathrm{L}=24, \mathrm{H}=1024$ $\mathrm{A}=16,$ Total Parameters $=340 \mathrm{M}$ ). BERT $_{\text {BASE }}$ was chosen to have the same model size as OpenAI GPT for comparison purposes. Critically, however, the BERT Transformer uses bidirectional self-attention, while the GPT Transformer uses constrained self-attention where every token can only attend to context to its left.
+
+-   L是transformer中的block块的层数
+-   H是隐藏层数量
+-   A是注意力的头数
+
+base bert和large bert参数规模的设置如下：
+
+$\mathbf{B E R T}_{\mathbf{B A S E}}(\mathrm{L}=12, \mathrm{H}=768, \mathrm{~A}=12,$ Total Param- eters $=110 \mathrm{M}$ ) and $\mathbf{B E R T}_{\text {LARGE }}(\mathrm{L}=24, \mathrm{H}=1024$ $\mathrm{A}=16,$ Total Parameters $=340 \mathrm{M}$ ).
+
+base bert的参数量级和openai的gpt的参数量是一样的。
+
+对比两个模型，bert是使用了双向的self-attention，GPT是是单项的self-attention,只能学到从左侧的上下文语义。
+
+### input output
+
+> Input/Output Representations To make BERT handle a variety of down-stream tasks, our input representation is able to unambiguously represent both a single sentence and a pair of sentences (e.g., $\langle$ Question, Answer $\rangle$ ) in one token sequence. Throughout this work, a "sentence" can be an arbitrary span of contiguous text, rather than an actual linguistic sentence. A "sequence" refers to the input token sequence to BERT, which may be a single sentence or two sentences packed together. We use WordPiece embeddings (Wu et al., 2016) with a 30,000 token vocabulary. The first token of every sequence is always a special classification token ( $[\mathrm{CLS}]$ ). The final hidden state corresponding to this token is used as the aggregate sequence representation for classification tasks. Sentence pairs are packed together into a single sequence. We differentiate the sentences in two ways. First, we separate them with a special token ( $[\mathrm{SEP}])$. Second, we add a learned embedding to every token indicating whether it belongs to sentence $A$ or sentence $B$. As shown in Figure 1 . we denote input embedding as $E,$ the final hidden vector of the special [CLS] token as $C \in \mathbb{R}^{H}$, and the final hidden vector for the $i^{\text {th }}$ input token as $T_{i} \in \mathbb{R}^{H}$ For a given token, its input representation is constructed by summing the corresponding token, segment, and position embeddings. A visualization of this construction can be seen in Figure 2
+
+输入表示能够在一个token序列中明确地表示单个文本句子或一对文本句子（例如，[问题，答案]）。对于给定的标记，其输入表示通过token embedding ,segment embedding ,position embedding三个部分求和来表示。输入表示的可视化表示在图2中给出。具体是：
+
+![](figs/bert-2.png)
+
+-   输入/输出表示 为了使bert处理一系列的下游任务，输入表示能够在一个token序列中明确的表示单个句子和一对句子。在整个工作中，一个"句子"可是是任意一段连续的文本，而不是实际语言的句子。一个"句子"指的是输入BERT的token序列，这个序列可以是单个序列或者是两个序列连在一起。
+
+-   使用带有30,000个token的词汇表做WordPiece嵌入，每个序列的第一个token都是一个特殊的分类符号（[CLS]）。与该token相对应的最终隐藏状态用作分类任务的合计序列表示。句子对打包在一起成为单个序列
+
+有两种方式区分句子。
+
+-   第一使用特殊的token（[SEP]）将句子分开，其次，在每个标记中加入一个学习嵌入，表明它是属于句子a还是句子B。如图1所示，用E表示输入嵌入，特殊token[CLS]的最终的影藏向量为C，和 ith 输入token最终隐藏向量为$T_i$。
+
+![](figs/bert_1.png)
+
+### MLM
+
+掩盖语言模型：
+
+> Task \#1: Masked LM $\quad$ Intuitively, it is reasonable to believe that a deep bidirectional model is strictly more powerful than either a left-to-righ model or the shallow concatenation of a left-toright and a right-to-left model. Unfortunately standard conditional language models can only be trained left-to-right or right-to-left, since bidirec tional conditioning would allow each word to in directly "see itself", and the model could trivially predict the target word in a multi-layered context. In order to train a deep bidirectional representation, we simply mask some percentage of the input tokens at random, and then predict those masked tokens. We refer to this procedure as a "masked LM" (MLM), although it is often referred to as a Cloze task in the literature (Taylor, 1953$)$. In this case, the final hidden vectors corresponding to the mask tokens are fed into an output softmax over the vocabulary, as in a standard LM. In all of our experiments, we mask $15 \%$ of all WordPiece tokens in each sequence at random. In contrast to denoising auto-encoders (Vincent et al., 2008 ), we only predict the masked words rather than reconstructing the entire input. Although this allows us to obtain a bidirectional pre-trained model, a downside is that we are creating a mismatch between pre-training and fine-tuning, since the [MASK] token does not appear during fine-tuning. To mitigate this, we do not always replace "masked" words with the actual [MASK] token. The training data generator chooses $15 \%$ of the token positions at random for prediction. If the $i$ -th token is chosen, we replace the $i$ -th token with (1) the [MASK] token $80 \%$ of the time (2) a random token $10 \%$ of the time (3) the unchanged $i$ -th token $10 \%$ of the time. Then, $T_{i}$ will be used to predict the original token with cross entropy loss. We compare variations of this procedure in Appendix $\mathrm{C.} .2 .$
+
+任务1：Masked LM直观的说，双向模型的效果比单项的好,因为双向调节会允许每个单词间接地"看到自己"，并且模型可以在多层次的语境中对目标词进行简单的预测。
+
+前者通常被称为"transformer encoder"，然而仅仅用于上下文的版本被称为"transformer decoder"，因此它可以被用于文本生成。
+
+为了训练深度双向的表示，只是随机的屏蔽一定百分比的输入token，然后去预测那些遮盖掉的token。将这个过程称为是"masked LM"（MLM），尽管它在文献中通常被称为完形任务。在这种情况下，对应于mask token的最终的隐藏向量通过词汇表输出softmax，如标准的LM。在所有的实验中，随机屏蔽每个序列中所有的WordPiece token的15%。和去燥的auto-encoder相比，只预测掩蔽的单词而不是重建整个输入。
+
+虽然这允许获得双向预训练模型，但缺点是在预训练和微调之间产生不匹配，因为微调期间 [MASK] 不会出现。为了缓解这个问题，并不总是用实际的 [MASK] token替换"masked"词。训练数据生成器随机选择15％的token位置进行预测。如果选择了第i个token，就将第i个token
+
+-   （1）80%的情况替换为[MASK]token
+
+-   （2）10%的情况替换为随机的token
+
+-   （3）10%的情况保持不变。
+
+然后$T_i$将用于预测具有交叉熵损失的原始token。比较了附录C.2中该过程的变化。
+
+附录东西跟多，可以好好看看
+
+BERT实际上是Transformer的Encoder，为了在语言模型的训练中，使用上下文信息又不泄露标签信息，采用了Masked LM，简单来说就是随机的选择序列的部分token用 [Mask] 标记代替。
+
+-   [ ] mask有一个非常大的缺点是mask的操作只存在于pre-train中，fine-tune中没有，这就使得，mask在下游任务中是失效的。
+
+但是，mask有效不是因为特征穿越的原因嘛？
+
+可以考虑下几个问题：
+
+-   mask中的特征穿越问题？
+
+-   mask中过程是无法知道预测的是上文还是下文的token
+
+-   mask与滑动窗口的关系？
+
+### Next Sentence Prediction
+
+> Many important downstream tasks such as Question Answering (QA) and Natural Language Inference (NLI) are based on understanding the relationship between two sentences, which is not directly captured by language modeling. In order to train a model that understands sentence relationships, we pre-train for a binarized next sentence prediction task that can be trivially generated from any monolingual corpus. Specifically, when choosing the sentences $A$ and $B$ for each pretraining example, $50 \%$ of the time $B$ is the actual next sentence that follows A (labeled as IsNext), and $50 \%$ of the time it is a random sentence from the corpus (labeled as NotNext). As we show in Figure $1, C$ is used for next sentence prediction (NSP). $^{5}$ Despite its simplicity, we demonstrate in Section 5.1 that pre-training towards this task is very beneficial to both QA and NLI. The NSP task is closely related to representationlearning objectives used in Jernite et al. (2017) and Logeswaran and Lee (2018). However, in prior work, only sentence embeddings are transferred to down-stream tasks, where BERT transfers all parameters to initialize end-task model parameters. Pre-training data The pre-training procedure largely follows the existing literature on language model pre-training. For the pre-training corpus we use the BooksCorpus (800M words) (Zhu et al., 2015 ) and English Wikipedia $(2,500 \mathrm{M}$ words $)$. For Wikipedia we extract only the text passages and ignore lists, tables, and headers. It is critical to use a document-level corpus rather than a shuffled sentence-level corpus such as the Billion Word Benchmark (Chelba et al., 2013 ) in order to extract long contiguous sequences.
+
+BERT这里是借鉴了Skip-thoughts方法中的句子预测，具体做法则是将两个句子组合成一个序列，当然组合方式会按照下面将要介绍的方式，然后让模型预测这两个句子是否是先后近邻的两个句子，也就是会把"Next Sentence Prediction"问题建模成为一个二分类问题。训练的时候，数据中有50%的情况这两个句子是先后关系，而另外50%的情况下，这两个句子是随机从语料中凑到一起的，也就是不具备先后关系，以此来构造训练数据。句子级别的预测思路和之前介绍的Skip-thoughts基本一致，当然更本质的思想来源还是来自于word2vec中的skip-gram模型。
+
+### Fine-tuning BERT
+
+bert的微调过程
+
+> Fine-tuning is straightforward since the self-attention mechanism in the Transformer al- lows BERT to model many downstream tasks whether they involve single text or text pairs-by swapping out the appropriate inputs and outputs. For applications involving text pairs, a common pattern is to independently encode text pairs before applying bidirectional cross attention, such as Parikh et al. (2016); Seo et al. (2017). BERT instead uses the self-attention mechanism to unify these two stages, as encoding a concatenated text pair with self-attention effectively includes bidirectional cross attention between two sentences. For each task, we simply plug in the task specific inputs and outputs into BERT and finetune all the parameters end-to-end. At the input, sentence $A$ and sentence $B$ from pre-training are analogous to (1) sentence pairs in paraphrasing, (2) hypothesis-premise pairs in entailment, (3) question-passage pairs in question answering, and (4) a degenerate text- $\varnothing$ pair in text classification or sequence tagging. At the output, the token representations are fed into an output layer for tokenlevel tasks, such as sequence tagging or question answering, and the [CLS] representation is fed into an output layer for classification, such as entailment or sentiment analysis.
+
+Compared to pre-training, fine-tuning is relatively inexpensive. All of the results in the paper can be replicated in at most 1 hour on a single Cloud TPU, or a few hours on a GPU, starting from the exact same pre-trained model. $^{7}$ We describe the task-specific details in the corresponding subsections of Section $4 .$ More details can be found in Appendix A.5.
+
+对比预训练的过程，微调的过程就没那么的耗费资源了。这篇文中所有的实验的结果使用单个tpu至少1个h，或者几个小时gpu。附录中有介绍。
+
+### 实验部分
+
+> The General Language Understanding Evaluation (GLUE) benchmark (Wang et al., $2018 \mathrm{a}$ ) is a collection of diverse natural language understanding tasks. Detailed descriptions of GLUE datasets are included in Appendix B.1.
+
+使用的是自然语言理解类的数据集GLUE
+
+To fine-tune on GLUE, we represent the input sequence (for single sentence or sentence pairs) as described in Section $3,$ and use the final hidden vector $C \in \mathbb{R}^{H}$ corresponding to the first input token ( [ CLS ] ) as the aggregate representation. The only new parameters introduced during fine-tuning are classification layer weights $W \in$ $\mathbb{R}^{K \times H}$, where $K$ is the number of labels. We compute a standard classification loss with $C$ and $W$, i.e., $\log \left(\operatorname{softmax}\left(C W^{T}\right)\right)$.
+
+> We use a batch size of 32 and fine-tune for 3 epochs over the data for all GLUE tasks. For each task, we selected the best fine-tuning learning rate (among $5 \mathrm{e}-5,4 \mathrm{e}-5,3 \mathrm{e}-5,$ and $2 \mathrm{e}-5)$ on the Dev set. Additionally, for BERT $_{\text {LARGE }}$ we found that finetuning was sometimes unstable on small datasets, so we ran several random restarts and selected the best model on the Dev set. With random restarts, we use the same pre-trained checkpoint but perform different fine-tuning data shuffling and classifier layer initialization. $^{9}$ Results are presented in Table 1. Both BERT $_{\text {BASE }}$ and BERT $_{\text {LARGE }}$ outperform all systems on all tasks by a substantial margin, obtaining $4.5 \%$ and $7.0 \%$ respective average accuracy improvement over the prior state of the art. Note that BERT $_{\text {BASE }}$ and OpenAI GPT are nearly identical in terms of model architecture apart from the attention masking. For the largest and most widely reported GLUE task, MNLI, BERT obtains a $4.6 \%$ absolute accuracy improvement. On the official GLUE leaderboard $^{10}$, BERT $_{\text {LARGE Obtains a score }}$ of $80.5,$ compared to OpenAI GPT, which obtains 72.8 as of the date of writing. We find that BERT $_{\text {LARGE }}$ significantly outperforms BERT $_{\text {BASE }}$ across all tasks, especially those with very little training data. The effect of model size is explored more thoroughly in Section 5.2.
+
+实验参数设置： - batchsize：32
+
+-   学习率：$5 \mathrm{e}-5,4 \mathrm{e}-5,3 \mathrm{e}-5,$ and $2 \mathrm{e}-5)$
+
+![](figs/bert_3.png)
+
+largebert在小的数据集上比basebert的效果来说可能不稳定
+
+从table的实验结果来看large-bert的效果在所有任务上都是最好的。
+
+在问答数据集SQuADv1.1上的效果
+
+> The Stanford Question Answering Dataset (SQuAD v1.1) is a collection of $100 \mathrm{k}$ crowdsourced question/answer pairs (Rajpurkar et al.,2016). Given a question and a passage from Wikipedia containing the answer, the task is to predict the answer text span in the passage. As shown in Figure $1,$ in the question answering task, we represent the input question and passage as a single packed sequence, with the question using the $A$ embedding and the passage using the $B$ embedding. We only introduce a start vector $S \in \mathbb{R}^{H}$ and an end vector $E \in \mathbb{R}^{H}$ during fine-tuning. The probability of word $i$ being the start of the answer span is computed as a dot product between $T_{i}$ and $S$ followed by a softmax over all of the words in the paragraph: $P_{i}=\frac{e^{S \cdot T_{i}}}{\sum_{j} e^{S \cdot T_{j}}}$ The analogous formula is used for the end of the answer span. The score of a candidate span from position $i$ to position $j$ is defined as $S \cdot T_{i}+E \cdot T_{j}$ and the maximum scoring span where $j \geq i$ is used as a prediction. The training objective is the sum of the log-likelihoods of the correct start and end positions. We fine-tune for 3 epochs with a learning rate of $5 \mathrm{e}-5$ and a batch size of 32 .
+
+这个实验中的参数设置：3个epoch,学习率：$5 \mathrm{e}-5$，batchsize:32
+
+> Table 2 shows top leaderboard entries as well as results from top published systems (Seo et al., $2017 ;$ Clark and Gardner, 2018 ; Peters et al., 2018a; Hu et al., 2018). The top results from the SQuAD leaderboard do not have up-to-date public system descriptions available, ${ }^{11}$ and are allowed to use any public data when training their systems. We therefore use modest data augmentation in our system by first fine-tuning on TriviaQA (Joshi et al., 2017 ) befor fine-tuning on SQuAD.
+
+Our best performing system outperforms the top leaderboard system by $+1.5 \mathrm{~F} 1$ in ensembling and $+1.3 \mathrm{~F} 1$ as a single system. In fact, our single BERT model outperforms the top ensemble system in terms of $\mathrm{F} 1$ score. Without TriviaQA fine-tuning data, we only lose 0.1-0.4 F1, still outperforming all existing systems by a wide margin.
+
+实验太多了，这里写一个吧\~1，图2中的实验对比结果，bert-large的效果是最好的。
+
+![](figs/bert_4.png)
+
+### Ablation Studies
+
+消融实验，这个名词第一回听说
+
+#### NSP对预训练模型的效果
+
+> We demonstrate the importance of the deep bidirectionality of BERT by evaluating two pretraining objectives using exactly the same pretraining data, fine-tuning scheme, and hyperparameters as BERT $_{\text {BASE }}$ :
+
+No NSP: A bidirectional model which is trained using the "masked LM" (MLM) but without the "next sentence prediction" (NSP) task. LTR & No NSP: A left-context-only model which is trained using a standard Left-to-Right (LTR) LM, rather than an MLM. The left-only constraint was also applied at fine-tuning, because removing it introduced a pre-train/fine-tune mismatch that degraded downstream performance. Additionally, this model was pre-trained without the NSP task. This is directly comparable to OpenAI GPT, but using our larger training dataset, our input representation, and our fine-tuning scheme.
+
+对于base bert中，设置对照组，双向LM无NSP，是LTR(从左到右)的单项任务无NSP，保留MLM任务，与GPT进行对比，实验效果如下
+
+We first examine the impact brought by the NSP task. In Table $5,$ we show that removing NSP hurts performance significantly on QNLI, MNLI, and SQuAD 1.1. Next, we evaluate the impact of training bidirectional representations by comparing "No NSP" to "LTR & No NSP". The LTR model performs worse than the MLM model on all tasks, with large drops on MRPC and SQuAD. For SQuAD it is intuitively clear that a LTR model will perform poorly at token predictions, since the token-level hidden states have no rightside context. In order to make a good faith attempt at strengthening the LTR system, we added a randomly initialized BiLSTM on top. This does significantly improve results on SQuAD, but the results are still far worse than those of the pretrained bidirectional models. The BiLSTM hurts performance on the GLUE tasks.
+
+表格5中的结果是去掉NSP的结果，对QNLI, MNLI, and SQuAD 1.1. 产生了比较显著的影响；接着评价双向任务中去掉NSP的和LTR单项任务中去掉NSP的效果，LTR任务且去掉NSP的是最差的，仅仅只是去掉NSP感觉并没有相差很大，
+
+![](figs/bert_5.png)
+
+We recognize that it would also be possible to train separate LTR and RTL models and represent each token as the concatenation of the two models, as ELMo does. However:
+
+(a) this is twice as expensive as a single bidirectional model;
+
+(b) this is non-intuitive for tasks like QA, since the RTL model would not be able to condition the answer on the question;
+
+(c) this it is strictly less powerful than a deep bidirectional model, since it can use both left and right context at every layer.
+
+可以训练单独的LTR和RTL模型，并像ELMo一样，将每个词表示为两个模型的拼接。然而:
+
+( a )训练成本是一个双向模型的两倍； ( b )对于像QA这样的任务来说，这是不直观的，因为RTL模型无法对这个问题的答案进行限定； ( c )这严格来说不如深度双向模型强大，因为深度双向模型可以选择使用左语境或右语境。
+
+#### Effect of Model Size
+
+模型尺寸的影响
+
+这部分设置的对照组的实验，模型的参数不同，总的来说模型的参数量级越大，模型效果越强。真的不是一般人能够玩得起的。
+
+![](figs/bert_6.png)
+
+#### 基本的特征对模型效果的影响
+
+对比的是在命名实体识别中的任务
+
+![](figs/bert_7.png)
+
+-   [ ] bert中的posititon和transformer中的是不一样的？
+
+前者是初始化一个矩阵自己训练参数，后者是正弦余弦函数计算控制距离的
+
+-   [ ] bert中的双向和elmo中的双向有什么不同？
+
+emlo的本质是单向，单项训练完concat两个方向到一起，算是函数也是分开计算的，bert中的双向是真正的双向，双向的transformer，继承了transformer中的大部分结构但不是全部。

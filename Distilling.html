@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2021-03-25" />
+<meta name="date" content="2021-05-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -101,6 +101,14 @@
 <li class="chapter" data-level="0.4.3" data-path=""><a href="#introdiction"><i class="fa fa-check"></i><b>0.4.3</b> introdiction</a></li>
 <li class="chapter" data-level="0.4.4" data-path=""><a href="#distilbert-a-distilled-version-of-bert"><i class="fa fa-check"></i><b>0.4.4</b> DistilBERT a distilled version of BERT</a></li>
 </ul></li>
+<li class="chapter" data-level="0.5" data-path=""><a href="#tinybert"><i class="fa fa-check"></i><b>0.5</b> TinyBERT</a>
+<ul>
+<li class="chapter" data-level="0.5.1" data-path=""><a href="#文章知识点总览-4"><i class="fa fa-check"></i><b>0.5.1</b> 文章知识点总览</a></li>
+<li class="chapter" data-level="0.5.2" data-path=""><a href="#abstract-3"><i class="fa fa-check"></i><b>0.5.2</b> abstract</a></li>
+<li class="chapter" data-level="0.5.3" data-path=""><a href="#introduction-3"><i class="fa fa-check"></i><b>0.5.3</b> Introduction</a></li>
+<li class="chapter" data-level="0.5.4" data-path=""><a href="#method"><i class="fa fa-check"></i><b>0.5.4</b> Method</a></li>
+<li class="chapter" data-level="0.5.5" data-path=""><a href="#蒸馏结构"><i class="fa fa-check"></i><b>0.5.5</b> 蒸馏结构</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path=""><a href="#参考文献"><i class="fa fa-check"></i>参考文献</a></li>
 </ul>
 
@@ -122,7 +130,7 @@
 <div id="header">
 <h1 class="title">模型蒸馏笔记</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2021-03-25</em></p>
+<p class="date"><em>2021-05-11</em></p>
 </div>
 <p>KD一个比较<a href="Wanghttps://www.zhihu.com/question/50519680/answer/136363665">靠谱的解释是Naiyan的这篇</a></p>
 <p>这里我直接粘过来</p>
@@ -396,7 +404,7 @@ logits, respectively.</p>
 <div id="文章知识点总览-2" class="section level3" number="0.3.1">
 <h3><span class="header-section-number">0.3.1</span> 文章知识点总览</h3>
 <p>提出一种Patient Knowledge Distillation方式</p>
-<p>训练了一个非常有“耐心” 的学生网络模型，能够学习教师网络的多层知识，不只是最后几层或者前几层，学习的足够充分。</p>
+<p>训练了一个非常有“耐心” 的教师生网络模型，学生能够学习教师网络的多层知识，不只是最后几层或者前几层，学习的足够充分。</p>
 <p><strong>模型结构</strong>：Patient student，蒸馏bert网络的中间层以及最后的输出层，多层蒸馏</p>
 <p><img src="figs/distillbert-pk_1.png" /></p>
 <p><strong>目标函数</strong>：</p>
@@ -614,6 +622,110 @@ faster, cheaper and lighter</a></p>
 <ul>
 <li>个人感觉这篇文章是上一篇的一部分，好像没什么创新，实验做的还算充分</li>
 </ul>
+</div>
+</div>
+<div id="tinybert" class="section level2" number="0.5">
+<h2><span class="header-section-number">0.5</span> TinyBERT</h2>
+<p>原文：<a href="https://arxiv.org/pdf/1909.10351.pdf">TinyBERT: Distilling BERT for Natural Language Understanding</a></p>
+<div id="文章知识点总览-4" class="section level3" number="0.5.1">
+<h3><span class="header-section-number">0.5.1</span> 文章知识点总览</h3>
+<p><strong>模型结构</strong>
+<strong>目标函数</strong>
+<strong>效果评估</strong></p>
+</div>
+<div id="abstract-3" class="section level3" number="0.5.2">
+<h3><span class="header-section-number">0.5.2</span> abstract</h3>
+<blockquote>
+<p>we first propose a novel Transformer distillation method that is specially designed for knowledge distillation (KD) of the Transformer-based models. By leveraging this new KD method, the plenty of knowledge encoded in a large “teacher” BERT can be effectively transferred to a small “student” TinyBERT. Then, we introduce a new two-stage learning framework for TinyBERT, which performs Transformer distillation at both the pretraining and task-specific learning stages. This framework ensures that TinyBERT can capture the general-domain as well as the task-specific knowledge in BERT.</p>
+</blockquote>
+<p>本文提出了一种新的transformer蒸馏方法，该方法专为基于transformer的知识精馏(KD)而设计。通过利用这种新的KD方法，大量的知识编码在一个大的“teacher”bert可以有效地转移到一个小的“student”bert。然后，我们提出了一个新的TinyBERT两阶段学习框架，在训练前和任务特定学习阶段进行transformer蒸馏。本文框架确保TinyBERT可以捕获一般领域以及BERT中特定于任务的知识。</p>
+<blockquote>
+<p>TinyBERT with 4 layers is empirically effective and achieves more than <span class="math inline">\(96.8 \%\)</span> the performance of its teacher BERT <span class="math inline">\(_{\text {BASE }}\)</span> on GLUE benchmark, while being <span class="math inline">\(7.5 x\)</span> smaller and <span class="math inline">\(9.4 x\)</span> faster on inference. TinyBERT <span class="math inline">\(_{4}\)</span> is also significantly better than 4-layer state-of-the-art baselines on BERT distillation, with only <span class="math inline">\(\sim \mathbf{2 8 \%}\)</span> parameters and <span class="math inline">\(\sim \mathbf{3 1 \%}\)</span> inference time of them. Moreover, TinyBERT <span class="math inline">\(_{6}\)</span> with 6 layers performs on-par with its teacher BERT <span class="math inline">\(_{\text {BASE. }}\)</span></p>
+</blockquote>
+<p>TinyBERT只有4层，但是模型的精度能到到教师bert-base的 <span class="math inline">\(96.8 \%\)</span> 在GLUE测试集上面。比bert-base减小7.5倍 速度提升了9.4倍inyBERT <span class="math inline">\(_{4}\)</span>的效果是比4层蒸馏的bert的baseline好的，参数量级只有其28%，时间只有其31%。</p>
+<p>看上去效果不错，要是精度很高的话，加一些规则不是秒了bert嘛？也能有效防止温室气体排放~</p>
+</div>
+<div id="introduction-3" class="section level3" number="0.5.3">
+<h3><span class="header-section-number">0.5.3</span> Introduction</h3>
+<blockquote>
+<p>we firstly propose a new Transformer distillation method to distill the knowledge embedded in teacher BERT. Specifically, we design three types of loss functions to fit different representations from BERT layers: 1) the output of the embedding layer; 2) the hidden states and attention matrices derived from the Transformer layer; 3 ) the logits output by the prediction layer. The attention based fitting is inspired by the recent findings (Clark et al., 2019<span class="math inline">\()\)</span> that the attention weights learned by BERT can capture substantial linguistic knowledge, and it thus encourages the linguistic knowledge can be well transferred from teacher BERT to student TinyBERT. Then, we propose a novel two-stage learning framework including the general distillation and the task-specific distillation, as illustrated in Figure 1 .</p>
+</blockquote>
+<p>本文首先提出了一种新的transformer蒸馏方法来提取BERT老师的知识。具体来说，本文设计了三种类型的损失函数来适应BERT层的不同表示:</p>
+<ul>
+<li>1)嵌入层的输出;</li>
+<li>2)由transformer层导出的隐藏状态和注意矩阵;</li>
+<li>3)预测层输出的logits。基于注意的拟合受到了最近的发现(Clark et al.， 2019<span class="math inline">\()\)</span>的启发，BERT学习的注意权重可以捕获大量的语言知识，从而鼓励语言知识可以很好地从BERT老师转移到学生TinyBERT。然后，本文提出了一个新的两阶段学习框架，包括一般蒸馏和特定任务蒸馏，如图1所示。</li>
+</ul>
+<p><img src="figs/tinybert_1.png" /></p>
+<blockquote>
+<p>At general distillation stage, the original BERT without fine-tuning acts as the teacher model. The student TinyBERT mimics the teacher’s behavior through the proposed Transformer distillation on general-domain corpus. After that, we obtain a general TinyBERT that is used as the initialization of student model for the further distillation. At the task-specific distillation stage, we first do the data augmentation, then perform the distillation on the augmented dataset using the fine-tuned BERT as the teacher model. It should be pointed out that both the two stages are essential to improve the performance and generalization capability of TinyBERT.</p>
+</blockquote>
+<p>在一般蒸馏阶段，原始bert没有微调直接作为教师模型。学生TinyBERT通过在一般领域语料库上提出的transformer蒸馏来模仿教师的行为。然后，得到了一个一般的TinyBERT，作为学生模型的初始化用于进一步的蒸馏。在特定任务的精馏阶段，本文首先进行数据增强，然后使用微调后的BERT作为教师模型对增强数据集进行蒸馏。需要指出的是，这两个阶段对于提高TinyBERT的性能和泛化能力都是至关重要的。</p>
+<p><strong>简单来说就是分为数据增强和蒸馏两个阶段</strong></p>
+<blockquote>
+<p>We also show that a 6-layer TinyBERT <span class="math inline">\(_{6}\)</span> can perform on-par with the teacher BERT <span class="math inline">\(_{\text {BASE }}\)</span> on GLUE.</p>
+</blockquote>
+<p>也有一个6层TinyBERT的和bert-teacher有的一拼。</p>
+<p><img src="figs/tinybert-1.png" /></p>
+</div>
+<div id="method" class="section level3" number="0.5.4">
+<h3><span class="header-section-number">0.5.4</span> Method</h3>
+<p><strong>Transformer Distillation</strong></p>
+<blockquote>
+<p>Problem Formulation. Assuming that the student model has <span class="math inline">\(M\)</span> Transformer layers and teacher model has <span class="math inline">\(N\)</span> Transformer layers, we start with choosing <span class="math inline">\(M\)</span> out of <span class="math inline">\(N\)</span> layers from the teacher model for the Transformer-layer distillation. Then a function <span class="math inline">\(n=g(m)\)</span> is defined as the mapping function between indices from student layers to teacher layers, which means that the <span class="math inline">\(m\)</span> -th layer of student model learns the information from the <span class="math inline">\(g(m)\)</span> -th layer of teacher model. To be precise, we set 0 to be the index of embedding layer and <span class="math inline">\(M+1\)</span> to be the index of prediction layer, and the corresponding layer mappings are defined as <span class="math inline">\(0=g(0)\)</span> and <span class="math inline">\(N+1=g(M+1)\)</span> respectively. The effect of the choice of different mapping functions on the performances is studied in the experiment section. Formally, the student can acquire knowledge from the teacher by minimizing the following objective:</p>
+</blockquote>
+<p>假设学生模型有<span class="math inline">\(M\)</span>Transformer层，教师模型有<span class="math inline">\(N\)</span>Transformer层，首先从教师模型的<span class="math inline">\(N\)</span>层中选择<span class="math inline">\(M\)</span>进行Transformer层蒸馏。然后定义函数<span class="math inline">\(n=g(m)\)</span>为学生层到教师层指标之间的映射函数，即学生模型的第m层从教师模型的<span class="math inline">\(g(m)\)</span> -1层学习信息。设0为嵌入层的索引，<span class="math inline">\(M+1\)</span>为预测层的索引，对应的层映射分别定义为<span class="math inline">\(0=g(0)\)</span>和<span class="math inline">\(N+1=g(M+1)\)</span>。在实验部分，研究了不同映射函数的选择对性能的影响。形式上，学生可以通过最小化以下目标从老师那里获得知识,下面的公式就是蒸馏模型的总目标函数。</p>
+<p>这一段应该主要是说明，蒸馏的从教师到学生的一个映射关系</p>
+<p><span class="math inline">\(\mathcal{L}_{\text {model }}=\sum_{x \in \mathcal{X}} \sum_{m=0}^{M+1} \lambda_{m} \mathcal{L}_{\text {layer }}\left(f_{m}^{S}(x), f_{g(m)}^{T}(x)\right)\)</span></p>
+</div>
+<div id="蒸馏结构" class="section level3" number="0.5.5">
+<h3><span class="header-section-number">0.5.5</span> 蒸馏结构</h3>
+<p>tinybert的蒸馏主要包括三个层的蒸馏,自然也包括三个损失函数</p>
+<p><strong>transformer层的蒸馏</strong>包括隐藏层蒸馏和att层蒸馏</p>
+<blockquote>
+<p>Transformer-layer Distillation. The proposed Transformer-layer distillation includes the attention based distillation and hidden states based distillation, which is shown in Figure <span class="math inline">\(2 .\)</span></p>
+</blockquote>
+<p>结构可以看上面的图2，对transformer中的att层进行蒸馏，目的是为了让学生模型学习到更多的语言信息，损失函数定义如下：</p>
+<p><span class="math inline">\(\mathcal{L}_{\mathrm{attn}}=\frac{1}{h} \sum_{i=1}^{h} \operatorname{MSE}\left(\boldsymbol{A}_{i}^{S}, \boldsymbol{A}_{i}^{T}\right)\)</span></p>
+<p>求学生模型和教师模型的MSE</p>
+<p><em>隐藏层的蒸馏</em></p>
+<p><span class="math display">\[
+\mathcal{L}_{\text {hidn }}=\operatorname{MSE}\left(\boldsymbol{H}^{S} \boldsymbol{W}_{h}, \boldsymbol{H}^{T}\right)
+\]</span></p>
+<p>where the matrices <span class="math inline">\(\boldsymbol{H}^{S} \in \mathbb{R}^{l \times d^{\prime}}\)</span> and <span class="math inline">\(\boldsymbol{H}^{T} \in \mathbb{R}^{l \times d}\)</span>
+refer to the hidden states of student and teacher net-works respectively, which are calculated by Equation <span class="math inline">\(4 .\)</span> The scalar values <span class="math inline">\(d\)</span> and <span class="math inline">\(d^{\prime}\)</span> denote the hidden
+sizes of teacher and student models, and <span class="math inline">\(d^{\prime}\)</span> is often smaller than <span class="math inline">\(d\)</span> to obtain a smaller student network. The matrix <span class="math inline">\(\boldsymbol{W}_{h} \in \mathbb{R}^{d^{\prime} \times d}\)</span> is a learnable linear transformation, which transforms the hidden states of student network into the same space as the teacher network’s states.</p>
+<p>计算教师学生隐藏层的mse，标量值<span class="math inline">\(d\)</span>和<span class="math inline">\(d^{\prime}\)</span>表示教师模型和学生模型的隐藏大小，并且<span class="math inline">\(d^{\prime}\)</span>通常小于<span class="math inline">\(d\)</span>以获得更小的学生网络。矩阵<span class="math inline">\(\boldsymbol{W}_{h} \in \mathbb{R}^{d^{\prime} \times d}\)</span>中是一个可学习的线性变换，它将学生网络的隐藏状态转换为与教师网络相同的空间状态。</p>
+<p><strong>embedding层的蒸馏</strong></p>
+<blockquote>
+<p>Embedding-layer Distillation. Similar to the hidden states based distillation, we also perform embedding-layer distillation and the objective is:</p>
+</blockquote>
+<p><span class="math display">\[
+\mathcal{L}_{\mathrm{embd}}=\operatorname{MSE}\left(\boldsymbol{E}^{S} \boldsymbol{W}_{e}, \boldsymbol{E}^{T}\right)
+\]</span></p>
+<blockquote>
+<p>where the matrices <span class="math inline">\(\boldsymbol{E}^{S}\)</span> and <span class="math inline">\(\boldsymbol{H}^{T}\)</span> refer to the embeddings of student and teacher networks, respectively. In this paper, they have the same shape as the hidden state matrices. The matrix <span class="math inline">\(\boldsymbol{W}_{e}\)</span> is a linear transformation playing a similar role as <span class="math inline">\(\boldsymbol{W}_{h}\)</span>.</p>
+</blockquote>
+<p>这里的w和隐藏层w作用相似，都是提供一个线性变换</p>
+<p><strong>预测层的蒸馏</strong></p>
+<blockquote>
+<p>Prediction-layer Distillation. In addition to imitating the behaviors of intermediate layers, we also use the knowledge distillation to fit the predictions of teacher model as in Hinton et al. (2015). Specifically, we penalize the soft cross-entropy loss between the student network’s logits against the teacher’s logits:
+<span class="math display">\[
+\mathcal{L}_{\text {pred }}=\operatorname{CE}\left(\boldsymbol{z}^{T} / t, \boldsymbol{z}^{S} / t\right)
+\]</span>
+where <span class="math inline">\(\boldsymbol{z}^{S}\)</span> and <span class="math inline">\(\boldsymbol{z}^{T}\)</span> are the logits vectors predicted by the student and teacher respectively, CE means the cross entropy loss, and <span class="math inline">\(t\)</span> means the temperature value. In our experiment, we find that <span class="math inline">\(t=1\)</span> performs well.</p>
+</blockquote>
+<p>与之前hinton的输出层蒸馏是一致的</p>
+<p>Using the above distillation objectives (i.e. Equations <span class="math inline">\(7,8,9\)</span> and 10 ), we can unify the distillation loss of the corresponding layers between the teacher and the student network:</p>
+<p><span class="math display">\[
+\mathcal{L}_{\text {layer }}=\left\{\begin{array}{ll}
+\mathcal{L}_{\mathrm{embd}}, &amp; m=0 \\
+\mathcal{L}_{\mathrm{hidn}}+\mathcal{L}_{\mathrm{attn}}, &amp; M \geq m&gt;0 \\
+\mathcal{L}_{\text {pred }}, &amp; m=M+1
+\end{array}\right.
+\]</span>
+因此从教师到学生的蒸馏是由三个部分组成的。</p>
+<p>模型的具体效果可以看原文，这里略</p>
 </div>
 </div>
 <div id="参考文献" class="section level2 unnumbered" number="">

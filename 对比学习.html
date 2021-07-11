@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>对比学习论文笔记</title>
+  <meta name="description" content="对比学习论文笔记" />
+  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="对比学习论文笔记" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="对比学习论文笔记" />
+  
+  
+  
+
+<meta name="author" content="高文欣" />
+
+
+<meta name="date" content="2021-06-18" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+
+<script src="libs/header-attrs-2.2/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path=""><a href="#对比学习"><i class="fa fa-check"></i><b>1</b> 对比学习</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path=""><a href="#从深度学习讲起"><i class="fa fa-check"></i><b>1.1</b> 从深度学习讲起</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">对比学习论文笔记</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">对比学习论文笔记</h1>
+<p class="author"><em>高文欣</em></p>
+<p class="date"><em>2021-06-18</em></p>
+</div>
+<div id="对比学习" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> 对比学习</h1>
+<p>它来了，它来了，对比学习携数据增强一起成团出道了，从CV到NLP都是妥妥的绝杀~当然了对比学习是cv领域率先提出的，鉴于笔者平时偏好nlp领域，因此本文主要介绍对比学习在nlp领域的相关研究进展，附带一些经典的cv领域的额对比学习进展，毕竟LeCun，Bengio，Hinton 和 Kaiming这种巨巨巨。。。佬都是在cv领域神仙打架。</p>
+<div id="从深度学习讲起" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> 从深度学习讲起</h2>
+<p>深度学习的一个重要的趋势是表示学习：Representation-Learning，学好了样本的表示可以直接用在一些不涉及逻辑、推理等的问题上，例如判断句子的情感极性、对图像进行目标检测（识别图像中包含哪些东西)。再例如文本领域从word2vec发展到bert等预训练模型，越来越多的工作都关注到表示学习上了。</p>
+<p>对比学习的目的也是为了更好的学习样本的表示,那问题来了，文本表示学什么？<a href="https://ankeshanand.com/blog/2020/01/26/contrative-self-supervised-learning.html">举个例子：contrative-self-supervised-learning</a></p>
+<p><img src="figs/ccm_1.png" /></p>
+<blockquote>
+<p>有人做了一个实验，要求一个人画一张美元图，右图是真实的美元，左边是这个人凭记忆画的美元图，
+这个实验想表达的一个核心思想就是：尽管我们已经见过很多次钞票长什么样子，但我们很少能一模一样的画出钞票；虽然我们画不出栩栩如生的钞票，但我们依旧可以轻易地辨别出钞票。基于此，也就意味着表示学习算法并不一定要关注到样本的每一个细节，只要学到的特征能够使其和其他样本区别开来就行，这就是对比学习和对抗生成网络（GAN）的一个主要不同所在。<a href="https://zhuanlan.zhihu.com/p/141141365">PaperWeekly</a></p>
+</blockquote>
+<p>因此表示学习不一定是学习到样本特征的方方面面，只要能学习到样本特有的特征，能够与其他的样本区分开就行了。</p>
+<p>So~对比学习到底在对比什么？其实就是学习一个函数映射的关系，公式如下：</p>
+<p><span class="math display">\[
+\operatorname{score}\left(f(x), f\left(x^{+}\right)\right)&gt;&gt;\operatorname{score}\left(f(x), f\left(x^{-}\right)\right)
+\]</span></p>
+<blockquote>
+<ul>
+<li>here <span class="math inline">\(x^{+}\)</span> is data point similar or congruent to <span class="math inline">\(x\)</span>, referred to as a positive sample.</li>
+<li><span class="math inline">\(x^{-}\)</span> is a data point dissimilar to <span class="math inline">\(x\)</span>, referred to as a negative sample.</li>
+<li>the score function is a metric that measures the similarity between two features.</li>
+</ul>
+</blockquote>
+<p><span class="math inline">\(x^{+}\)</span>是本<span class="math inline">\(x4\)</span>相似的样本记为正例，<span class="math inline">\(x^{-}\)</span>是和<span class="math inline">\(x\)</span>不相似的样本记为负例。score是衡量两个样本的相似度。因此这个公式也非常好理解：相似样本的距离要远远大于不相似样本的距离。</p>
+<blockquote>
+<p><span class="math inline">\(x\)</span> is commonly referred to as an “anchor” data point. To optimize for this property, we can construct a softmax classifier that classifies positive and negative samples correctly. This should encourage the score function to assign large values to positive examples and small values to negative examples:</p>
+</blockquote>
+<p><span class="math display">\[
+\mathcal{L}_{N}=-\mathbb{E}_{X}\left[\log \frac{\overline{\exp \left(f(x)^{T} f\left(x^{+}\right)\right)}}{\exp \left(f(x)^{T} f\left(x^{+}\right)\right)+\sum_{j=1}^{N-1} \exp \left(f(x)^{T} f\left(x_{j}\right)\right)}\right]
+\]</span></p>
+<p><span class="math inline">\(x\)</span>一般称’锚’点,为了优化这一特性，可以构造一个能正确分类正样本和负样本的softmax分类器。</p>
+<p>The denominator terms consist of one positive, and <span class="math inline">\(N-1\)</span> negative samples. Here, we have used the dot product as the score function:</p>
+<p><span class="math display">\[
+\operatorname{score}\left(f(x), f\left(x^{+}\right)\right)=f(x)^{T} f\left(x^{+}\right)
+\]</span></p>
+<p>This is the familiar cross-entropy loss for an <span class="math inline">\(N\)</span> -way softmax classifier, and commonly called the InfoNCE loss in the contrastive learning literature. It has been referred to as multi-class n-pair loss and ranking-based NCE in previous works.
+The InfoNCE objective is also connected to mutual information. Specifically, minimizing the InfoNCE loss maximizes a lower bound on the mutual information between <span class="math inline">\(f(X)\)</span> and <span class="math inline">\(f\left(X^{+}\right)\)</span>. See Poole et al., 2019 for a derivation and more details on this bound.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"search": false
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -9,7 +9,7 @@ RoBERTa在idea上面没有什么创新，可以认为是bert调参到最优的�
 提出了一项BERT预训练的复制研究(Devlin等人，2019)，其中包括对超参数调整和训练集大小的影响的仔细评估。结果发现BERT明显训练不足，并提出了一种改进的训练BERT模型RoBERTa，它可以匹配或超过所有后BERT方法的性能。主要优化方式包括
 
 >
-- (1)training the model longer, with bigger batches, over more data; 
+- (1) training the model longer, with bigger batches, over more data; 
 - (2) removing the next sentence prediction objective;
 - (3) training on longer sequences; and 
 - (4) dynamically changing the masking pattern applied to the training data. We also collect a large new dataset (CC-NEWS) of comparable size to other privately used datasets, to better control for training set size effects.
@@ -17,7 +17,7 @@ RoBERTa在idea上面没有什么创新，可以认为是bert调参到最优的�
 - batch size更大了，数据集更大了
 - 去掉了NSP任务
 - 序列更长了
-- 动态MASK
+- 动态MASK:每一次将训练example喂给模型的时候，才进行随机mask。
 
 >
 When controlling for training data, our improved training procedure improves upon the published BERT results on both GLUE and SQuAD. When trained for longer over additional data, our model achieves a score of 88.5 on the public GLUE leaderboard, matching the 88.4 reported by Yang et al. (2019). Our model establishes a new state-of-the-art on $4 / 9$ of the GLUE tasks:

@@ -1,0 +1,54 @@
+
+### 文章总览
+
+- 去掉了segment embedding，只有一个长的句子，类似RoBERTa
+- Span Masking
+- 去掉了NSP，增加了SBO
+- 在问答和指代消解任务上表现较好
+
+loss
+
+$\begin{aligned} \mathcal{L}\left(x_{i}\right) &=\mathcal{L}_{\mathrm{MLM}}\left(x_{i}\right)+\mathcal{L}_{\mathrm{SBO}}\left(x_{i}\right) \\ &=-\log P\left(x_{i} \mid \mathbf{x}_{i}\right)-\log P\left(x_{i} \mid \mathbf{y}_{i}\right) \end{aligned}$
+
+### intrduction
+
+>We present SpanBERT, a pre-training method that is designed to better represent and predict spans of text. Our method differs from BERT in both the masking scheme and the training objectives. First, we mask random contiguous spans, rather than random individual tokens. Second, we introduce a novel span-boundary objective (SBO) so the model learns to predict the entire masked span from the observed tokens at its boundary. 
+
+SpanBERT在masking scheme以及训练目标上都不一样
+- 1.SpanBERT是mask掉随机连续的span而不是sub-token
+- 2.提出了SBO来预测mask掉的span
+
+>To implement SpanBERT, we build on a welltuned replica of BERT, which itself substantially outperforms the original BERT. While building on our baseline, we find that pre-training on single segments, instead of two half-length segments with the next sentence prediction (NSP) objective, considerably improves performance on most downstream tasks. Therefore, we add our modifications on top of the tuned single-sequence BERT baseline.
+
+SpanBERT去掉了NSP任务，效果好于bert baseline
+
+### SPAN MASK
+
+bert是随机mask单个的字。
+SpanBERT是根据几何分布，先随机选择一段（span）的长度，之后再根据均匀分布随机选择这一段的起始位置，最后**按照长度遮盖**。文中使用几何分布取 p=0.2，最大长度只能是 10，利用此方案获得平均采样长度分布。
+和在 BERT 中一样，作者将 Y 的规模设定为 X 的15%，其中 80% 使用 [MASK] 进行替换，10% 使用随机单词替换，10%保持不变.
+
+感觉span的方式确实有助于句子消岐，因为一定程度上保留了上下文的信息。
+![](figs/spanbert-1.png)
+
+![](figs/spanbert-2.png)
+
+### SBO
+
+Span Boundary Objective 是该论文加入的新训练目标，希望被遮盖Span边界的词向量，能学习到Span的内容。或许作者想通过这个目标，让模型在一些需要 Span 的下游任务取得更好表现。具体做法是，在训练时取 Span 前后边界的两个词，这两个词不在Span内，然后用这两个词向量加上Span 中被遮盖掉词的位置向量，来预测原词。
+
+这样做的目的是：增强了BERT的性能，为了让模型让模型在一些需要Span 的下游任务取得更好表现，特别在一些与 Span相关的任务，如抽取式问答。
+
+### Single-Sequence Training
+
+XLNet中证实了NSP不是必要的，而且两句拼接在一起使单句子不能俘获长距离的语义关系，所以作者剔除了NSP任务，直接一句长句做MLM任务和SBO任务。
+
+这样做的目的是：剔除没有必要的预训练任务，并且使模型获取更长距离的语义依赖信息。
+
+
+### 实验效果
+
+在问答和消岐任务上达到sota，具体可以看paper
+
+
+

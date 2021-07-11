@@ -24,7 +24,7 @@
 <meta name="author" content="高文欣" />
 
 
-<meta name="date" content="2021-05-01" />
+<meta name="date" content="2021-07-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -224,12 +224,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.12.2" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#mlm-1"><i class="fa fa-check"></i><b>1.12.2</b> MLM</a></li>
 <li class="chapter" data-level="1.12.3" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#static-vs.-dynamic-masking"><i class="fa fa-check"></i><b>1.12.3</b> Static vs. Dynamic Masking</a></li>
 </ul></li>
-<li class="chapter" data-level="1.13" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#bertflow"><i class="fa fa-check"></i><b>1.13</b> bertFlow</a></li>
-<li class="chapter" data-level="1.14" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#t5"><i class="fa fa-check"></i><b>1.14</b> T5</a>
+<li class="chapter" data-level="1.13" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#spanbert"><i class="fa fa-check"></i><b>1.13</b> SpanBERT</a>
 <ul>
-<li class="chapter" data-level="1.14.1" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#introduction-9"><i class="fa fa-check"></i><b>1.14.1</b> introduction</a></li>
-<li class="chapter" data-level="1.14.2" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#model"><i class="fa fa-check"></i><b>1.14.2</b> MODEL</a></li>
+<li class="chapter" data-level="1.13.1" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#文章总览"><i class="fa fa-check"></i><b>1.13.1</b> 文章总览</a></li>
+<li class="chapter" data-level="1.13.2" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#intrduction"><i class="fa fa-check"></i><b>1.13.2</b> intrduction</a></li>
+<li class="chapter" data-level="1.13.3" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#span-mask"><i class="fa fa-check"></i><b>1.13.3</b> SPAN MASK</a></li>
+<li class="chapter" data-level="1.13.4" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#sbo"><i class="fa fa-check"></i><b>1.13.4</b> SBO</a></li>
+<li class="chapter" data-level="1.13.5" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#single-sequence-training"><i class="fa fa-check"></i><b>1.13.5</b> Single-Sequence Training</a></li>
+<li class="chapter" data-level="1.13.6" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#实验效果"><i class="fa fa-check"></i><b>1.13.6</b> 实验效果</a></li>
 </ul></li>
+<li class="chapter" data-level="1.14" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#unilm"><i class="fa fa-check"></i><b>1.14</b> unilm</a></li>
+<li class="chapter" data-level="1.15" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#bertflow"><i class="fa fa-check"></i><b>1.15</b> bertFlow</a></li>
+<li class="chapter" data-level="1.16" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#t5"><i class="fa fa-check"></i><b>1.16</b> T5</a>
+<ul>
+<li class="chapter" data-level="1.16.1" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#introduction-9"><i class="fa fa-check"></i><b>1.16.1</b> introduction</a></li>
+<li class="chapter" data-level="1.16.2" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#model"><i class="fa fa-check"></i><b>1.16.2</b> MODEL</a></li>
+</ul></li>
+<li class="chapter" data-level="1.17" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#小结"><i class="fa fa-check"></i><b>1.17</b> 小结</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="模型蒸馏.html"><a href="模型蒸馏.html"><i class="fa fa-check"></i><b>2</b> 模型蒸馏</a>
 <ul>
@@ -256,7 +267,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">NLP相关paper阅读</h1>
 <p class="author"><em>高文欣</em></p>
-<p class="date"><em>2021-05-01</em></p>
+<p class="date"><em>2021-07-11</em></p>
 </div>
 <div id="nlp-paper-preview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> NLP paper preview</h1>
@@ -402,7 +413,8 @@ fasttext 文本分类的结构？</li>
 <p>In our model, the vector representation is trained to be useful for predicting words in a paragraph. More precisely, we concatenate the paragraph vector with several word vectors from a paragraph and predict the following word in the given context. Both word vectors and paragraph vectors are trained by the stochastic gradient descent and backpropagation (Rumelhart et al., 1986 ). While paragraph vectors are unique among paragraphs, the word vectors are shared. At prediction time, the paragraph vectors are inferred by fixing the word vectors and training the new paragraph vector until convergence.</p>
 </blockquote>
 <p>说简单点就是在原有词向量的基础上concat上了句向量，同时学习词向量和句向量的语义。</p>
-<p>个人感觉句向量的作用其实是增加了一个上下文的position，句向量的大小可以自定义。</p>
+<p><del>个人感觉句向量的作用其实是增加了一个上下文的position，句向量的大小可以自定义。</del></p>
+<p>句向量是对句子进行编码</p>
 <p>Doc2vec同样具有2种结构</p>
 <blockquote>
 <p>The above method considers the concatenation of the paragraph vector with the word vectors to predict the next word in a text window. Another way is to ignore the context words in the input, but force the model to predict words randomly sampled from the paragraph in the output. In reality, what this means is that at each iteration of stochastic gradient descent, we sample a text window, then sample a random word from the text window and form a classification task given the Paragraph Vector. This technique is shown in Figure <span class="math inline">\(3 .\)</span> We name this version the Distributed Bag of Words version of Paragraph Vector (PV-DBOW), as opposed to Distributed Memory version of Paragraph Vector (PV-DM) in previous section.</p>
@@ -1771,7 +1783,9 @@ Therefore, for ALBERT we use a factorization of the embedding parameters, decomp
 <p>提出了一项BERT预训练的复制研究(Devlin等人，2019)，其中包括对超参数调整和训练集大小的影响的仔细评估。结果发现BERT明显训练不足，并提出了一种改进的训练BERT模型RoBERTa，它可以匹配或超过所有后BERT方法的性能。主要优化方式包括</p>
 <blockquote>
 <ul>
-<li>(1)training the model longer, with bigger batches, over more data;</li>
+<li><ol style="list-style-type: decimal">
+<li>training the model longer, with bigger batches, over more data;</li>
+</ol></li>
 <li><ol start="2" style="list-style-type: decimal">
 <li>removing the next sentence prediction objective;</li>
 </ol></li>
@@ -1787,7 +1801,7 @@ Therefore, for ALBERT we use a factorization of the embedding parameters, decomp
 <li>batch size更大了，数据集更大了</li>
 <li>去掉了NSP任务</li>
 <li>序列更长了</li>
-<li>动态MASK</li>
+<li>动态MASK:每一次将训练example喂给模型的时候，才进行随机mask。</li>
 </ul>
 <blockquote>
 <p>When controlling for training data, our improved training procedure improves upon the published BERT results on both GLUE and SQuAD. When trained for longer over additional data, our model achieves a score of 88.5 on the public GLUE leaderboard, matching the 88.4 reported by Yang et al. (2019). Our model establishes a new state-of-the-art on <span class="math inline">\(4 / 9\)</span> of the GLUE tasks:
@@ -1825,15 +1839,87 @@ In the original implementation, random masking and replacement is performed once
 <p><img src="figs/ROBERTA_1.png" /></p>
 </div>
 </div>
-<div id="bertflow" class="section level2" number="1.13">
-<h2><span class="header-section-number">1.13</span> bertFlow</h2>
+<div id="spanbert" class="section level2" number="1.13">
+<h2><span class="header-section-number">1.13</span> SpanBERT</h2>
+<div id="文章总览" class="section level3" number="1.13.1">
+<h3><span class="header-section-number">1.13.1</span> 文章总览</h3>
+<ul>
+<li>去掉了segment embedding，只有一个长的句子，类似RoBERTa</li>
+<li>Span Masking</li>
+<li>去掉了NSP，增加了SBO</li>
+<li>在问答和指代消解任务上表现较好</li>
+</ul>
+<p>loss</p>
+<p><span class="math inline">\(\begin{aligned} \mathcal{L}\left(x_{i}\right) &amp;=\mathcal{L}_{\mathrm{MLM}}\left(x_{i}\right)+\mathcal{L}_{\mathrm{SBO}}\left(x_{i}\right) \\ &amp;=-\log P\left(x_{i} \mid \mathbf{x}_{i}\right)-\log P\left(x_{i} \mid \mathbf{y}_{i}\right) \end{aligned}\)</span></p>
+</div>
+<div id="intrduction" class="section level3" number="1.13.2">
+<h3><span class="header-section-number">1.13.2</span> intrduction</h3>
+<blockquote>
+<p>We present SpanBERT, a pre-training method that is designed to better represent and predict spans of text. Our method differs from BERT in both the masking scheme and the training objectives. First, we mask random contiguous spans, rather than random individual tokens. Second, we introduce a novel span-boundary objective (SBO) so the model learns to predict the entire masked span from the observed tokens at its boundary.</p>
+</blockquote>
+<p>SpanBERT在masking scheme以及训练目标上都不一样
+- 1.SpanBERT是mask掉随机连续的span而不是sub-token
+- 2.提出了SBO来预测mask掉的span</p>
+<blockquote>
+<p>To implement SpanBERT, we build on a welltuned replica of BERT, which itself substantially outperforms the original BERT. While building on our baseline, we find that pre-training on single segments, instead of two half-length segments with the next sentence prediction (NSP) objective, considerably improves performance on most downstream tasks. Therefore, we add our modifications on top of the tuned single-sequence BERT baseline.</p>
+</blockquote>
+<p>SpanBERT去掉了NSP任务，效果好于bert baseline</p>
+</div>
+<div id="span-mask" class="section level3" number="1.13.3">
+<h3><span class="header-section-number">1.13.3</span> SPAN MASK</h3>
+<p>bert是随机mask单个的字。
+SpanBERT是根据几何分布，先随机选择一段（span）的长度，之后再根据均匀分布随机选择这一段的起始位置，最后<strong>按照长度遮盖</strong>。文中使用几何分布取 p=0.2，最大长度只能是 10，利用此方案获得平均采样长度分布。
+和在 BERT 中一样，作者将 Y 的规模设定为 X 的15%，其中 80% 使用 [MASK] 进行替换，10% 使用随机单词替换，10%保持不变.</p>
+<p>感觉span的方式确实有助于句子消岐，因为一定程度上保留了上下文的信息。
+<img src="figs/spanbert-1.png" /></p>
+<p><img src="figs/spanbert-2.png" /></p>
+</div>
+<div id="sbo" class="section level3" number="1.13.4">
+<h3><span class="header-section-number">1.13.4</span> SBO</h3>
+<p>Span Boundary Objective 是该论文加入的新训练目标，希望被遮盖Span边界的词向量，能学习到Span的内容。或许作者想通过这个目标，让模型在一些需要 Span 的下游任务取得更好表现。具体做法是，在训练时取 Span 前后边界的两个词，这两个词不在Span内，然后用这两个词向量加上Span 中被遮盖掉词的位置向量，来预测原词。</p>
+<p>这样做的目的是：增强了BERT的性能，为了让模型让模型在一些需要Span 的下游任务取得更好表现，特别在一些与 Span相关的任务，如抽取式问答。</p>
+</div>
+<div id="single-sequence-training" class="section level3" number="1.13.5">
+<h3><span class="header-section-number">1.13.5</span> Single-Sequence Training</h3>
+<p>XLNet中证实了NSP不是必要的，而且两句拼接在一起使单句子不能俘获长距离的语义关系，所以作者剔除了NSP任务，直接一句长句做MLM任务和SBO任务。</p>
+<p>这样做的目的是：剔除没有必要的预训练任务，并且使模型获取更长距离的语义依赖信息。</p>
+</div>
+<div id="实验效果" class="section level3" number="1.13.6">
+<h3><span class="header-section-number">1.13.6</span> 实验效果</h3>
+<p>在问答和消岐任务上达到sota，具体可以看paper</p>
+</div>
+</div>
+<div id="unilm" class="section level2" number="1.14">
+<h2><span class="header-section-number">1.14</span> unilm</h2>
+<p>直接copy<a href="https://zhuanlan.zhihu.com/p/113380840">刘聪nlp</a>的结论啦～
+看上去结构比较简单</p>
+<p>UniLM模型参数通过最小化预测token和标准token的交叉嫡来优化。三种类型的完型填空任务可以 完成不同的语言模型运用相同的程序程序训练。</p>
+<ul>
+<li><strong>单向语言模型：</strong>有从右到左和从左到右两者，以从左到右为例进行介绍。每个特殊标记 [Mask] 的预测，仅采用它自身和其左侧的token进行编码。例如，我们预测序列 <span class="math inline">\(x_{1} x_{2}[\operatorname{mas} k] x_{4}\)</span> 中的 [Mask] ，我们仅可以利用 <span class="math inline">\(x_{1}\)</span> 、 <span class="math inline">\(x_{2}\)</span> 和它自身进行编码。具体操作，如图1所示，使用一个上三 角矩阵来作为掩码矩阵。阴影部分为 <span class="math inline">\(-\infty\)</span> ，空白部分为0。</li>
+</ul>
+<p>这个结构主要是为了生成任务。和elmo的双向感觉有那么一丢丢的相似</p>
+<ul>
+<li><strong>双向语言模型：</strong>跟Bert模型一致，每个特殊标记 [Mask] 的预测，可以使用所有的token进行编 码。例如，我们预测 序列 <span class="math inline">\(x_{1} x_{2}[\)</span> mask <span class="math inline">\(] x_{4}\)</span> 中的 <span class="math inline">\(\mathbf{[ M a s k l}\)</span>, 我们仅可以利用 <span class="math inline">\(x_{1}, x_{2}, x_{4}\)</span> 和 它自身进行编码。具体操作，如图1所示，使用全0矩阵来作为掩码矩阵。</li>
+</ul>
+<p>这个和bert中的mlm是一致的</p>
+<ul>
+<li><strong>序列到序列语言模型：</strong>如果预测的特殊标记 [Mask] 出现在第一段文本中时，仅可以使用第一段 文本中所有的token进行预测; 如果：如果预测的特殊标记 <span class="math inline">\(\mathbf{I M a s k} \mathbf{~ 出 现 在 第 二 段 文 本 中 时 ， 可 以 ~}\)</span> 采用第一段文本中所有的token, 和第二段文本中该预测标记的左侧所有tokne以及它本身。例如, 我们预测序列 <span class="math inline">\([S O S] x_{1} x_{2}[\operatorname{mask} 1] x_{4}[\operatorname{EOS}] x_{5} x_{6}[\)</span> mask 2<span class="math inline">\(] x_{8}[E O S]\)</span> 中的 [mask1] 时，除去
+去 [SOS] 和 <span class="math inline">\(\left[\mathrm{EOS}\right.\)</span> ], 我们仅可以利用 <span class="math inline">\(x_{1}\)</span> 行编码。具体操作，如图1所示。
+由于在训练时，将源文本和目标文本结合进入模型，使模型可以含蓄地学习到两个文本之间关系, 可以做到seq-to-seq的效果。</li>
+</ul>
+<p>这个笔者感觉是增加了一个句子编码的位置信息，可以充分利用向量的信息。</p>
+<p>NSP任务：对于双向语言模型，与bert模型一样，也进行下一个句子预测。如果是第一段文本的下 一段文本，则预测1; 否则预测0。</p>
+<p><img src="figs/unilm-1.png" /></p>
+</div>
+<div id="bertflow" class="section level2" number="1.15">
+<h2><span class="header-section-number">1.15</span> bertFlow</h2>
 <p>文本表示的最新研究</p>
 <p>论文题目：On the Sentence Embeddings from Pre-trained Language Models
 下载地址：<a href="https://arxiv.org/pdf/2011.05864.pdf" class="uri">https://arxiv.org/pdf/2011.05864.pdf</a>
 论文代码：<a href="https://github.com/bohanli/BERT-flow" class="uri">https://github.com/bohanli/BERT-flow</a></p>
 </div>
-<div id="t5" class="section level2" number="1.14">
-<h2><span class="header-section-number">1.14</span> T5</h2>
+<div id="t5" class="section level2" number="1.16">
+<h2><span class="header-section-number">1.16</span> T5</h2>
 <blockquote>
 <p>In this paper, we explore the landscape of transfer
 learning techniques for NLP by introducing a unified framework that converts all text-based
@@ -1845,8 +1931,8 @@ on many benchmarks covering summarization, question answering, text classificati
 more.<span class="citation">(Raffel et al. 2019)</span></p>
 </blockquote>
 <p>通过引入一个统一的框架将所有基于文本的语言问题转换为text-to-text格式，探索了NLP的迁移学习技术的前景。 本文系统研究比较了数十种语言理解任务中的预训练目标，体系结构，未标记的数据集，传输方法和其他因素。通过结合对规模的探索和新的“Colossal Clean Crawled Corpus语料库”，在许多基准上获得了sota，包括摘要，问题回答，文本分类等。</p>
-<div id="introduction-9" class="section level3" number="1.14.1">
-<h3><span class="header-section-number">1.14.1</span> introduction</h3>
+<div id="introduction-9" class="section level3" number="1.16.1">
+<h3><span class="header-section-number">1.16.1</span> introduction</h3>
 <blockquote>
 <p>The basic idea underlying our work is to treat every text processing problem as a “text-to-text” problem, i.e. taking text as input and producing new text as output. This approach is inspired by previous unifying frameworks for NLP tasks, including casting all text problems as question answering (McCann et al., 2018), language modeling (Radford et al.,
 2019), or span extraction Keskar et al. (2019b) tasks. Crucially, the text-to-text framework allows us to directly apply the same model, objective, training procedure, and decoding process to every task we consider. We leverage this flexibility by evaluating performance on a wide variety of English-based NLP problems, including question answering, document summarization, and sentiment classification, to name a few. With this unified approach, we can compare the effectiveness of different transfer learning objectives, unlabeled data sets, and other factors, while exploring the limits of transfer learning for NLP by scaling up models and data sets beyond what has previously been considered.</p>
@@ -1857,8 +1943,8 @@ more.<span class="citation">(Raffel et al. 2019)</span></p>
 </blockquote>
 <p>本文的目标不是提出新的方法，而是对该领域的现状提供一个全面的观点。因此，本文的工作主要包括对现有技术的调查、探索和实证比较。本文还探索了当前方法的局限性，通过扩大我们的系统研究(训练模型多达110亿个参数)，在我们考虑的许多任务中获得最先进的结果。为了在这个规模上进行实验，我们引入了“Colossal Clean Crawled Corpus” 也叫(C4)，这是一个数据集，由数百gb的干净的英文文本从网络上刮取。认识到迁移学习的主要用途是在数据稀缺的环境中利用预训练模型的可能性，本文发布了代码、数据集和预训练模型。</p>
 </div>
-<div id="model" class="section level3" number="1.14.2">
-<h3><span class="header-section-number">1.14.2</span> MODEL</h3>
+<div id="model" class="section level3" number="1.16.2">
+<h3><span class="header-section-number">1.16.2</span> MODEL</h3>
 <blockquote>
 <p>Overall, our encoder-decoder Transformer implementation closely follows its originally proposed form (Vaswani et al., 2017). First, an input sequence of tokens is mapped to a sequence of embeddings, which is then passed into the encoder. The encoder consists of a stack of “blocks”, each of which comprises two subcomponents: a self-attention layer followed by a small feed-forward network. Layer normalization (Ba et al., 2016 ) is applied to the input of each subcomponent. We use a simplified version of layer normalization where the activations are only rescaled and no additive bias is applied. After layer normalization, a residual skip connection (He et al., 2016 ) adds each subcomponent’s input to its output. Dropout (Srivastava et al., 2014 ) is applied within the feed-forward network, on the skip connection, on the attention weights, and at the input and output of the entire stack. The decoder is similar in structure to the encoder except that it includes a standard attention mechanism after each self-attention layer that attends to the output of the encoder. The self-attention mechanism in the decoder also uses a form of autoregressive or causal selfattention, which only allows the model to attend to past outputs. The output of the final decoder block is fed into a dense layer with a softmax output, whose weights are shared with the input embedding matrix. All attention mechanisms in the Transformer are split up into independent “heads” whose outputs are concatenated before being further processed.</p>
 </blockquote>
@@ -1869,6 +1955,9 @@ more.<span class="citation">(Raffel et al. 2019)</span></p>
 <p>text-to-text结构如图一所示</p>
 <p><img src="figs/T5.png" /></p>
 </div>
+</div>
+<div id="小结" class="section level2" number="1.17">
+<h2><span class="header-section-number">1.17</span> 小结</h2>
 </div>
 </div>
             </section>
