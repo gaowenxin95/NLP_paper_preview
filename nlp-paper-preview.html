@@ -234,13 +234,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.13.6" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#实验效果"><i class="fa fa-check"></i><b>1.13.6</b> 实验效果</a></li>
 </ul></li>
 <li class="chapter" data-level="1.14" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#unilm"><i class="fa fa-check"></i><b>1.14</b> unilm</a></li>
-<li class="chapter" data-level="1.15" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#bertflow"><i class="fa fa-check"></i><b>1.15</b> bertFlow</a></li>
-<li class="chapter" data-level="1.16" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#t5"><i class="fa fa-check"></i><b>1.16</b> T5</a>
+<li class="chapter" data-level="1.15" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#chinesebert"><i class="fa fa-check"></i><b>1.15</b> chineseBERT</a>
 <ul>
-<li class="chapter" data-level="1.16.1" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#introduction-9"><i class="fa fa-check"></i><b>1.16.1</b> introduction</a></li>
-<li class="chapter" data-level="1.16.2" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#model"><i class="fa fa-check"></i><b>1.16.2</b> MODEL</a></li>
+<li class="chapter" data-level="1.15.1" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#论文总览"><i class="fa fa-check"></i><b>1.15.1</b> 论文总览</a></li>
+<li class="chapter" data-level="1.15.2" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#增加全词掩码"><i class="fa fa-check"></i><b>1.15.2</b> 增加全词掩码</a></li>
 </ul></li>
-<li class="chapter" data-level="1.17" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#小结"><i class="fa fa-check"></i><b>1.17</b> 小结</a></li>
+<li class="chapter" data-level="1.16" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#bertflow"><i class="fa fa-check"></i><b>1.16</b> bertFlow</a></li>
+<li class="chapter" data-level="1.17" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#t5"><i class="fa fa-check"></i><b>1.17</b> T5</a>
+<ul>
+<li class="chapter" data-level="1.17.1" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#introduction-9"><i class="fa fa-check"></i><b>1.17.1</b> introduction</a></li>
+<li class="chapter" data-level="1.17.2" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#model"><i class="fa fa-check"></i><b>1.17.2</b> MODEL</a></li>
+</ul></li>
+<li class="chapter" data-level="1.18" data-path="nlp-paper-preview.html"><a href="nlp-paper-preview.html#小结"><i class="fa fa-check"></i><b>1.18</b> 小结</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="模型蒸馏.html"><a href="模型蒸馏.html"><i class="fa fa-check"></i><b>2</b> 模型蒸馏</a>
 <ul>
@@ -1911,15 +1916,37 @@ SpanBERT是根据几何分布，先随机选择一段（span）的长度，之�
 <p>NSP任务：对于双向语言模型，与bert模型一样，也进行下一个句子预测。如果是第一段文本的下 一段文本，则预测1; 否则预测0。</p>
 <p><img src="figs/unilm-1.png" /></p>
 </div>
-<div id="bertflow" class="section level2" number="1.15">
-<h2><span class="header-section-number">1.15</span> bertFlow</h2>
+<div id="chinesebert" class="section level2" number="1.15">
+<h2><span class="header-section-number">1.15</span> chineseBERT</h2>
+<p>专门针对中文做的bert的优化</p>
+<div id="论文总览" class="section level3" number="1.15.1">
+<h3><span class="header-section-number">1.15.1</span> 论文总览</h3>
+<p>主要idea</p>
+<blockquote>
+<p>汉字的最大特性有两个方面：一是字形，二是拼音。汉字是一种典型的意音文字，从其起源来看，它的字形本身就蕴含了一部分语义。比如，“江河湖泊”都有偏旁三点水，这表明它们都与水有关。</p>
+</blockquote>
+<blockquote>
+<p>从汉字本身的这两大特性出发，将汉字的字形与拼音信息融入到中文语料的预训练过程。一个汉字的字形向量由多个不同的字体形成，而拼音向量则由对应的罗马化的拼音字符序列得到。二者与字向量一起进行融合，得到最终的融合向量，作为预训练模型的输入。模型使用全词掩码（Whole Word Masking）和字掩码（Character Masking）两种策略训练，使模型更加综合地建立汉字、字形、读音与上下文之间的联系</p>
+</blockquote>
+<p>其实看了源码很容易理解，就是embedding的部分增加了pinyin embedding和字形embedding，与bert的三个embedding一起相加</p>
+<p><img src="figs/chinesebert-1.png" /></p>
+<p><img src="figs/chinesebert-2.png" /></p>
+</div>
+<div id="增加全词掩码" class="section level3" number="1.15.2">
+<h3><span class="header-section-number">1.15.2</span> 增加全词掩码</h3>
+<p>全词mask就是以词为单位进行mask，字mask就是以字为单位</p>
+<p>创新点只有embedding部分，因为全词掩码之前哈工大的bert-zh已经提出了</p>
+</div>
+</div>
+<div id="bertflow" class="section level2" number="1.16">
+<h2><span class="header-section-number">1.16</span> bertFlow</h2>
 <p>文本表示的最新研究</p>
 <p>论文题目：On the Sentence Embeddings from Pre-trained Language Models
 下载地址：<a href="https://arxiv.org/pdf/2011.05864.pdf" class="uri">https://arxiv.org/pdf/2011.05864.pdf</a>
 论文代码：<a href="https://github.com/bohanli/BERT-flow" class="uri">https://github.com/bohanli/BERT-flow</a></p>
 </div>
-<div id="t5" class="section level2" number="1.16">
-<h2><span class="header-section-number">1.16</span> T5</h2>
+<div id="t5" class="section level2" number="1.17">
+<h2><span class="header-section-number">1.17</span> T5</h2>
 <blockquote>
 <p>In this paper, we explore the landscape of transfer
 learning techniques for NLP by introducing a unified framework that converts all text-based
@@ -1931,8 +1958,8 @@ on many benchmarks covering summarization, question answering, text classificati
 more.<span class="citation">(Raffel et al. 2019)</span></p>
 </blockquote>
 <p>通过引入一个统一的框架将所有基于文本的语言问题转换为text-to-text格式，探索了NLP的迁移学习技术的前景。 本文系统研究比较了数十种语言理解任务中的预训练目标，体系结构，未标记的数据集，传输方法和其他因素。通过结合对规模的探索和新的“Colossal Clean Crawled Corpus语料库”，在许多基准上获得了sota，包括摘要，问题回答，文本分类等。</p>
-<div id="introduction-9" class="section level3" number="1.16.1">
-<h3><span class="header-section-number">1.16.1</span> introduction</h3>
+<div id="introduction-9" class="section level3" number="1.17.1">
+<h3><span class="header-section-number">1.17.1</span> introduction</h3>
 <blockquote>
 <p>The basic idea underlying our work is to treat every text processing problem as a “text-to-text” problem, i.e. taking text as input and producing new text as output. This approach is inspired by previous unifying frameworks for NLP tasks, including casting all text problems as question answering (McCann et al., 2018), language modeling (Radford et al.,
 2019), or span extraction Keskar et al. (2019b) tasks. Crucially, the text-to-text framework allows us to directly apply the same model, objective, training procedure, and decoding process to every task we consider. We leverage this flexibility by evaluating performance on a wide variety of English-based NLP problems, including question answering, document summarization, and sentiment classification, to name a few. With this unified approach, we can compare the effectiveness of different transfer learning objectives, unlabeled data sets, and other factors, while exploring the limits of transfer learning for NLP by scaling up models and data sets beyond what has previously been considered.</p>
@@ -1943,8 +1970,8 @@ more.<span class="citation">(Raffel et al. 2019)</span></p>
 </blockquote>
 <p>本文的目标不是提出新的方法，而是对该领域的现状提供一个全面的观点。因此，本文的工作主要包括对现有技术的调查、探索和实证比较。本文还探索了当前方法的局限性，通过扩大我们的系统研究(训练模型多达110亿个参数)，在我们考虑的许多任务中获得最先进的结果。为了在这个规模上进行实验，我们引入了“Colossal Clean Crawled Corpus” 也叫(C4)，这是一个数据集，由数百gb的干净的英文文本从网络上刮取。认识到迁移学习的主要用途是在数据稀缺的环境中利用预训练模型的可能性，本文发布了代码、数据集和预训练模型。</p>
 </div>
-<div id="model" class="section level3" number="1.16.2">
-<h3><span class="header-section-number">1.16.2</span> MODEL</h3>
+<div id="model" class="section level3" number="1.17.2">
+<h3><span class="header-section-number">1.17.2</span> MODEL</h3>
 <blockquote>
 <p>Overall, our encoder-decoder Transformer implementation closely follows its originally proposed form (Vaswani et al., 2017). First, an input sequence of tokens is mapped to a sequence of embeddings, which is then passed into the encoder. The encoder consists of a stack of “blocks”, each of which comprises two subcomponents: a self-attention layer followed by a small feed-forward network. Layer normalization (Ba et al., 2016 ) is applied to the input of each subcomponent. We use a simplified version of layer normalization where the activations are only rescaled and no additive bias is applied. After layer normalization, a residual skip connection (He et al., 2016 ) adds each subcomponent’s input to its output. Dropout (Srivastava et al., 2014 ) is applied within the feed-forward network, on the skip connection, on the attention weights, and at the input and output of the entire stack. The decoder is similar in structure to the encoder except that it includes a standard attention mechanism after each self-attention layer that attends to the output of the encoder. The self-attention mechanism in the decoder also uses a form of autoregressive or causal selfattention, which only allows the model to attend to past outputs. The output of the final decoder block is fed into a dense layer with a softmax output, whose weights are shared with the input embedding matrix. All attention mechanisms in the Transformer are split up into independent “heads” whose outputs are concatenated before being further processed.</p>
 </blockquote>
@@ -1956,8 +1983,8 @@ more.<span class="citation">(Raffel et al. 2019)</span></p>
 <p><img src="figs/T5.png" /></p>
 </div>
 </div>
-<div id="小结" class="section level2" number="1.17">
-<h2><span class="header-section-number">1.17</span> 小结</h2>
+<div id="小结" class="section level2" number="1.18">
+<h2><span class="header-section-number">1.18</span> 小结</h2>
 </div>
 </div>
             </section>

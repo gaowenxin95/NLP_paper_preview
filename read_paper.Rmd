@@ -778,6 +778,13 @@ Fine-tuning部分
 
 ```
 
+## chineseBERT
+
+
+```{r child='analysis/chinesebert.Rmd'}
+
+```
+
 ## bertFlow
 
 文本表示的最新研究
