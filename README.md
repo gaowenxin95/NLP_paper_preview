@@ -8,5 +8,7 @@
 
 [对比学习相关文献阅读](https://gaowenxin95.github.io/NLP_paper_preview/CL.html)
 
+[prompt学习笔记](https://gaowenxin95.github.io/NLP_paper_preview/analysis/prompt.html)
+
 
 
