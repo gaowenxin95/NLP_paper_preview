@@ -1,0 +1,97 @@
+---
+title: prompt
+author: 高文欣
+date: "`r Sys.Date()`"
+output: 
+  bookdown::gitbook:
+bibliography: ../refs/add.bib
+---
+
+# prompt
+
+参考[微光](https://baijiahao.baidu.com/s?id=1768381274275868731&wfr=spider&for=pc)
+
+## LLMS
+
+LLMs(Large Language Models )
+Large Language Models（LLMs），也称为大型语言模型，是一种基于机器学习和自然语言处理技术的模型，它通过对大量的文本数据进行训练，来学习服务人类语言理解和生成的能力。
+LLM的核心思想是通过大规模的无监督训练来学习自然语言的模式和语言结构，这在一定程度上能够模拟人类的语言认知和生成过程。与传统的NLP模型相比，LLM能够更好地理解和生成自然文本，同时还能够表现出一定的逻辑思维和推理能力。
+
+## prompt定义
+
+prompt在人工智能场景下指给模型的一个初始输入或提示，用于引导模型生成特定的输出。如果把大模型比如为代码解释器，那prompt就类似于我们编写的代码。
+
+![](../figs/prompt1.png)
+
+可以是一个问题、一段文字描述，甚至可以是带有一堆参数的文字描述。AI 模型会基于 prompt 所提供的信息，生成对应的文本，亦或者图片。比如，我们在chatGPT中输入：中国的首都是什么？这个问题就是prompt。
+
+而 Prompt Engineering （中文意思为提示工程，缩写为 PE）则是：
+Prompt Engineering 是一种人工智能（AI）技术，它通过设计和改进 AI 的 prompt 来提高 AI 的表现。Prompt Engineering 的目标是创建高度有效和可控的 AI 系统，使其能够准确、可靠地执行特定任务。
+为什么需要PE?
+
+因为人类的语言从根本上说是不精确的，目前机器还没法很好地理解人类说的话，所以才会出现 PE 这个技术。
+
+是否需要学习PE？
+
+有人认为这个就像当年搜索工具刚出来的时候，出现了不少所谓的「搜索专家」，熟练使用各种搜索相关的奇技淫巧。但现在这些专家都不存在了。因为产品会不断迭代，变得更加易用，无需再使用这些技巧。一个比较统一的看法是：
+
+现在 AI 的发展还比较早期，了解和学习 PE 价值相对比较大，但长远来看可能会被淘汰。这个「长远」可能是 3 年，亦或者 1 年。
+
+## prompt结构
+
+A prompt contains any of the following elements:
+
+Instruction - a specific task or instruction you want the model to perform
+Context - external information or additional context that can steer the model to better responses
+Input Data - the input or question that we are interested to find a response for
+Output Indicator - the type or format of the output.
+
+![](../figs/prompt2.png)
+
+## Zero-Shot Prompting
+
+零示例提示语
+
+"Zero-Shot Prompting" 是一种在自然语言处理（NLP）中常见的机器学习技术，尤其在处理大型语言模型（如 GPT-3 或 GPT-4）时。"Zero-Shot"的含义是指模型在没有见过特定任务的训练样本的情况下，试图解决该任务。
+
+![](../figs/prompt3.png)
+
+
+GPT并没有针对这种类型的任务进行训练，但是由于它在大量的语料上进行训练，依然可以很好的结局这类任务。需要注意的是，虽然 "Zero-Shot Prompting" 可以在许多情况下表现得很好，但它并不总是能够生成完全正确或一致的输出，尤其是在处理复杂或未知任务时。
+
+## Few-Shot Prompting
+
+少量提示语
+
+"Few-Shot Prompting" 是一种自然语言处理中的机器学习技术，用于在处理任务时，通过仅提供少量样本来引导模型的学习和推理过程。
+通过提供少量的样本，模型可以从中学习任务的模式、关系和特征，并推断出适当的输出。这种方法使得模型能够在遇到类似但未见过的情况时，快速适应和表现出良好的泛化能力。
+"Few-Shot Prompting" 的目标是通过最少的样本和信息来实现高效的学习和推理，使模型能够在新任务或领域中快速适应和表现出良好的性能。这对于处理具有限数据或频繁面临新任务的情况下尤为有用。
+
+
+>如果想要以零示例提示语（zero shot prompting）或少数示例提示语（few shot prompting）的方式做好任务，则必须要采取GPT模式。现在已有研究（参考：On the Role of Bidirectionality in Language Model Pre-Training）证明：如果是以fine-tuning方式解决下游任务，Bert模式的效果优于GPT模式；若是以zero shot/few shot prompting这种模式解决下游任务，则GPT模式效果要优于Bert模式。这说明了，生成模型更容易做好zero shot/few shot prompting方式的任务，而Bert模式以这种方式做任务，是天然有劣势的[张俊林](https://zhuanlan.zhihu.com/p/597586623?)
+
+## Chain-of-Thought Prompting
+
+Chain-of-Thought Prompting是一种在自然语言处理中使用的技术，用于引导语言模型生成连贯的文本，建立一种逻辑和连贯的思维链条。
+在传统的语言模型中，只给出单个的提示或问题，模型的输出可能会在不同的方向上迅速转变，缺乏一致性和连贯性。而 "Chain-of-Thought Prompting"的目标是通过给模型提供多个相关的提示，使模型能够在生成文本时沿着逻辑思维链条进行连贯的推理。
+
+这种方法可以在生成对话、故事、论述等文本时非常有用。通过给模型提供一系列连续的提示，每个提示都与前一个提示相关，模型可以建立上下文和逻辑关系，从而生成更加连贯和有条理的文本。
+例如，假设我们要让模型生成一个完整的故事，我们可以使用 "Chain-of-Thought Prompting"，依次提供故事的不同部分作为连续的提示。模型可以通过理解前一个部分的内容，并在此基础上继续发展故事情节，以确保整个故事具有逻辑和连贯性。
+通过使用 "Chain-of-Thought Prompting" 技术，我们可以引导语言模型生成更具结构和连贯性的文本，使其能够按照逻辑顺序展开思维，并生成更加自然和可理解的输出。
+
+**思维链仅在使用大于等于 100B 参数的模型时，才会生效**
+
+## tricks
+
+- 将指令放在开头，并用###或"""分隔上下文
+
+- 对所需的背景、结果、长度、格式、风格等尽可能具体、描述性和详细
+
+- 通过例子说明输出格式
+
+- 优先使用zero-shot, 其次 few-shot，当两者都不能得到满意结果时尝试fine-tune （模型微调）
+
+- 使用引用减少虚假知识
+
+-  设定角色或人物
+

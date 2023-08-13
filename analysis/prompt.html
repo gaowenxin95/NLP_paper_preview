@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>prompt</title>
+  <meta name="description" content="prompt" />
+  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="prompt" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="prompt" />
+  
+  
+  
+
+<meta name="author" content="高文欣" />
+
+
+<meta name="date" content="2023-08-13" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+
+<script src="libs/header-attrs-2.2/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path=""><a href="#prompt"><i class="fa fa-check"></i><b>1</b> prompt</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path=""><a href="#llms"><i class="fa fa-check"></i><b>1.1</b> LLMS</a></li>
+<li class="chapter" data-level="1.2" data-path=""><a href="#prompt定义"><i class="fa fa-check"></i><b>1.2</b> prompt定义</a></li>
+<li class="chapter" data-level="1.3" data-path=""><a href="#prompt结构"><i class="fa fa-check"></i><b>1.3</b> prompt结构</a></li>
+<li class="chapter" data-level="1.4" data-path=""><a href="#zero-shot-prompting"><i class="fa fa-check"></i><b>1.4</b> Zero-Shot Prompting</a></li>
+<li class="chapter" data-level="1.5" data-path=""><a href="#few-shot-prompting"><i class="fa fa-check"></i><b>1.5</b> Few-Shot Prompting</a></li>
+<li class="chapter" data-level="1.6" data-path=""><a href="#chain-of-thought-prompting"><i class="fa fa-check"></i><b>1.6</b> Chain-of-Thought Prompting</a></li>
+<li class="chapter" data-level="1.7" data-path=""><a href="#tricks"><i class="fa fa-check"></i><b>1.7</b> tricks</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">prompt</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">prompt</h1>
+<p class="author"><em>高文欣</em></p>
+<p class="date"><em>2023-08-13</em></p>
+</div>
+<div id="prompt" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> prompt</h1>
+<p>参考<a href="https://baijiahao.baidu.com/s?id=1768381274275868731&amp;wfr=spider&amp;for=pc">微光</a></p>
+<div id="llms" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> LLMS</h2>
+<p>LLMs(Large Language Models )
+Large Language Models（LLMs），也称为大型语言模型，是一种基于机器学习和自然语言处理技术的模型，它通过对大量的文本数据进行训练，来学习服务人类语言理解和生成的能力。
+LLM的核心思想是通过大规模的无监督训练来学习自然语言的模式和语言结构，这在一定程度上能够模拟人类的语言认知和生成过程。与传统的NLP模型相比，LLM能够更好地理解和生成自然文本，同时还能够表现出一定的逻辑思维和推理能力。</p>
+</div>
+<div id="prompt定义" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> prompt定义</h2>
+<p>prompt在人工智能场景下指给模型的一个初始输入或提示，用于引导模型生成特定的输出。如果把大模型比如为代码解释器，那prompt就类似于我们编写的代码。</p>
+<p><img src="../figs/prompt1.png" /></p>
+<p>可以是一个问题、一段文字描述，甚至可以是带有一堆参数的文字描述。AI 模型会基于 prompt 所提供的信息，生成对应的文本，亦或者图片。比如，我们在chatGPT中输入：中国的首都是什么？这个问题就是prompt。</p>
+<p>而 Prompt Engineering （中文意思为提示工程，缩写为 PE）则是：
+Prompt Engineering 是一种人工智能（AI）技术，它通过设计和改进 AI 的 prompt 来提高 AI 的表现。Prompt Engineering 的目标是创建高度有效和可控的 AI 系统，使其能够准确、可靠地执行特定任务。
+为什么需要PE?</p>
+<p>因为人类的语言从根本上说是不精确的，目前机器还没法很好地理解人类说的话，所以才会出现 PE 这个技术。</p>
+<p>是否需要学习PE？</p>
+<p>有人认为这个就像当年搜索工具刚出来的时候，出现了不少所谓的「搜索专家」，熟练使用各种搜索相关的奇技淫巧。但现在这些专家都不存在了。因为产品会不断迭代，变得更加易用，无需再使用这些技巧。一个比较统一的看法是：</p>
+<p>现在 AI 的发展还比较早期，了解和学习 PE 价值相对比较大，但长远来看可能会被淘汰。这个「长远」可能是 3 年，亦或者 1 年。</p>
+</div>
+<div id="prompt结构" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> prompt结构</h2>
+<p>A prompt contains any of the following elements:</p>
+<p>Instruction - a specific task or instruction you want the model to perform
+Context - external information or additional context that can steer the model to better responses
+Input Data - the input or question that we are interested to find a response for
+Output Indicator - the type or format of the output.</p>
+<p><img src="../figs/prompt2.png" /></p>
+</div>
+<div id="zero-shot-prompting" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Zero-Shot Prompting</h2>
+<p>零示例提示语</p>
+<p>“Zero-Shot Prompting” 是一种在自然语言处理（NLP）中常见的机器学习技术，尤其在处理大型语言模型（如 GPT-3 或 GPT-4）时。“Zero-Shot”的含义是指模型在没有见过特定任务的训练样本的情况下，试图解决该任务。</p>
+<p><img src="../figs/prompt3.png" /></p>
+<p>GPT并没有针对这种类型的任务进行训练，但是由于它在大量的语料上进行训练，依然可以很好的结局这类任务。需要注意的是，虽然 “Zero-Shot Prompting” 可以在许多情况下表现得很好，但它并不总是能够生成完全正确或一致的输出，尤其是在处理复杂或未知任务时。</p>
+</div>
+<div id="few-shot-prompting" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> Few-Shot Prompting</h2>
+<p>少量提示语</p>
+<p>“Few-Shot Prompting” 是一种自然语言处理中的机器学习技术，用于在处理任务时，通过仅提供少量样本来引导模型的学习和推理过程。
+通过提供少量的样本，模型可以从中学习任务的模式、关系和特征，并推断出适当的输出。这种方法使得模型能够在遇到类似但未见过的情况时，快速适应和表现出良好的泛化能力。
+“Few-Shot Prompting” 的目标是通过最少的样本和信息来实现高效的学习和推理，使模型能够在新任务或领域中快速适应和表现出良好的性能。这对于处理具有限数据或频繁面临新任务的情况下尤为有用。</p>
+<blockquote>
+<p>如果想要以零示例提示语（zero shot prompting）或少数示例提示语（few shot prompting）的方式做好任务，则必须要采取GPT模式。现在已有研究（参考：On the Role of Bidirectionality in Language Model Pre-Training）证明：如果是以fine-tuning方式解决下游任务，Bert模式的效果优于GPT模式；若是以zero shot/few shot prompting这种模式解决下游任务，则GPT模式效果要优于Bert模式。这说明了，生成模型更容易做好zero shot/few shot prompting方式的任务，而Bert模式以这种方式做任务，是天然有劣势的<a href="https://zhuanlan.zhihu.com/p/597586623?">张俊林</a></p>
+</blockquote>
+</div>
+<div id="chain-of-thought-prompting" class="section level2" number="1.6">
+<h2><span class="header-section-number">1.6</span> Chain-of-Thought Prompting</h2>
+<p>Chain-of-Thought Prompting是一种在自然语言处理中使用的技术，用于引导语言模型生成连贯的文本，建立一种逻辑和连贯的思维链条。
+在传统的语言模型中，只给出单个的提示或问题，模型的输出可能会在不同的方向上迅速转变，缺乏一致性和连贯性。而 “Chain-of-Thought Prompting”的目标是通过给模型提供多个相关的提示，使模型能够在生成文本时沿着逻辑思维链条进行连贯的推理。</p>
+<p>这种方法可以在生成对话、故事、论述等文本时非常有用。通过给模型提供一系列连续的提示，每个提示都与前一个提示相关，模型可以建立上下文和逻辑关系，从而生成更加连贯和有条理的文本。
+例如，假设我们要让模型生成一个完整的故事，我们可以使用 “Chain-of-Thought Prompting”，依次提供故事的不同部分作为连续的提示。模型可以通过理解前一个部分的内容，并在此基础上继续发展故事情节，以确保整个故事具有逻辑和连贯性。
+通过使用 “Chain-of-Thought Prompting” 技术，我们可以引导语言模型生成更具结构和连贯性的文本，使其能够按照逻辑顺序展开思维，并生成更加自然和可理解的输出。</p>
+<p><strong>思维链仅在使用大于等于 100B 参数的模型时，才会生效</strong></p>
+</div>
+<div id="tricks" class="section level2" number="1.7">
+<h2><span class="header-section-number">1.7</span> tricks</h2>
+<ul>
+<li><p>将指令放在开头，并用###或"""分隔上下文</p></li>
+<li><p>对所需的背景、结果、长度、格式、风格等尽可能具体、描述性和详细</p></li>
+<li><p>通过例子说明输出格式</p></li>
+<li><p>优先使用zero-shot, 其次 few-shot，当两者都不能得到满意结果时尝试fine-tune （模型微调）</p></li>
+<li><p>使用引用减少虚假知识</p></li>
+<li><p>设定角色或人物</p></li>
+</ul>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"search": false
+});
+});
+</script>
+
+</body>
+
+</html>
