@@ -10,6 +10,7 @@ bibliography: ../refs/add.bib
 # prompt
 
 参考[微光](https://baijiahao.baidu.com/s?id=1768381274275868731&wfr=spider&for=pc)
+只给提示叫做 zero-shot，给一个范例叫做 one-shot，给多个范例叫做 few-shot。
 
 ## LLMS
 
